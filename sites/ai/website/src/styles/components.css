@@ -60,15 +60,7 @@
   font-size: var(--fs-small);
 }
 
-/* ---- Brand: the ALEX OXYTOCIN wordmark ----------------------------- */
-
-/* The sprite only carries the <symbol>; it must take no layout space. */
-.logo-sprite {
-  position: absolute;
-  width: 0;
-  height: 0;
-  overflow: hidden;
-}
+/* ---- Brand: the shared ALEX OXYTOCIN wordmark ---------------------- */
 
 .brand {
   display: inline-flex;
@@ -76,46 +68,10 @@
   flex-shrink: 0;
 }
 
-.logo {
-  /* Aspect ratio comes from the viewBox (1090 × 114), which is 18 units of
-     stroke plus padding around a 1062 × 86 drawing — so these heights are not
-     the wordmark's height, they are the box's. The caps were flattened from
-     100 units to 86, which is why the same heights below now draw a mark a
-     tenth wider than before: the box got shorter, so the uniform scale grew.
-     Change the caps or the stroke and this has to be re-derived. */
-  height: 1.25rem;
+.brand-logo {
+  height: 18px;
   width: auto;
   display: block;
-}
-
-.logo-alex {
-  stroke: var(--teal);
-  filter: drop-shadow(0 0 6px rgba(46, 230, 214, 0.35));
-}
-
-.logo-oxytocin {
-  stroke: var(--logo-violet);
-  filter: drop-shadow(0 0 6px rgba(139, 92, 246, 0.45));
-}
-
-.brand:hover .logo-alex,
-.brand:hover .logo-oxytocin {
-  filter: drop-shadow(0 0 10px rgba(139, 92, 246, 0.55));
-}
-
-/* The wordmark is 11.7 : 1 wide, so on narrow screens it has to come down or
-   it crowds the menu toggle. These live here, not in layout.css, because this
-   layer is concatenated later and would otherwise win. */
-@media (max-width: 60em) {
-  .logo {
-    height: 1.125rem;
-  }
-}
-
-@media (max-width: 30em) {
-  .logo {
-    height: 1rem;
-  }
 }
 
 /* ---- Monogram (about chip) ------------------------------------------ */

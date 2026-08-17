@@ -21,7 +21,7 @@ test("renders the personal hub with the neural hero", async () => {
 
   const html = await response.text();
   assert.match(html, /<title>Alex Oxytocin — ИИ, архитектура и инструменты<\/title>/i);
-  assert.match(html, /<strong>OXYTOCIN<\/strong>/);
+  assert.match(html, /class="brand-logo"[^>]*src="\/assets\/alex-oxytocin-logo\.svg"/);
   assert.match(html, /class="hero-canvas"/);
   assert.match(html, /class="direction-card-mark"[^>]*src="\/assets\/community-mark\.jpg"/);
   assert.match(html, /alt="Логотип сообщества «Алло, Нейросеточная\?»"/);
@@ -46,10 +46,11 @@ test("reuses the exact Alex Neon neural modules", async () => {
 });
 
 test("static deployment carries the same interactive field", async () => {
-  const [html, css, communityMark] = await Promise.all([
+  const [html, css, communityMark, brandLogo] = await Promise.all([
     readFile(new URL("../sites/hub/index.html", import.meta.url), "utf8"),
     readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
     readFile(new URL("../public/assets/community-mark.jpg", import.meta.url)),
+    readFile(new URL("../public/assets/alex-oxytocin-logo.svg", import.meta.url), "utf8"),
   ]);
 
   assert.match(html, /<canvas class="hero-canvas"/);
@@ -59,5 +60,8 @@ test("static deployment carries the same interactive field", async () => {
   assert.match(css, /mask-composite:\s*intersect/);
   assert.match(html, /class="direction-card-mark"[^>]*community-mark\.jpg/);
   assert.ok(communityMark.byteLength > 8000, "community logo asset is missing or truncated");
+  assert.match(html, /class="brand-logo"[^>]*alex-oxytocin-logo\.svg/);
+  assert.match(brandLogo, /font-weight="800"/);
+  assert.match(brandLogo, /<tspan fill="#25e3d3">ALEX<\/tspan><tspan fill="#8668ff"> OXYTOCIN<\/tspan>/);
   assert.doesNotMatch(css, /\.signal(?:-|\s*\{)/);
 });

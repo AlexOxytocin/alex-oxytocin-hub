@@ -79,6 +79,7 @@ const REQUIRED_LINKS = [
 /* Any URL in built output must start with one of these. */
 const ALLOWED_URL_PREFIXES = [
   ...REQUIRED_LINKS,
+  "https://godmodetools.com/assets/alex-oxytocin-logo.svg",
   "https://alex-neon.ks-design.workers.dev",
   "http://www.w3.org/",
   "https://www.w3.org/",
@@ -334,43 +335,16 @@ test("scroll and touch glow stay behind the same gates as the pulses", async () 
 });
 
 test("the wordmark is the ALEX OXYTOCIN logo with an accessible name", () => {
-  assert.ok(html.includes('id="logo-alex-oxytocin"'), "logo definition missing");
   assert.equal(
-    (html.match(/href="#logo-alex-oxytocin"/g) ?? []).length,
+    (html.match(/src="https:\/\/godmodetools\.com\/assets\/alex-oxytocin-logo\.svg"/g) ?? []).length,
     1,
-    "the logo is used once, in the header"
+    "the canonical logo from the main site must be used once, in the header"
   );
   assert.ok(
     /<a class="brand"[^>]*aria-label="Alex Oxytocin/.test(html),
     "the brand link needs an accessible name once its text became a drawing"
   );
-  assert.ok(
-    html.includes('d="M592 6 623 49 654 6M623 49v43"'),
-    "the corrected Y must stay centred on the old I axis with even side spacing"
-  );
-  /* A <symbol> would give <use> its own viewport anchored at (0,0) and shift
-     the drawing out of a viewBox whose origin is negative, shaving the N. */
-  assert.ok(
-    !/<symbol[^>]*id="logo-alex-oxytocin"/.test(html),
-    "the logo must be a plain group in <defs>, not a <symbol>"
-  );
-  /* The last letter's stroke has to sit inside the viewBox, cap included —
-     that is exactly what was clipping the N. */
-  const stroke = Number(html.match(/id="logo-alex-oxytocin"[^>]*stroke-width="([\d.]+)"/)[1]);
-  assert.equal(stroke, 18, "the wordmark must retain its stronger original weight");
-  /* The cap height is not pinned here — it has been retuned deliberately more
-     than once. What must hold is that the N's own box, whatever its height,
-     still ends inside the viewBox with its stroke cap on. */
-  const [nx, nw] = html.match(/d="M(\d+) \d+V6l(\d+) \d+V6"/).slice(1).map(Number);
-  const [vbLeft, , vbWidth] = html
-    .match(/<svg class="logo" viewBox="(-?[\d.]+) (-?[\d.]+) ([\d.]+) ([\d.]+)"/)
-    .slice(1)
-    .map(Number);
-  assert.ok(
-    nx + nw + stroke / 2 <= vbLeft + vbWidth,
-    `the N ends at ${nx + nw + stroke / 2}, past the viewBox edge ${vbLeft + vbWidth}`
-  );
-  assert.ok(vbLeft <= -stroke / 2, "the viewBox needs padding on the left too");
+  assert.ok(!html.includes('class="logo-sprite"'), "the obsolete outlined logo must not return");
 });
 
 test("the field generator survives a degenerate box", async () => {

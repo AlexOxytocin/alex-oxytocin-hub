@@ -65,7 +65,13 @@ export default function Home() {
     <main>
       <header className="site-header">
         <a className="brand" href="#top" aria-label="Alex Oxytocin — на главную">
-          <span>ALEX</span> <strong>OXYTOCIN</strong>
+          <img
+            className="brand-logo"
+            src="/assets/alex-oxytocin-logo.svg"
+            alt=""
+            width="178"
+            height="19"
+          />
         </a>
         <nav aria-label="Основные разделы">
           <a href="#directions">Направления</a>

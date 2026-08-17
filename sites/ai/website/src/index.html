@@ -26,41 +26,10 @@
 <body>
   <a class="skip-link" href="#top">К содержанию</a>
 
-  <!-- Wordmark: monoline geometric caps, kept in <defs> as a plain group.
-       A <symbol> would be wrong here: <use> gives a symbol its own viewport
-       anchored at (0,0), which shifts the drawing against a viewBox whose
-       origin is negative and shaves the last letter. A group is cloned into
-       the caller's coordinate system, so the padding in the viewBox holds. -->
-  <svg class="logo-sprite" aria-hidden="true" focusable="false">
-    <defs>
-      <g id="logo-alex-oxytocin" fill="none" stroke-width="18"
-         stroke-linecap="round" stroke-linejoin="round">
-        <g class="logo-alex">
-          <path d="M0 92 33 6 66 92"/>
-          <path d="M105 6v86h52"/>
-          <path d="M196 6h52M196 6v86M196 49h44M196 92h52"/>
-          <path d="M287 6 349 92M349 6 287 92"/>
-        </g>
-        <g class="logo-oxytocin">
-          <rect x="417" y="6" width="66" height="86" rx="28"/>
-          <path d="M522 6 584 92M584 6 522 92"/>
-          <path d="M592 6 623 49 654 6M623 49v43"/>
-          <path d="M662 6h58M691 6v86"/>
-          <rect x="759" y="6" width="66" height="86" rx="28"/>
-          <path d="M924 26.6c-6-12.9-18-20.6-29-20.6-18 0-31 17.2-31 43s13 43 31 43c11 0 23-7.7 29-20.6"/>
-          <path d="M965 6v86"/>
-          <path d="M1004 92V6l58 86V6"/>
-        </g>
-      </g>
-    </defs>
-  </svg>
-
   <header class="site-header">
     <div class="container header-inner">
       <a class="brand" href="#top" aria-label="Alex Oxytocin — на главную">
-        <svg class="logo" viewBox="-14 -8 1090 114" aria-hidden="true" focusable="false">
-          <use href="#logo-alex-oxytocin"/>
-        </svg>
+        <img class="brand-logo" src="https://godmodetools.com/assets/alex-oxytocin-logo.svg" alt="" width="178" height="19">
       </a>
       <nav class="site-nav" id="site-nav" aria-label="Разделы страницы">
         <ul role="list">
