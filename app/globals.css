@@ -227,8 +227,7 @@ h1 span {
 }
 
 .solutions,
-.about,
-.community-bridge {
+.about {
   padding: 100px 0;
   border-top: 1px solid var(--line);
 }
@@ -331,8 +330,7 @@ h2 {
   font-weight: 800;
 }
 
-.solution-layout,
-.community-bridge {
+.solution-layout {
   display: grid;
   grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
   gap: clamp(50px, 8vw, 120px);
@@ -347,8 +345,7 @@ h2 {
 }
 
 .solution-lead,
-.about-copy > p:not(.eyebrow),
-.community-copy p {
+.about-copy > p:not(.eyebrow) {
   color: var(--muted);
   font-size: clamp(18px, 2vw, 22px);
   line-height: 1.65;
@@ -378,8 +375,7 @@ h2 {
   color: var(--cyan);
 }
 
-.about-copy h2,
-.community-bridge h2 {
+.about-copy h2 {
   margin-bottom: 28px;
 }
 
@@ -439,15 +435,6 @@ h2 {
   color: var(--muted);
   font-size: 14px;
   line-height: 1.45;
-}
-
-.community-bridge {
-  align-items: end;
-}
-
-.community-copy .primary-button {
-  width: fit-content;
-  margin-top: 14px;
 }
 
 .about-strip {
@@ -527,8 +514,7 @@ h2 {
   }
 
   .solution-layout,
-  .about,
-  .community-bridge {
+  .about {
     grid-template-columns: 1fr;
   }
 

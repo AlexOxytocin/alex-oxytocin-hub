@@ -172,22 +172,6 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="community-bridge" aria-labelledby="community-title">
-        <div>
-          <p className="eyebrow">Алло, Нейросеточная?</p>
-          <h2 id="community-title">Технологии существуют внутри жизни, а не вместо неё.</h2>
-        </div>
-        <div className="community-copy">
-          <p>
-            Комьюнити практиков, где обсуждаем инструменты, собираем проекты,
-            разбираем ошибки и делимся тем, что реально работает.
-          </p>
-          <a className="primary-button" href="https://allo.godmodetools.com">
-            Открыть комьюнити
-          </a>
-        </div>
-      </section>
-
       <footer className="about-strip">
         <p>Алексей Грищенко · AI Solutions Architect · Buenos Aires</p>
         <div className="footer-links">
