@@ -124,7 +124,7 @@ projects:
     order: 85
     role: System author & operator
     year: "2026 · in use"
-    description: Personal AI operations environment for repeatable work — Telegram communication and document delivery, read-only Gmail and Drive, invoice generation, daily Binance synchronization and reconciliation, migration-status monitoring, expense accounting, and durable task context.
+    description: Personal AI operations environment with shared development rules, durable context, and work-process monitoring. It connects Telegram and document delivery, read-only Gmail and Drive access, invoice generation, personal finance across fiat and crypto services, legal-document and status tracking, expense accounting, training statistics, and medical data.
     platforms: [Codex, Telegram, Google Workspace]
     stack: [PowerShell, Python, Node.js, SQLite, Scheduled Automations]
     tags: [Personal AI OS, Integrations, Human Approval, Audit]
