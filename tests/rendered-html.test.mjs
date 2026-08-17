@@ -33,7 +33,8 @@ test("renders the personal hub with the portrait hero", async () => {
   assert.match(html, /Смотреть проекты и подходы/);
   assert.doesNotMatch(html, /id="solutions"|Что я делаю для команд/);
   assert.match(html, /alt="Логотип сообщества «Алло, Нейросеточная\?»"/);
-  assert.match(html, /Разрабатываю[\s\S]*hero-accent-tools[^>]*>ИИ-инструменты<[\s\S]*автоматизирую процессы\. Обучаю этому на[\s\S]*hero-accent-task[^>]*>ваших задачах</);
+  assert.match(html, /Разрабатываю[\s\S]*hero-accent-tools[^>]*>ИИ-инструменты<[\s\S]*автоматизирую процессы\./);
+  assert.doesNotMatch(html, /Обучаю этому на|hero-accent-task/);
   assert.doesNotMatch(html, /Не продаю магию|Собираю технологии/);
   assert.match(html, /class="hero-summary"/);
   assert.match(html, /тёплое и безопасное сообщество[\s\S]*взаимопомощи/);
@@ -93,4 +94,7 @@ test("static deployment carries the same portrait hero", async () => {
   assert.match(brandLogo, /font-weight="800"/);
   assert.match(brandLogo, /<tspan fill="#25e3d3">ALEX<\/tspan><tspan fill="#8668ff"> OXYTOCIN<\/tspan>/);
   assert.doesNotMatch(css, /\.signal(?:-|\s*\{)/);
+  assert.match(css, /\.directions\s*\{[^}]*border:\s*0/);
+  assert.doesNotMatch(html, /Обучаю этому на|hero-accent-task/);
+  assert.match(html, /href="\/styles\.css\?v=hero-cleanup-20260817"/);
 });

@@ -85,8 +85,7 @@ export default function Home() {
           <p className="eyebrow">Алексей Грищенко · архитектура · разработка · ИИ</p>
           <h1>
             Разрабатываю <span className="hero-accent-tools">ИИ-инструменты</span> и
-            автоматизирую процессы. Обучаю этому на{" "}
-            <span className="hero-accent-task">ваших задачах</span>.
+            автоматизирую процессы.
           </h1>
         </div>
 
