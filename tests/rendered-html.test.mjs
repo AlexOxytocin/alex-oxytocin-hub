@@ -32,7 +32,7 @@ test("renders the personal hub with the portrait hero", async () => {
   assert.match(html, /Смотреть проекты и подходы/);
   assert.doesNotMatch(html, /id="solutions"|Что я делаю для команд/);
   assert.match(html, /alt="Логотип сообщества «Алло, Нейросеточная\?»"/);
-  assert.match(html, /Разрабатываю[\s\S]*hero-accent-tools[^>]*>ИИ-инструменты<[\s\S]*hero-accent-community[^>]*>сообщество</);
+  assert.match(html, /Разрабатываю[\s\S]*hero-accent-tools[^>]*>ИИ-инструменты<[\s\S]*автоматизирую процессы\. Обучаю этому на[\s\S]*hero-accent-task[^>]*>ваших задачах</);
   assert.doesNotMatch(html, /Не продаю магию|Собираю технологии/);
   assert.match(html, /тёплое и безопасное сообщество[\s\S]*с взаимопомощью/);
   assert.match(html, /Индивидуально помогаю осваивать их на реальных задачах/);
