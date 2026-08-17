@@ -107,7 +107,7 @@ projects:
     name: SymbioFlow Engine
     order: 60
     role: Автор архитектуры
-    year: "2026 · NDA"
+    year: "2026 · в разработке · NDA"
     description: Корпоративная платформа исполнения AI-агентов на Java и Temporal — долгоживущие AgentRun, retries, replay, идемпотентные tool calls, аудит и наблюдаемость без привязки к одному агентному фреймворку.
     platforms: [Enterprise, Temporal]
     stack: [Java 25, Spring Boot, Temporal, NATS JetStream, PostgreSQL, OpenTelemetry]
