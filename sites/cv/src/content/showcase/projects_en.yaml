@@ -114,7 +114,7 @@ projects:
     order: 90
     role: Workflow author & operator
     year: "2026 · in use"
-    description: Reproducible monthly Small Business workflow covering obligation checks, declaration preparation, payable verification, separate tax-payment approval, and receipt capture.
+    description: Reproducible Georgian individual entrepreneur operations workflow covering obligation checks, declaration preparation, invoice issuance, banking, and tax payments with separate approval for critical actions and receipt capture.
     platforms: [RS.ge, Bank of Georgia, Codex]
     stack: [Browser Automation, Verified Runbooks, Human Approval, Audit Notes]
     tags: [Tax Operations, Compliance, Personal Automation]
