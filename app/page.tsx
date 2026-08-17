@@ -56,7 +56,7 @@ const directions: Direction[] = [
 const evidence = [
   { value: "20+", label: "лет в IT: от embedded и инфраструктуры до enterprise и AI" },
   { value: "7+", label: "лет в Java-разработке, техлидстве и архитектуре" },
-  { value: "10+", label: "инженеров в командах, которые я вёл" },
+  { value: "20+", label: "инженеров в командах, которые я вёл" },
   { value: "15 000+", label: "магазинов работали на системах, которые мы развивали" },
 ];
 
@@ -171,9 +171,19 @@ export default function Home() {
             Посмотреть профессиональный профиль ↗
           </a>
         </div>
+        <figure className="about-portrait">
+          <img
+            src="/assets/alexey-grishchenko-about.jpg"
+            alt="Алексей Грищенко"
+            width="1122"
+            height="1402"
+            loading="lazy"
+            decoding="async"
+          />
+        </figure>
         <div className="evidence-grid" aria-label="Опыт в цифрах">
           {evidence.map((item) => (
-            <div className="evidence-item" key={item.value}>
+            <div className="evidence-item" key={item.label}>
               <strong>{item.value}</strong>
               <span>{item.label}</span>
             </div>

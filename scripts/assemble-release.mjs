@@ -27,6 +27,10 @@ await cp(
   resolve(root, "public", "assets", "alex-oxytocin-logo.svg"),
   resolve(release, "hub", "assets", "alex-oxytocin-logo.svg")
 );
+await cp(
+  resolve(root, "public", "assets", "alexey-grishchenko-about.jpg"),
+  resolve(release, "hub", "assets", "alexey-grishchenko-about.jpg")
+);
 
 const hubCss = await readFile(resolve(release, "hub", "styles.css"));
 const hubNeural = await readFile(resolve(release, "hub", "assets", "neural.js"));

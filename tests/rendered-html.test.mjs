@@ -24,6 +24,9 @@ test("renders the personal hub with the neural hero", async () => {
   assert.match(html, /class="brand-logo"[^>]*src="\/assets\/alex-oxytocin-logo\.svg"/);
   assert.match(html, /class="hero-canvas"/);
   assert.match(html, /class="direction-card-mark"[^>]*src="\/assets\/community-mark\.jpg"/);
+  assert.match(html, /class="about-portrait"/);
+  assert.match(html, /src="\/assets\/alexey-grishchenko-about\.jpg"/);
+  assert.match(html, /<strong>20\+<\/strong>[\s\S]*инженеров в командах/);
   assert.match(html, /alt="Логотип сообщества «Алло, Нейросеточная\?»"/);
   assert.match(html, /Собираю технологии/);
   assert.doesNotMatch(html, /signal-core|signal-ring|codex-preview/);
@@ -46,10 +49,11 @@ test("reuses the exact Alex Neon neural modules", async () => {
 });
 
 test("static deployment carries the same interactive field", async () => {
-  const [html, css, communityMark, brandLogo] = await Promise.all([
+  const [html, css, communityMark, portrait, brandLogo] = await Promise.all([
     readFile(new URL("../sites/hub/index.html", import.meta.url), "utf8"),
     readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
     readFile(new URL("../public/assets/community-mark.jpg", import.meta.url)),
+    readFile(new URL("../public/assets/alexey-grishchenko-about.jpg", import.meta.url)),
     readFile(new URL("../public/assets/alex-oxytocin-logo.svg", import.meta.url), "utf8"),
   ]);
 
@@ -60,6 +64,10 @@ test("static deployment carries the same interactive field", async () => {
   assert.match(css, /mask-composite:\s*intersect/);
   assert.match(html, /class="direction-card-mark"[^>]*community-mark\.jpg/);
   assert.ok(communityMark.byteLength > 8000, "community logo asset is missing or truncated");
+  assert.match(html, /class="about-portrait"/);
+  assert.match(html, /alexey-grishchenko-about\.jpg/);
+  assert.ok(portrait.byteLength > 100000, "about portrait asset is missing or truncated");
+  assert.match(html, /<strong>20\+<\/strong><span>инженеров в командах/);
   assert.match(html, /class="brand-logo"[^>]*alex-oxytocin-logo\.svg/);
   assert.match(brandLogo, /font-weight="800"/);
   assert.match(brandLogo, /<tspan fill="#25e3d3">ALEX<\/tspan><tspan fill="#8668ff"> OXYTOCIN<\/tspan>/);
