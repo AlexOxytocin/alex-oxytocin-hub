@@ -19,7 +19,7 @@ groups:
   - id: personal-operations
     title: Автоматизация личных операций
     description: Воспроизводимые контуры для финансов, отчётности и регулярных обязательств с ручным подтверждением критичных действий.
-    project_slugs: [jarvis, georgia-ip-automation, binance-warehouse]
+    project_slugs: [jarvis, argentina-migration-bot, georgia-ip-automation, binance-warehouse]
   - id: community-learning
     title: Сообщество и обучение
     description: Среда, где инструменты превращаются в практику, проекты и передаваемые навыки.
@@ -158,8 +158,20 @@ projects:
     platforms: [Codex, Telegram, Google Workspace]
     stack: [PowerShell, Python, Node.js, SQLite, Scheduled Automations]
     tags: [Personal AI OS, Integrations, Human Approval, Audit]
-    metrics: [{ label: Активные расписания, value: "Binance + Migraciones" }, { label: Критические действия, value: "с подтверждением" }]
+    metrics: [{ label: Рабочие контуры, value: "финансы + документы" }, { label: Критические действия, value: "с подтверждением" }]
     media: [{ type: image, src: /media/showcase/jarvis.jpg, alt: "Jarvis связывает рабочие интеграции, расписания, проверки и подтверждения", featured: true }]
+
+  - slug: argentina-migration-bot
+    name: Бот сопровождения миграционного дела
+    order: 87
+    role: Автор автоматизации и оператор
+    year: "2026 · используется"
+    description: Интеграция с официальными государственными сервисами Аргентины для сопровождения дела в Migraciones — ежедневно проверяет expediente, сравнивает этапы и даты, отслеживает доступность продления, скачивает обновлённые precaria и disposición и уведомляет об изменениях. Подача и продление выполняются только после явного подтверждения.
+    platforms: [Argentina Migraciones, Consulta Unificada, Codex]
+    stack: [PowerShell, Official AJAX, Scheduled Monitoring, Sanitized Snapshots, PDF Downloads]
+    tags: [GovTech Integration, Legal Operations, Document Monitoring, Human Approval]
+    metrics: [{ label: Проверка статуса, value: "ежедневно" }, { label: Подача документов, value: "только с подтверждением" }]
+    media: [{ type: image, src: /media/showcase/argentina-migration-bot.jpg, alt: "Бот проверяет этапы миграционного дела, документы и доступность продления", featured: true }]
 
   - slug: binance-warehouse
     name: Binance History Warehouse
