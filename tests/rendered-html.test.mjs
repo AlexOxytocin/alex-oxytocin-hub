@@ -32,8 +32,10 @@ test("renders the personal hub with the portrait hero", async () => {
   assert.match(html, /Смотреть проекты и подходы/);
   assert.doesNotMatch(html, /id="solutions"|Что я делаю для команд/);
   assert.match(html, /alt="Логотип сообщества «Алло, Нейросеточная\?»"/);
-  assert.match(html, /Я Алексей\. Проектирую системы, пишу код и работаю с ИИ\./);
+  assert.match(html, /Разрабатываю инструменты на основе ИИ, автоматизирую процессы и[\s\S]*развиваю сообщество\./);
   assert.doesNotMatch(html, /Не продаю магию|Собираю технологии/);
+  assert.match(html, /сообщество профессионалов с тёплой и безопасной атмосферой/);
+  assert.match(html, /Индивидуально обучаю работе с ИИ на реальных задачах/);
   assert.doesNotMatch(html, /signal-core|signal-ring|codex-preview/);
 });
 
@@ -65,6 +67,8 @@ test("static deployment carries the same portrait hero", async () => {
   assert.doesNotMatch(html, /<canvas class="hero-canvas"/);
   assert.doesNotMatch(html, /<script type="module" src="\/assets\/neural\.js"><\/script>/);
   assert.doesNotMatch(css, /\.hero-canvas\s*\{/);
+  assert.match(css, /\.hero-portrait[\s\S]*mask-image:\s*radial-gradient/);
+  assert.doesNotMatch(css, /\.hero-portrait\s*\{[^}]*border:\s*1px solid/);
   assert.match(html, /class="direction-card-mark"[^>]*community-mark\.jpg/);
   assert.ok(communityMark.byteLength > 8000, "community logo asset is missing or truncated");
   assert.match(html, /class="hero-portrait"/);
