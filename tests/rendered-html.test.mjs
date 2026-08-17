@@ -28,6 +28,9 @@ test("renders the personal hub with the neural hero", async () => {
   assert.match(html, /src="\/assets\/alexey-grishchenko-about\.jpg\?v=natural-warm"/);
   assert.match(html, /<strong>10\+<\/strong>[\s\S]*лет в Java-разработке/);
   assert.match(html, /<strong>20\+<\/strong>[\s\S]*инженеров в командах/);
+  assert.match(html, /href="https:\/\/cv\.godmodetools\.com\/showcase"/);
+  assert.match(html, /Смотреть проекты и подходы/);
+  assert.doesNotMatch(html, /id="solutions"|Что я делаю для команд/);
   assert.match(html, /alt="Логотип сообщества «Алло, Нейросеточная\?»"/);
   assert.match(html, /Собираю технологии/);
   assert.doesNotMatch(html, /signal-core|signal-ring|codex-preview/);
@@ -70,6 +73,8 @@ test("static deployment carries the same interactive field", async () => {
   assert.ok(portrait.byteLength > 100000, "about portrait asset is missing or truncated");
   assert.match(html, /<strong>10\+<\/strong><span>лет в Java-разработке/);
   assert.match(html, /<strong>20\+<\/strong><span>инженеров в командах/);
+  assert.match(html, /href="https:\/\/cv\.godmodetools\.com\/showcase"/);
+  assert.doesNotMatch(html, /id="solutions"|Что я делаю для команд/);
   assert.match(html, /class="brand-logo"[^>]*alex-oxytocin-logo\.svg/);
   assert.match(brandLogo, /font-weight="800"/);
   assert.match(brandLogo, /<tspan fill="#25e3d3">ALEX<\/tspan><tspan fill="#8668ff"> OXYTOCIN<\/tspan>/);

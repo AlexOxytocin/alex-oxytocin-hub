@@ -1,1 +1,185 @@
-projects: []
+intro: >
+  Здесь собраны клиентские системы, собственные продукты и инженерные инструменты.
+  Завершённые кейсы отделены от проектов в разработке, а цифры приведены только там,
+  где их можно подтвердить.
+
+groups:
+  - id: client-systems
+    title: Корпоративные AI-системы
+    description: Решения для реальных процессов, данных и ограничений бизнеса. Часть деталей закрыта NDA.
+    project_slugs: [construction-budget, media-buyer, rag-platform]
+  - id: products
+    title: Собственные продукты
+    description: Инструменты, которые выросли из конкретных бытовых и профессиональных задач.
+    project_slugs: [flatscanner, community-platform]
+  - id: engineering-platforms
+    title: Инженерные платформы и процесс
+    description: Надёжное исполнение агентов, архитектурные решения и управляемая AI-assisted разработка.
+    project_slugs: [symbioflow-engine, architectura, development-automation]
+  - id: personal-operations
+    title: Автоматизация личных операций
+    description: Воспроизводимые контуры для финансов, отчётности и регулярных обязательств с ручным подтверждением критичных действий.
+    project_slugs: [georgia-ip-automation, binance-warehouse]
+  - id: community-learning
+    title: Сообщество и обучение
+    description: Среда, где инструменты превращаются в практику, проекты и передаваемые навыки.
+    project_slugs: [allo-community, ai-training]
+
+approaches:
+  - title: Сначала процесс, потом модель
+    description: Нахожу ручную работу, источник данных, владельца решения и цену ошибки; только после этого выбираю агент, RAG или обычную автоматизацию.
+  - title: Надёжность — часть продукта
+    description: Идемпотентность, retries, аудит, наблюдаемость и управляемое восстановление проектируются вместе с happy path, а не после первой аварии.
+  - title: Человек остаётся в контуре
+    description: Платёж, публикация, изменение внешней системы и неоднозначное решение требуют явного подтверждения там, где ошибка дороже лишнего клика.
+  - title: Качество измеряется
+    description: Для LLM-процессов задаю проверяемые контракты, evals и критерии приёмки; эффект связываю со временем, стоимостью или качеством результата.
+  - title: Знание живёт в репозитории
+    description: Спецификации, ADR, решения и результаты проверки сохраняются как версия системы, чтобы работу можно было продолжить без скрытого контекста сессии.
+
+projects:
+  - slug: construction-budget
+    name: AI-управление строительными бюджетами
+    order: 10
+    role: AI Solutions Architect
+    year: "2024–2025 · NDA"
+    description: Отказоустойчивая агентная система внутри контура крупного израильского девелопера — консолидация бюджетов, прогноз отклонений и управленческая отчётность по портфелю проектов.
+    platforms: [Enterprise, Private cloud]
+    stack: [LangGraph, FastMCP, Python, PostgreSQL]
+    tags: [Agentic AI, Human-in-the-loop, Budgeting, NDA]
+    metrics: [{ label: Ручная консолидация, value: "из рабочей недели в часы" }]
+    media: [{ type: image, src: /media/showcase/construction-budget.jpg, alt: "Архитектурная модель строительного бюджета и поток управленческих данных", featured: true }]
+    links: [{ label: Контекст в LinkedIn, url: "https://www.linkedin.com/in/aleksei-grishchenko/", type: article }]
+    featured: true
+
+  - slug: media-buyer
+    name: Автоматизированный media buyer
+    order: 20
+    role: AI Solutions Architect
+    year: "2024–2025 · NDA"
+    description: Мультиагентная система для планирования кампаний, анализа метрик, управления аккаунтами и проверки креативов при пяти- и шестизначном дневном бюджете.
+    platforms: [Meta Ads, TikTok Ads, Google Ads]
+    stack: [LangGraph, Anthropic API, FastMCP, Langfuse, ClickHouse, PostgreSQL]
+    tags: [Multi-agent, AdTech, Observability, NDA]
+    metrics: [{ label: Скорость гипотез, value: "×4–5" }, { label: ROAS, value: "+15–20%" }]
+    media: [{ type: image, src: /media/showcase/media-buyer.jpg, alt: "Мультиагентная система управления рекламными кампаниями", featured: true }]
+    links: [{ label: Контекст в LinkedIn, url: "https://www.linkedin.com/in/aleksei-grishchenko/", type: article }]
+
+  - slug: rag-platform
+    name: RAG-платформа для документации и онбординга
+    order: 30
+    role: AI Solutions Architect
+    year: "2024 · NDA"
+    description: Корпоративный поиск и ассистент поверх PDF, Confluence и wiki — гибридный retrieval, reranker и ответы по процессам с контролем источников.
+    platforms: [Web, Confluence]
+    stack: [Python, LangChain, LangSmith, Vector DB, BM25, Docker]
+    tags: [RAG, Hybrid Search, Reranking, Onboarding]
+    metrics: [{ label: Время онбординга, value: "−30–40%" }, { label: Без эскалации, value: "60–70% вопросов" }]
+    media: [{ type: image, src: /media/showcase/rag-platform.jpg, alt: "Поиск ответа в корпоративном архиве документов", featured: true }]
+    links: [{ label: Контекст в LinkedIn, url: "https://www.linkedin.com/in/aleksei-grishchenko/", type: article }]
+
+  - slug: flatscanner
+    name: FlatScanner
+    order: 40
+    role: Автор продукта и архитектор
+    year: "2026 · развивается"
+    description: Telegram- и web-сервис для анализа объявлений об аренде — извлекает данные, изучает фотографии, замечает планировку, удобства и практические риски, которых нет в обычных фильтрах.
+    platforms: [Telegram, Web, Airbnb]
+    stack: [FastAPI, OpenRouter, Apify, Redis, PostgreSQL, Docker]
+    tags: [Computer Vision, Rental Search, AI Analysis, Product]
+    media: [{ type: image, src: /media/showcase/flatscanner.jpg, alt: "Компьютерный анализ квартиры, планировки и визуальных рисков", featured: true }]
+    links: [{ label: Репозиторий, url: "https://github.com/alexgoodman53/flatscanner", type: repo }]
+    featured: true
+
+  - slug: community-platform
+    name: Платформа сообщества
+    order: 50
+    role: Product owner / архитектор
+    year: "2026 · в разработке"
+    description: Единое пространство для участников «Алло, Нейросеточная?» — проекты, задания, прогресс, репутация и инструменты сообщества поверх уже работающего бота.
+    platforms: [Web App, Telegram]
+    stack: [Product Architecture, Community Bot, Web]
+    tags: [Community Platform, Progress, Reputation, In development]
+    media: [{ type: image, src: /media/showcase/community-platform.jpg, alt: "Рабочее пространство платформы сообщества", featured: true }]
+    links: [{ label: О сообществе, url: "https://allo.godmodetools.com", type: product }]
+
+  - slug: symbioflow-engine
+    name: SymbioFlow Engine
+    order: 60
+    role: Автор архитектуры
+    year: "2026 · foundation"
+    description: Корпоративная платформа исполнения AI-агентов на Java и Temporal — долгоживущие AgentRun, retries, replay, идемпотентные tool calls, аудит и наблюдаемость без привязки к одному агентному фреймворку.
+    platforms: [Enterprise, Temporal]
+    stack: [Java 25, Spring Boot, Temporal, NATS JetStream, PostgreSQL, OpenTelemetry]
+    tags: [Durable Workflows, Agent Runtime, Control Plane, In development]
+    media: [{ type: image, src: /media/showcase/symbioflow-engine.jpg, alt: "Долгоживущий агентный workflow с восстановлением и аудитом", featured: true }]
+
+  - slug: architectura
+    name: Architectura
+    order: 70
+    role: Автор и архитектор
+    year: "2026 · развивается"
+    description: Repository-backed движок формирования архитектуры — независимые роли готовят варианты, решения фиксируются явно, разногласия закрываются кворумом, а итоговый план проходит отдельную проверку.
+    platforms: [Codex, CLI, Git]
+    stack: [Python, JSON Schema, Repository Memory, MemPalace]
+    tags: [Architecture Council, Quorum, Decision Records, Validation]
+    media: [{ type: image, src: /media/showcase/architectura.jpg, alt: "Три независимых архитектурных предложения сходятся в кворумное решение", featured: true }]
+    links: [{ label: Репозиторий, url: "https://github.com/alexgoodman53/Architectura", type: repo }]
+
+  - slug: development-automation
+    name: Контур управляемой AI-разработки
+    order: 80
+    role: Архитектор процесса
+    year: "2026 · используется"
+    description: Spec-driven цикл «задача → спецификация → isolated worker → PR → CI → AI review → merge», где память хранится в репозитории, а код не считается принятым до прохождения всего контура.
+    platforms: [GitHub, CI/CD, Codex, Claude Code]
+    stack: [Git Worktrees, GitHub Actions, Specs, ADR, Automated Review]
+    tags: [AI-assisted Development, Quality Gates, Repository Memory]
+    media: [{ type: image, src: /media/showcase/development-automation.jpg, alt: "Производственная линия управляемой разработки с проверками качества", featured: true }]
+    links: [{ label: Реализация в FlatScanner, url: "https://github.com/alexgoodman53/flatscanner", type: repo }]
+
+  - slug: georgia-ip-automation
+    name: Автоматизация грузинского ИП
+    order: 90
+    role: Автор процесса и оператор
+    year: "2026 · используется"
+    description: Воспроизводимый ежемесячный контур для статуса малого бизнеса — проверка обязательств, подготовка нулевой или ненулевой декларации, сверка суммы, отдельное подтверждение оплаты налога и фиксация квитанции.
+    platforms: [RS.ge, Bank of Georgia, Codex]
+    stack: [Browser Automation, Verified Runbooks, Human Approval, Audit Notes]
+    tags: [Tax Operations, Compliance, Personal Automation]
+    media: [{ type: image, src: /media/showcase/georgia-ip-automation.jpg, alt: "Контролируемый процесс декларации и оплаты налога грузинского ИП", featured: true }]
+
+  - slug: binance-warehouse
+    name: Binance History Warehouse
+    order: 100
+    role: Автор интеграции
+    year: "2026 · используется"
+    description: Read-only интеграция объединяет выгрузки и историю нескольких Binance API в локальной SQLite-базе, нормализует потоки, маркирует назначения, проверяет согласованность и строит воспроизводимые отчёты.
+    platforms: [Binance, Local-first]
+    stack: [Python, SQLite, Ed25519, REST API, Scheduled Sync]
+    tags: [Financial Data, Reconciliation, Read-only, Audit]
+    media: [{ type: image, src: /media/showcase/binance-warehouse.jpg, alt: "Локальное хранилище истории Binance с нормализацией и сверкой", featured: true }]
+
+  - slug: allo-community
+    name: «Алло, Нейросеточная?»
+    order: 110
+    role: Основатель и организатор
+    year: "2026 · работает"
+    description: Некоммерческое сообщество AI-практиков — разбираем инструменты, собираем проекты, обсуждаем ошибки и делимся тем, что получилось проверить руками.
+    platforms: [Telegram, Web]
+    stack: [Community Bot, Moderation, Project Practice]
+    tags: [Community, AI Practice, Knowledge Sharing]
+    media: [{ type: image, src: /media/showcase/allo-community.jpg, alt: "Знак сообщества в сети участников и совместных проектов", featured: true }]
+    links: [{ label: Страница сообщества, url: "https://allo.godmodetools.com", type: product }]
+
+  - slug: ai-training
+    name: «ИИ по делу»
+    order: 120
+    role: Автор программы и наставник
+    year: "2026 · запуск"
+    description: Индивидуальное обучение практической работе с ИИ на реальной задаче ученика — от разбора процесса до собственного управляемого помощника без обязательного программирования.
+    platforms: [Online, One-to-one]
+    stack: [AI Assistants, Automation, Personal Workflows]
+    tags: [Education, Applied AI, Mentoring]
+    media: [{ type: image, src: /media/showcase/ai-training.jpg, alt: "Практическое обучение превращает сложную задачу в управляемый AI-процесс", featured: true }]
+    links: [{ label: Страница обучения, url: "https://ai.godmodetools.com", type: product }]

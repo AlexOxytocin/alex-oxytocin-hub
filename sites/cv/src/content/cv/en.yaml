@@ -22,7 +22,7 @@ contacts:
 
 achievements:
   - 20+ years in IT across embedded development, infrastructure, enterprise backend, and applied AI
-  - 7+ years in Java development, technical leadership, and architecture; led teams of 10+ engineers
+  - 10+ years in Java development, technical leadership, and architecture; led teams of 20+ engineers
   - Evolved a back-office platform serving 15,000+ stores and helped decompose a ~12,000-class legacy monolith
   - Reduced an enterprise build pipeline from 1.5 hours to 30 minutes
   - 2+ years designing and deploying LLM agents, including code review and acceptance workflows integrated with CI/CD
@@ -59,7 +59,7 @@ experience:
       - Helped decompose a ~12,000-class legacy monolith into a modular monolith and later microservices
       - Reduced build time from 1.5 hours to 30 minutes and modernized the stack from Java 7 to Java 17 / Spring Boot
       - Designed a Spring Cloud store-update delivery system and developed event-driven flows with Kafka, SAGA, and orchestration
-      - Led engineering teams of more than 10 people
+      - Led engineering teams of more than 20 people
     stack: [Java 17, Spring Boot, Spring Cloud, Kafka, SAGA, REST, Maven, Gradle, Swagger, Grafana, PostgreSQL]
 
   - company: Wellink Company

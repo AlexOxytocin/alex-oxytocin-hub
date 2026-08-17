@@ -13,26 +13,26 @@
    ───────────────────────────────────────────────────────────────────────────── */
 :root {
   /* Фон страницы */
-  --bg: #070a10;
+  --bg: #05060a;
 
   /* Фоновые глоу-градиенты (radial на body) */
-  --bg-glow-1: rgba(59 130 246 / 0.22);
-  --bg-glow-2: rgba(96 165 250 / 0.12);
+  --bg-glow-1: rgba(37 227 211 / 0.12);
+  --bg-glow-2: rgba(134 104 255 / 0.14);
 
   /* Текст */
-  --text: rgba(233, 238, 247, 0.96);
-  --text-strong: rgba(233, 238, 247, 0.92);
-  --muted: rgba(166, 177, 194, 0.90);
+  --text: #f3f5fb;
+  --text-strong: #f3f5fb;
+  --muted: #a9b0c2;
 
   /* Бордеры */
   --border: rgba(255, 255, 255, 0.10);
   --border-2: rgba(255, 255, 255, 0.16);
 
   /* Акцент */
-  --accent: #3b82f6;
-  --accent-2: #60a5fa;
-  --accent-rgb: 59 130 246;
-  --accent-2-rgb: 96 165 250;
+  --accent: #25e3d3;
+  --accent-2: #8668ff;
+  --accent-rgb: 37 227 211;
+  --accent-2-rgb: 134 104 255;
 
   /* Градиент бренда (CV Hub в хедере) */
   --brand-grad: linear-gradient(90deg, var(--accent), var(--accent-2));
@@ -53,7 +53,7 @@
   --r-pill: 999px;
 
   /* Хедер */
-  --header-bg: rgba(7, 10, 16, 0.70);
+  --header-bg: rgba(5, 6, 10, 0.78);
 
   /* Лейаут */
   --container: 980px;
@@ -837,7 +837,7 @@ a:hover { text-decoration: underline; }
   border-radius: 14px;
   overflow: hidden;
   border: 1px solid rgba(255,255,255,0.10);
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 16 / 9;
   max-height: 360px;
 }
 

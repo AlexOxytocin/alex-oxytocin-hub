@@ -1,1 +1,153 @@
-projects: []
+intro: >
+  Client systems, original products, and engineering tools. Completed cases are
+  separated from work in progress, and metrics appear only where they can be substantiated.
+
+groups:
+  - { id: client-systems, title: Enterprise AI systems, description: "Solutions built around real processes, data, and business constraints. Selected details are protected by NDA.", project_slugs: [construction-budget, media-buyer, rag-platform] }
+  - { id: products, title: Original products, description: "Tools that grew out of specific everyday and professional problems.", project_slugs: [flatscanner, community-platform] }
+  - { id: engineering-platforms, title: Engineering platforms & process, description: "Durable agent execution, architecture decisions, and controlled AI-assisted delivery.", project_slugs: [symbioflow-engine, architectura, development-automation] }
+  - { id: personal-operations, title: Personal operations automation, description: "Reproducible workflows for finance, reporting, and recurring obligations with human approval for critical actions.", project_slugs: [georgia-ip-automation, binance-warehouse] }
+  - { id: community-learning, title: Community & learning, description: "An environment where tools become practice, projects, and transferable skills.", project_slugs: [allo-community, ai-training] }
+
+approaches:
+  - { title: Process before model, description: "Identify manual work, data sources, the decision owner, and the cost of error before choosing an agent, RAG, or conventional automation." }
+  - { title: Reliability is product work, description: "Idempotency, retries, audit, observability, and recovery are designed with the happy path, not after the first incident." }
+  - { title: Keep people in the loop, description: "Payments, publication, external mutations, and ambiguous decisions require explicit approval wherever an error costs more than an extra click." }
+  - { title: Measure quality, description: "LLM workflows get testable contracts, evals, and acceptance criteria; impact is tied to time, cost, or output quality." }
+  - { title: Knowledge lives in the repository, description: "Specs, ADRs, decisions, and validation results are versioned so work can continue without hidden session context." }
+
+projects:
+  - slug: construction-budget
+    name: AI-driven construction budget management
+    order: 10
+    role: AI Solutions Architect
+    year: "2024–2025 · NDA"
+    description: Fault-tolerant agentic system inside a major Israeli developer's perimeter for portfolio budget consolidation, deviation forecasting, and executive reporting.
+    platforms: [Enterprise, Private cloud]
+    stack: [LangGraph, FastMCP, Python, PostgreSQL]
+    tags: [Agentic AI, Human-in-the-loop, Budgeting, NDA]
+    metrics: [{ label: Manual consolidation, value: "from a workweek to hours" }]
+    media: [{ type: image, src: /media/showcase/construction-budget.jpg, alt: "Construction budget architecture and management data flows", featured: true }]
+    links: [{ label: LinkedIn context, url: "https://www.linkedin.com/in/aleksei-grishchenko/", type: article }]
+    featured: true
+  - slug: media-buyer
+    name: Automated media buyer
+    order: 20
+    role: AI Solutions Architect
+    year: "2024–2025 · NDA"
+    description: Multi-agent system for campaign planning, metric analysis, account management, and creative review across five- and six-figure daily budgets.
+    platforms: [Meta Ads, TikTok Ads, Google Ads]
+    stack: [LangGraph, Anthropic API, FastMCP, Langfuse, ClickHouse, PostgreSQL]
+    tags: [Multi-agent, AdTech, Observability, NDA]
+    metrics: [{ label: Hypothesis velocity, value: "4–5×" }, { label: ROAS, value: "+15–20%" }]
+    media: [{ type: image, src: /media/showcase/media-buyer.jpg, alt: "Multi-agent advertising operations system", featured: true }]
+    links: [{ label: LinkedIn context, url: "https://www.linkedin.com/in/aleksei-grishchenko/", type: article }]
+  - slug: rag-platform
+    name: RAG platform for documentation & onboarding
+    order: 30
+    role: AI Solutions Architect
+    year: "2024 · NDA"
+    description: Enterprise search and assistant over PDF, Confluence, and wikis with hybrid retrieval, reranking, and source-controlled process answers.
+    platforms: [Web, Confluence]
+    stack: [Python, LangChain, LangSmith, Vector DB, BM25, Docker]
+    tags: [RAG, Hybrid Search, Reranking, Onboarding]
+    metrics: [{ label: Onboarding time, value: "−30–40%" }, { label: Without escalation, value: "60–70% of questions" }]
+    media: [{ type: image, src: /media/showcase/rag-platform.jpg, alt: "Retrieving a trusted answer from an enterprise document archive", featured: true }]
+    links: [{ label: LinkedIn context, url: "https://www.linkedin.com/in/aleksei-grishchenko/", type: article }]
+  - slug: flatscanner
+    name: FlatScanner
+    order: 40
+    role: Product author & architect
+    year: "2026 · evolving"
+    description: Telegram and web service that analyses rental listings and photos for layouts, amenities, and practical risks that ordinary filters miss.
+    platforms: [Telegram, Web, Airbnb]
+    stack: [FastAPI, OpenRouter, Apify, Redis, PostgreSQL, Docker]
+    tags: [Computer Vision, Rental Search, AI Analysis, Product]
+    media: [{ type: image, src: /media/showcase/flatscanner.jpg, alt: "Computer vision analysis of a rental property and visual risks", featured: true }]
+    links: [{ label: Repository, url: "https://github.com/alexgoodman53/flatscanner", type: repo }]
+    featured: true
+  - slug: community-platform
+    name: Community platform
+    order: 50
+    role: Product owner / architect
+    year: "2026 · in development"
+    description: A shared workspace for the “Hello, Neural Network?” community — projects, assignments, progress, reputation, and tools around the existing bot.
+    platforms: [Web App, Telegram]
+    stack: [Product Architecture, Community Bot, Web]
+    tags: [Community Platform, Progress, Reputation, In development]
+    media: [{ type: image, src: /media/showcase/community-platform.jpg, alt: "Community platform workspace", featured: true }]
+    links: [{ label: About the community, url: "https://allo.godmodetools.com", type: product }]
+  - slug: symbioflow-engine
+    name: SymbioFlow Engine
+    order: 60
+    role: Architecture author
+    year: "2026 · foundation"
+    description: Corporate AI-agent execution platform on Java and Temporal with durable AgentRuns, retries, replay, idempotent tool calls, audit, and observability independent of one agent framework.
+    platforms: [Enterprise, Temporal]
+    stack: [Java 25, Spring Boot, Temporal, NATS JetStream, PostgreSQL, OpenTelemetry]
+    tags: [Durable Workflows, Agent Runtime, Control Plane, In development]
+    media: [{ type: image, src: /media/showcase/symbioflow-engine.jpg, alt: "Durable agent workflow with recovery and audit history", featured: true }]
+  - slug: architectura
+    name: Architectura
+    order: 70
+    role: Author & architect
+    year: "2026 · evolving"
+    description: Repository-backed architecture engine where isolated roles draft options, decisions are explicit, disagreements close by quorum, and the final plan receives independent validation.
+    platforms: [Codex, CLI, Git]
+    stack: [Python, JSON Schema, Repository Memory, MemPalace]
+    tags: [Architecture Council, Quorum, Decision Records, Validation]
+    media: [{ type: image, src: /media/showcase/architectura.jpg, alt: "Independent architecture proposals converging through quorum", featured: true }]
+    links: [{ label: Repository, url: "https://github.com/alexgoodman53/Architectura", type: repo }]
+  - slug: development-automation
+    name: Controlled AI development loop
+    order: 80
+    role: Process architect
+    year: "2026 · in use"
+    description: Spec-driven delivery loop from task and isolated worker to PR, CI, AI review, and merge, with repository-backed memory and full acceptance gates.
+    platforms: [GitHub, CI/CD, Codex, Claude Code]
+    stack: [Git Worktrees, GitHub Actions, Specs, ADR, Automated Review]
+    tags: [AI-assisted Development, Quality Gates, Repository Memory]
+    media: [{ type: image, src: /media/showcase/development-automation.jpg, alt: "Controlled software delivery line with quality gates", featured: true }]
+    links: [{ label: FlatScanner implementation, url: "https://github.com/alexgoodman53/flatscanner", type: repo }]
+  - slug: georgia-ip-automation
+    name: Georgian IE operations automation
+    order: 90
+    role: Workflow author & operator
+    year: "2026 · in use"
+    description: Reproducible monthly Small Business workflow covering obligation checks, declaration preparation, payable verification, separate tax-payment approval, and receipt capture.
+    platforms: [RS.ge, Bank of Georgia, Codex]
+    stack: [Browser Automation, Verified Runbooks, Human Approval, Audit Notes]
+    tags: [Tax Operations, Compliance, Personal Automation]
+    media: [{ type: image, src: /media/showcase/georgia-ip-automation.jpg, alt: "Controlled declaration and tax-payment workflow", featured: true }]
+  - slug: binance-warehouse
+    name: Binance History Warehouse
+    order: 100
+    role: Integration author
+    year: "2026 · in use"
+    description: Read-only integration combining exports and multiple Binance API history streams in local SQLite, with normalization, destination labels, reconciliation, and reproducible reports.
+    platforms: [Binance, Local-first]
+    stack: [Python, SQLite, Ed25519, REST API, Scheduled Sync]
+    tags: [Financial Data, Reconciliation, Read-only, Audit]
+    media: [{ type: image, src: /media/showcase/binance-warehouse.jpg, alt: "Local Binance history warehouse with reconciliation", featured: true }]
+  - slug: allo-community
+    name: “Hello, Neural Network?”
+    order: 110
+    role: Founder & organizer
+    year: "2026 · active"
+    description: Non-commercial community for AI practitioners to examine tools, build projects, discuss failures, and share what has been tested hands-on.
+    platforms: [Telegram, Web]
+    stack: [Community Bot, Moderation, Project Practice]
+    tags: [Community, AI Practice, Knowledge Sharing]
+    media: [{ type: image, src: /media/showcase/allo-community.jpg, alt: "Community mark connected to members and shared projects", featured: true }]
+    links: [{ label: Community page, url: "https://allo.godmodetools.com", type: product }]
+  - slug: ai-training
+    name: Practical AI training
+    order: 120
+    role: Program author & mentor
+    year: "2026 · launch"
+    description: One-to-one practical AI training around the learner's real task, from process analysis to a controlled personal assistant without mandatory coding.
+    platforms: [Online, One-to-one]
+    stack: [AI Assistants, Automation, Personal Workflows]
+    tags: [Education, Applied AI, Mentoring]
+    media: [{ type: image, src: /media/showcase/ai-training.jpg, alt: "Practical training turns a complex task into a controlled AI workflow", featured: true }]
+    links: [{ label: Training page, url: "https://ai.godmodetools.com", type: product }]

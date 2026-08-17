@@ -24,9 +24,9 @@ const directions: Direction[] = [
     eyebrow: "Решения",
     title: "ИИ и автоматизация",
     description:
-      "Проектирование рабочих процессов, интеграций и инструментов, которыми можно управлять и которым можно доверять.",
-    href: "#solutions",
-    action: "Посмотреть направление",
+      "Клиентские кейсы, собственные продукты и инженерные подходы — от RAG и агентов до Temporal и управляемой разработки.",
+    href: "https://cv.godmodetools.com/showcase",
+    action: "Смотреть проекты и подходы",
     accent: "violet",
   },
   {
@@ -135,25 +135,6 @@ export default function Home() {
               <span className="card-action">{direction.action} ↗</span>
             </a>
           ))}
-        </div>
-      </section>
-
-      <section className="solutions" id="solutions" aria-labelledby="solutions-title">
-        <div className="section-heading">
-          <p className="eyebrow">От процесса до рабочего инструмента</p>
-          <h2 id="solutions-title">Что я делаю для команд</h2>
-        </div>
-        <div className="solution-layout">
-          <p className="solution-lead">
-            Нахожу место, где ИИ действительно снимает ручную работу, проектирую
-            решение и довожу его до управляемого продакшена — с интеграциями,
-            проверками качества и человеком в контуре.
-          </p>
-          <ul className="solution-list">
-            <li>Аудит процессов и карта возможностей автоматизации</li>
-            <li>ИИ-агенты, RAG, MCP-интеграции и внутренние инструменты</li>
-            <li>Прототип, оценка качества, внедрение и передача команде</li>
-          </ul>
         </div>
       </section>
 

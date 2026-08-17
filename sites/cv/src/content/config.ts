@@ -122,9 +122,24 @@ const showcaseProjectSchema = z.object({
   archive: z.boolean().optional().default(false),
 }).passthrough();
 
+const showcaseGroupSchema = z.object({
+  id: z.string(),
+  title: z.string(),
+  description: z.string().optional().default(''),
+  project_slugs: z.array(z.string()).optional().default([]),
+});
+
+const showcaseApproachSchema = z.object({
+  title: z.string(),
+  description: z.string(),
+});
+
 const showcase = defineCollection({
   type: 'data',
   schema: z.object({
+    intro: z.string().optional().default(''),
+    groups: z.array(showcaseGroupSchema).optional().default([]),
+    approaches: z.array(showcaseApproachSchema).optional().default([]),
     projects: z.array(showcaseProjectSchema).optional().default([]),
   }),
 });

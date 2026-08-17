@@ -41,10 +41,16 @@ const translations = await getEntry('i18n', 'translations');
 const t = makeT(translations?.data ?? {}, defaultLang);
 
 let projects: any[] = [];
+let groups: any[] = [];
+let approaches: any[] = [];
+let intro = '';
 
 try {
   const entry = await getEntry('showcase', `projects_${defaultLang}`);
   projects = entry?.data?.projects ?? [];
+  groups = entry?.data?.groups ?? [];
+  approaches = entry?.data?.approaches ?? [];
+  intro = entry?.data?.intro ?? '';
 } catch {}
 
 projects = [...projects].sort((a, b) => {
@@ -77,19 +83,29 @@ const showcaseLangLinks = allLangs.map(l => ({
   <section class="container">
     <header class="showcase__header">
       <h1>{t('showcase.title')}</h1>
+      {intro && <p>{intro}</p>}
     </header>
 
     {projects.length === 0 && (
       <article class="card"><p class="muted">{t('showcase.empty')}</p></article>
     )}
 
-    {projects.length > 0 && (
-      <div class="showcase__section">
-        <div class="grid">
-          {projects.map((p: any, i: number) => (
+    {projects.length > 0 && groups.map((group: any) => {
+      const groupProjects = group.project_slugs
+        .map((slug: string) => projects.find((p: any) => p.slug === slug))
+        .filter(Boolean);
+      if (groupProjects.length === 0) return null;
+      return (
+        <section class="showcase__group" id={group.id}>
+          <header class="showcase__group-header">
+            <h2>{group.title}</h2>
+            {group.description && <p>{group.description}</p>}
+          </header>
+          <div class="grid">
+          {groupProjects.map((p: any) => (
             <ProjectCard
               project={p}
-              eager={i === eagerIdx}
+              eager={projects.indexOf(p) === eagerIdx}
               t={{
                 platforms: t('showcase.platforms'),
                 stack:     t('showcase.stack'),
@@ -98,14 +114,44 @@ const showcaseLangLinks = allLangs.map(l => ({
               }}
             />
           ))}
+          </div>
+        </section>
+      );
+    })}
+
+    {approaches.length > 0 && (
+      <section class="approaches" id="approaches">
+        <header class="showcase__group-header">
+          <h2>{defaultLang === 'ru' ? 'Как я работаю' : 'How I work'}</h2>
+          <p>{defaultLang === 'ru' ? 'Принципы, которые повторяются в клиентских и собственных проектах.' : 'Principles repeated across client work and original products.'}</p>
+        </header>
+        <div class="approaches__grid">
+          {approaches.map((approach: any, index: number) => (
+            <article class="approach-card">
+              <span>{String(index + 1).padStart(2, '0')}</span>
+              <h3>{approach.title}</h3>
+              <p>{approach.description}</p>
+            </article>
+          ))}
         </div>
-      </div>
+      </section>
     )}
   </section>
 </Layout>
 
 <style>
-  .showcase__header { margin-bottom: 24px; }
+  .showcase__header { margin: 18px 0 42px; max-width: 780px; }
   .showcase__header h1 { margin: 0; }
-  .showcase__section { margin-bottom: 14px; }
+  .showcase__header p, .showcase__group-header p { color: var(--muted); max-width: 720px; }
+  .showcase__group { margin-bottom: 54px; scroll-margin-top: 90px; }
+  .showcase__group-header { margin-bottom: 18px; }
+  .showcase__group-header h2 { margin: 0 0 6px; font-size: clamp(24px, 4vw, 34px); }
+  .showcase__group-header p { margin: 0; }
+  .approaches { margin: 72px 0 28px; scroll-margin-top: 90px; }
+  .approaches__grid { display: grid; gap: 14px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .approach-card { padding: 22px; border: 1px solid var(--border); border-radius: var(--r-lg); background: var(--card-bg); }
+  .approach-card span { color: var(--accent); font-size: 12px; font-weight: 800; letter-spacing: .14em; }
+  .approach-card h3 { margin: 10px 0 8px; }
+  .approach-card p { margin: 0; color: var(--muted); }
+  @media (max-width: 680px) { .approaches__grid { grid-template-columns: 1fr; } }
 </style>

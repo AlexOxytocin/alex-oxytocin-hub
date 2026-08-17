@@ -4,8 +4,8 @@ nav:
     ru: "Главная"
     zh: "首页"
   showcase:
-    en: "Showcase"
-    ru: "Проекты"
+    en: "Projects & Approach"
+    ru: "Проекты и подходы"
     zh: "项目"
   changelog:
     en: "Changelog"
@@ -72,12 +72,12 @@ showcase:
     ru: "Избранное"
     zh: "精选"
   title:
-    en: "Showcase"
-    ru: "Проекты"
+    en: "Projects & Approach"
+    ru: "Проекты и подходы"
     zh: "项目展示"
   page_title:
-    en: "Projects"
-    ru: "Проекты"
+    en: "Projects & Approach"
+    ru: "Проекты и подходы"
     zh: "项目"
   empty:
     en: "No projects yet."
