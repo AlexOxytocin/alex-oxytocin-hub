@@ -1,0 +1,12 @@
+#!/usr/bin/env sh
+set -eu
+
+install -m 0644 /etc/letsencrypt/live/godmodetools.com/fullchain.pem /opt/app/nginx/ssl/fullchain.pem
+install -m 0600 /etc/letsencrypt/live/godmodetools.com/privkey.pem /opt/app/nginx/ssl/privkey.pem
+
+if ! nginx_check="$(docker exec nginx nginx -t 2>&1)"; then
+  printf '%s\n' "$nginx_check" >&2
+  exit 1
+fi
+
+docker exec nginx nginx -s reload >/dev/null 2>&1
