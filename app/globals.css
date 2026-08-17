@@ -288,6 +288,31 @@ h2 {
 .direction-card-blue { color: var(--blue); }
 .direction-card-magenta { color: var(--magenta); }
 
+.direction-card-mark {
+  width: 96px;
+  height: 96px;
+  position: absolute;
+  top: 28px;
+  right: 28px;
+  z-index: 1;
+  display: block;
+  object-fit: cover;
+  border: 1px solid rgba(209, 92, 255, 0.32);
+  border-radius: 24px;
+  box-shadow: 0 14px 38px rgba(93, 50, 255, 0.24);
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.direction-card-with-mark .card-eyebrow,
+.direction-card-with-mark h3 {
+  max-width: calc(100% - 124px);
+}
+
+.direction-card-with-mark:hover .direction-card-mark {
+  transform: translateY(-3px) scale(1.025);
+  box-shadow: 0 18px 46px rgba(93, 50, 255, 0.32);
+}
+
 .direction-card h3 {
   margin: 28px 0 14px;
   color: var(--text);
@@ -503,6 +528,19 @@ h2 {
   .direction-card {
     min-height: 275px;
     padding: 26px;
+  }
+
+  .direction-card-mark {
+    width: 72px;
+    height: 72px;
+    top: 22px;
+    right: 22px;
+    border-radius: 19px;
+  }
+
+  .direction-card-with-mark .card-eyebrow,
+  .direction-card-with-mark h3 {
+    max-width: calc(100% - 92px);
   }
 
   .evidence-grid {

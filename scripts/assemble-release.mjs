@@ -19,6 +19,10 @@ for (const name of ["field.js", "palette.js", "placement.js", "neural.js"]) {
     resolve(release, "hub", "assets", name)
   );
 }
+await cp(
+  resolve(root, "public", "assets", "community-mark.jpg"),
+  resolve(release, "hub", "assets", "community-mark.jpg")
+);
 
 const hubCss = await readFile(resolve(release, "hub", "styles.css"));
 const hubNeural = await readFile(resolve(release, "hub", "assets", "neural.js"));

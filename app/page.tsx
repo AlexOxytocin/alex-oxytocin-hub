@@ -1,6 +1,16 @@
 import { NeuralField } from "./NeuralField";
 
-const directions = [
+type Direction = {
+  eyebrow: string;
+  title: string;
+  description: string;
+  href: string;
+  action: string;
+  accent: string;
+  image?: { src: string; alt: string };
+};
+
+const directions: Direction[] = [
   {
     eyebrow: "Обучение",
     title: "ИИ по делу",
@@ -36,6 +46,10 @@ const directions = [
     href: "https://allo.godmodetools.com",
     action: "Зайти в комьюнити",
     accent: "magenta",
+    image: {
+      src: "/assets/community-mark.jpg",
+      alt: "Логотип сообщества «Алло, Нейросеточная?»",
+    },
   },
 ];
 
@@ -94,10 +108,21 @@ export default function Home() {
         <div className="direction-grid">
           {directions.map((direction) => (
             <a
-              className={`direction-card direction-card-${direction.accent}`}
+              className={`direction-card direction-card-${direction.accent}${direction.image ? " direction-card-with-mark" : ""}`}
               href={direction.href}
               key={direction.title}
             >
+              {direction.image && (
+                <img
+                  className="direction-card-mark"
+                  src={direction.image.src}
+                  alt={direction.image.alt}
+                  width="96"
+                  height="96"
+                  loading="lazy"
+                  decoding="async"
+                />
+              )}
               <span className="card-eyebrow">{direction.eyebrow}</span>
               <h3>{direction.title}</h3>
               <p>{direction.description}</p>
