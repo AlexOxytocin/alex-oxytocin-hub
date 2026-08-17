@@ -32,6 +32,8 @@ test("renders the personal hub with the portrait hero", async () => {
   assert.doesNotMatch(html, /class="hero-actions"|Хочу научиться|Написать мне ↗/);
   assert.match(html, /Смотреть проекты и подходы/);
   assert.doesNotMatch(html, /id="solutions"|Что я делаю для команд/);
+  assert.doesNotMatch(html, /Проекты, опыт и работа с ИИ|class="section-heading"|<h2/);
+  assert.match(html, /<section class="directions"[^>]*aria-label="Направления"/);
   assert.match(html, /alt="Логотип сообщества «Алло, Нейросеточная\?»"/);
   assert.match(html, /Разрабатываю[\s\S]*hero-accent-tools[^>]*>ИИ-инструменты<[\s\S]*автоматизирую процессы\./);
   assert.doesNotMatch(html, /Обучаю этому на|hero-accent-task/);

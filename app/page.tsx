@@ -127,11 +127,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="directions" id="directions" aria-labelledby="directions-title">
-        <div className="section-heading">
-          <h2 id="directions-title">Проекты, опыт и работа с ИИ</h2>
-        </div>
-
+      <section className="directions" id="directions" aria-label="Направления">
         <div className="direction-grid">
           {directions.map((direction) => (
             <a
