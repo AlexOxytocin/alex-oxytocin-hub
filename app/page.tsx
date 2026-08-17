@@ -119,26 +119,6 @@ export default function Home() {
               взаимопомощью, совместными проектами и встречами онлайн и офлайн.
             </li>
           </ul>
-          <div className="hero-actions">
-            <a
-              className="hero-button primary-button"
-              href="https://cv.godmodetools.com/showcase/"
-            >
-              Посмотреть проекты
-            </a>
-            <a
-              className="hero-button secondary-button"
-              href="https://ai.godmodetools.com"
-            >
-              Хочу научиться
-            </a>
-            <a
-              className="hero-button secondary-button"
-              href="https://t.me/AlexOxitocin"
-            >
-              Написать мне ↗
-            </a>
-          </div>
         </div>
 
         <div className="evidence-grid hero-evidence" aria-label="Опыт в цифрах">

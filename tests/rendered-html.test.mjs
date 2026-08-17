@@ -29,7 +29,7 @@ test("renders the personal hub with the portrait hero", async () => {
   assert.match(html, /<strong>10\+<\/strong>[\s\S]*лет в Java-разработке/);
   assert.match(html, /<strong>20\+<\/strong>[\s\S]*инженеров в командах/);
   assert.match(html, /href="https:\/\/cv\.godmodetools\.com\/showcase"/);
-  assert.match(html, /class="hero-button secondary-button"[^>]*href="https:\/\/ai\.godmodetools\.com"[^>]*>\s*Хочу научиться/);
+  assert.doesNotMatch(html, /class="hero-actions"|Хочу научиться|Написать мне ↗/);
   assert.match(html, /Смотреть проекты и подходы/);
   assert.doesNotMatch(html, /id="solutions"|Что я делаю для команд/);
   assert.match(html, /alt="Логотип сообщества «Алло, Нейросеточная\?»"/);
@@ -75,6 +75,9 @@ test("static deployment carries the same portrait hero", async () => {
   assert.doesNotMatch(css, /\.hero-portrait\s*\{[^}]*mask-image/);
   assert.match(css, /\.hero-portrait::after[\s\S]*linear-gradient/);
   assert.doesNotMatch(css, /\.hero-portrait\s*\{[^}]*border:\s*1px solid/);
+  assert.match(css, /\.hero-portrait\s*\{[^}]*aspect-ratio:\s*1122\s*\/\s*1402/);
+  assert.match(css, /\.hero-portrait img\s*\{[^}]*object-fit:\s*contain/);
+  assert.doesNotMatch(css, /\.hero-portrait img\s*\{[^}]*object-fit:\s*cover/);
   assert.match(css, /\.hero-summary\s*\{[\s\S]*list-style:\s*none/);
   assert.match(html, /class="direction-card-mark"[^>]*community-mark\.jpg/);
   assert.ok(communityMark.byteLength > 8000, "community logo asset is missing or truncated");
