@@ -29,16 +29,18 @@ test("renders the personal hub with the portrait hero", async () => {
   assert.match(html, /<strong>10\+<\/strong>[\s\S]*лет в Java-разработке/);
   assert.match(html, /<strong>20\+<\/strong>[\s\S]*инженеров в командах/);
   assert.match(html, /href="https:\/\/cv\.godmodetools\.com\/showcase"/);
+  assert.match(html, /class="hero-button secondary-button"[^>]*href="https:\/\/ai\.godmodetools\.com"[^>]*>\s*Хочу научиться/);
   assert.match(html, /Смотреть проекты и подходы/);
   assert.doesNotMatch(html, /id="solutions"|Что я делаю для команд/);
   assert.match(html, /alt="Логотип сообщества «Алло, Нейросеточная\?»"/);
   assert.match(html, /Разрабатываю[\s\S]*hero-accent-tools[^>]*>ИИ-инструменты<[\s\S]*автоматизирую процессы\. Обучаю этому на[\s\S]*hero-accent-task[^>]*>ваших задачах</);
   assert.doesNotMatch(html, /Не продаю магию|Собираю технологии/);
+  assert.match(html, /class="hero-summary"/);
   assert.match(html, /тёплое и безопасное сообщество[\s\S]*с взаимопомощью/);
-  assert.match(html, /Индивидуально помогаю осваивать их на реальных задачах/);
+  assert.match(html, /Индивидуально помогаю освоить ИИ на ваших задачах/);
   assert.match(html, /href="https:\/\/github\.com\/AlexOxytocin">GitHub<\/a>/);
   assert.doesNotMatch(html, /github\.com\/alexgoodman53/i);
-  assert.match(html, /К ИИ я пришёл через разработку, инфраструктуру и архитектуру больших[\s\S]*Хороший[\s\S]*инструмент освобождает время и внимание/);
+  assert.match(html, /Опыт разработки, инфраструктуры и архитектуры[\s\S]*Хороший инструмент должен быть понятным/);
   assert.doesNotMatch(html, /signal-core|signal-ring|codex-preview/);
 });
 
@@ -73,6 +75,7 @@ test("static deployment carries the same portrait hero", async () => {
   assert.doesNotMatch(css, /\.hero-portrait\s*\{[^}]*mask-image/);
   assert.match(css, /\.hero-portrait::after[\s\S]*linear-gradient/);
   assert.doesNotMatch(css, /\.hero-portrait\s*\{[^}]*border:\s*1px solid/);
+  assert.match(css, /\.hero-summary\s*\{[\s\S]*list-style:\s*none/);
   assert.match(html, /class="direction-card-mark"[^>]*community-mark\.jpg/);
   assert.ok(communityMark.byteLength > 8000, "community logo asset is missing or truncated");
   assert.match(html, /class="hero-portrait"/);
