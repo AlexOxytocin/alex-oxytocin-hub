@@ -6,7 +6,7 @@ groups:
   - { id: client-systems, title: Enterprise AI systems, description: "Solutions built around real processes, data, and business constraints. Selected details are protected by NDA.", project_slugs: [construction-budget, media-buyer, rag-platform] }
   - { id: products, title: Original products, description: "Tools that grew out of specific everyday and professional problems.", project_slugs: [flatscanner, community-platform] }
   - { id: engineering-platforms, title: Engineering platforms & process, description: "Durable agent execution, architecture decisions, and controlled AI-assisted delivery.", project_slugs: [symbioflow-engine, architectura, development-automation] }
-  - { id: personal-operations, title: Personal operations automation, description: "Reproducible workflows for finance, reporting, and recurring obligations with human approval for critical actions.", project_slugs: [georgia-ip-automation, binance-warehouse] }
+  - { id: personal-operations, title: Personal operations automation, description: "Reproducible workflows for finance, reporting, and recurring obligations with human approval for critical actions.", project_slugs: [jarvis, georgia-ip-automation, binance-warehouse] }
   - { id: community-learning, title: Community & learning, description: "An environment where tools become practice, projects, and transferable skills.", project_slugs: [allo-community, ai-training] }
 
 approaches:
@@ -119,6 +119,17 @@ projects:
     stack: [Browser Automation, Verified Runbooks, Human Approval, Audit Notes]
     tags: [Tax Operations, Compliance, Personal Automation]
     media: [{ type: image, src: /media/showcase/georgia-ip-automation.jpg, alt: "Controlled declaration and tax-payment workflow", featured: true }]
+  - slug: jarvis
+    name: Jarvis
+    order: 85
+    role: System author & operator
+    year: "2026 · in use"
+    description: Personal AI operations environment for repeatable work — Telegram communication and document delivery, read-only Gmail and Drive, invoice generation, daily Binance synchronization and reconciliation, migration-status monitoring, expense accounting, and durable task context.
+    platforms: [Codex, Telegram, Google Workspace]
+    stack: [PowerShell, Python, Node.js, SQLite, Scheduled Automations]
+    tags: [Personal AI OS, Integrations, Human Approval, Audit]
+    metrics: [{ label: Active schedules, value: "Binance + Migraciones" }, { label: Critical actions, value: "approval required" }]
+    media: [{ type: image, src: /media/showcase/jarvis.jpg, alt: "Jarvis connects work integrations, schedules, checks, and approval gates", featured: true }]
   - slug: binance-warehouse
     name: Binance History Warehouse
     order: 100

@@ -19,7 +19,7 @@ groups:
   - id: personal-operations
     title: Автоматизация личных операций
     description: Воспроизводимые контуры для финансов, отчётности и регулярных обязательств с ручным подтверждением критичных действий.
-    project_slugs: [georgia-ip-automation, binance-warehouse]
+    project_slugs: [jarvis, georgia-ip-automation, binance-warehouse]
   - id: community-learning
     title: Сообщество и обучение
     description: Среда, где инструменты превращаются в практику, проекты и передаваемые навыки.
@@ -148,6 +148,18 @@ projects:
     stack: [Browser Automation, Verified Runbooks, Human Approval, Audit Notes]
     tags: [Tax Operations, Compliance, Personal Automation]
     media: [{ type: image, src: /media/showcase/georgia-ip-automation.jpg, alt: "Контролируемый процесс декларации и оплаты налога грузинского ИП", featured: true }]
+
+  - slug: jarvis
+    name: Jarvis
+    order: 85
+    role: Автор системы и оператор
+    year: "2026 · используется"
+    description: Персональная AI-операционная среда для повторяемой работы — Telegram-коммуникации и доставка документов, read-only Gmail и Drive, выпуск инвойсов, ежедневная синхронизация и сверка Binance, мониторинг миграционного статуса, учёт расходов и долгоживущий контекст по задачам.
+    platforms: [Codex, Telegram, Google Workspace]
+    stack: [PowerShell, Python, Node.js, SQLite, Scheduled Automations]
+    tags: [Personal AI OS, Integrations, Human Approval, Audit]
+    metrics: [{ label: Активные расписания, value: "Binance + Migraciones" }, { label: Критические действия, value: "с подтверждением" }]
+    media: [{ type: image, src: /media/showcase/jarvis.jpg, alt: "Jarvis связывает рабочие интеграции, расписания, проверки и подтверждения", featured: true }]
 
   - slug: binance-warehouse
     name: Binance History Warehouse
