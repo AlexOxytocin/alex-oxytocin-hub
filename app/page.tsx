@@ -105,39 +105,6 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="directions" id="directions" aria-labelledby="directions-title">
-        <div className="section-heading">
-          <p className="eyebrow">Одна система · разные точки входа</p>
-          <h2 id="directions-title">С чего начнём?</h2>
-        </div>
-
-        <div className="direction-grid">
-          {directions.map((direction) => (
-            <a
-              className={`direction-card direction-card-${direction.accent}${direction.image ? " direction-card-with-mark" : ""}`}
-              href={direction.href}
-              key={direction.title}
-            >
-              {direction.image && (
-                <img
-                  className="direction-card-mark"
-                  src={direction.image.src}
-                  alt={direction.image.alt}
-                  width="96"
-                  height="96"
-                  loading="lazy"
-                  decoding="async"
-                />
-              )}
-              <span className="card-eyebrow">{direction.eyebrow}</span>
-              <h3>{direction.title}</h3>
-              <p>{direction.description}</p>
-              <span className="card-action">{direction.action} ↗</span>
-            </a>
-          ))}
-        </div>
-      </section>
-
       <section className="about" id="about" aria-labelledby="about-title">
         <div className="about-copy">
           <p className="eyebrow">Инженерный фундамент</p>
@@ -168,6 +135,39 @@ export default function Home() {
               <strong>{item.value}</strong>
               <span>{item.label}</span>
             </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="directions" id="directions" aria-labelledby="directions-title">
+        <div className="section-heading">
+          <p className="eyebrow">Одна система · разные точки входа</p>
+          <h2 id="directions-title">С чего начнём?</h2>
+        </div>
+
+        <div className="direction-grid">
+          {directions.map((direction) => (
+            <a
+              className={`direction-card direction-card-${direction.accent}${direction.image ? " direction-card-with-mark" : ""}`}
+              href={direction.href}
+              key={direction.title}
+            >
+              {direction.image && (
+                <img
+                  className="direction-card-mark"
+                  src={direction.image.src}
+                  alt={direction.image.alt}
+                  width="96"
+                  height="96"
+                  loading="lazy"
+                  decoding="async"
+                />
+              )}
+              <span className="card-eyebrow">{direction.eyebrow}</span>
+              <h3>{direction.title}</h3>
+              <p>{direction.description}</p>
+              <span className="card-action">{direction.action} ↗</span>
+            </a>
           ))}
         </div>
       </section>
