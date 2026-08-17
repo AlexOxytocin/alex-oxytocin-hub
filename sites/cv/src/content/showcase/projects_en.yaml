@@ -64,7 +64,7 @@ projects:
     stack: [FastAPI, OpenRouter, Apify, Redis, PostgreSQL, Docker]
     tags: [Computer Vision, Rental Search, AI Analysis, Product]
     media: [{ type: image, src: /media/showcase/flatscanner.jpg, alt: "Computer vision analysis of a rental property and visual risks", featured: true }]
-    links: [{ label: Repository, url: "https://github.com/alexgoodman53/flatscanner", type: repo }]
+    links: [{ label: Repository, url: "https://github.com/AlexOxytocin/flatscanner-demo", type: repo }]
     featured: true
   - slug: community-platform
     name: Community platform
@@ -97,7 +97,7 @@ projects:
     stack: [Python, JSON Schema, Repository Memory, MemPalace]
     tags: [Architecture Council, Quorum, Decision Records, Validation]
     media: [{ type: image, src: /media/showcase/architectura.jpg, alt: "Independent architecture proposals converging through quorum", featured: true }]
-    links: [{ label: Repository, url: "https://github.com/alexgoodman53/Architectura", type: repo }]
+    links: [{ label: Repository, url: "https://github.com/AlexOxytocin/Architectura", type: repo }]
   - slug: development-automation
     name: Controlled AI development loop
     order: 80
@@ -108,7 +108,7 @@ projects:
     stack: [Git Worktrees, GitHub Actions, Specs, ADR, Automated Review]
     tags: [AI-assisted Development, Quality Gates, Repository Memory]
     media: [{ type: image, src: /media/showcase/development-automation.jpg, alt: "Controlled software delivery line with quality gates", featured: true }]
-    links: [{ label: FlatScanner implementation, url: "https://github.com/alexgoodman53/flatscanner", type: repo }]
+    links: [{ label: FlatScanner implementation, url: "https://github.com/AlexOxytocin/flatscanner-demo", type: repo }]
   - slug: georgia-ip-automation
     name: Georgian IE operations automation
     order: 90

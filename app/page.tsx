@@ -172,7 +172,7 @@ export default function Home() {
       <footer className="about-strip">
         <p>Алексей Грищенко · AI Solutions Architect · Buenos Aires</p>
         <div className="footer-links">
-          <a href="https://github.com/alexgoodman53">GitHub</a>
+          <a href="https://github.com/AlexOxytocin">GitHub</a>
           <a href="https://www.linkedin.com/in/aleksei-grishchenko/">LinkedIn</a>
           <a href="https://t.me/AlexOxitocin">Telegram</a>
         </div>

@@ -88,7 +88,7 @@ projects:
     stack: [FastAPI, OpenRouter, Apify, Redis, PostgreSQL, Docker]
     tags: [Computer Vision, Rental Search, AI Analysis, Product]
     media: [{ type: image, src: /media/showcase/flatscanner.jpg, alt: "Компьютерный анализ квартиры, планировки и визуальных рисков", featured: true }]
-    links: [{ label: Репозиторий, url: "https://github.com/alexgoodman53/flatscanner", type: repo }]
+    links: [{ label: Репозиторий, url: "https://github.com/AlexOxytocin/flatscanner-demo", type: repo }]
     featured: true
 
   - slug: community-platform
@@ -124,7 +124,7 @@ projects:
     stack: [Python, JSON Schema, Repository Memory, MemPalace]
     tags: [Architecture Council, Quorum, Decision Records, Validation]
     media: [{ type: image, src: /media/showcase/architectura.jpg, alt: "Три независимых архитектурных предложения сходятся в кворумное решение", featured: true }]
-    links: [{ label: Репозиторий, url: "https://github.com/alexgoodman53/Architectura", type: repo }]
+    links: [{ label: Репозиторий, url: "https://github.com/AlexOxytocin/Architectura", type: repo }]
 
   - slug: development-automation
     name: Контур управляемой AI-разработки
@@ -136,7 +136,7 @@ projects:
     stack: [Git Worktrees, GitHub Actions, Specs, ADR, Automated Review]
     tags: [AI-assisted Development, Quality Gates, Repository Memory]
     media: [{ type: image, src: /media/showcase/development-automation.jpg, alt: "Производственная линия управляемой разработки с проверками качества", featured: true }]
-    links: [{ label: Реализация в FlatScanner, url: "https://github.com/alexgoodman53/flatscanner", type: repo }]
+    links: [{ label: Реализация в FlatScanner, url: "https://github.com/AlexOxytocin/flatscanner-demo", type: repo }]
 
   - slug: georgia-ip-automation
     name: Автоматизация грузинского ИП
