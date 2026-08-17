@@ -7,45 +7,39 @@
     <meta name="description" content="Личный сайт Алексея Грищенко: AI-решения, обучение, профессиональный опыт и комьюнити «Алло, Нейросеточная?»." />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="/styles.css" />
-    <script type="module" src="/assets/neural.js"></script>
   </head>
   <body>
     <main>
       <header class="site-header">
         <a class="brand" href="#top" aria-label="Alex Oxytocin — на главную"><img class="brand-logo" src="/assets/alex-oxytocin-logo.svg" alt="" width="178" height="19" /></a>
         <nav aria-label="Основные разделы">
-          <a href="#directions">Направления</a>
           <a href="#about">Обо мне</a>
+          <a href="#directions">Направления</a>
           <a class="nav-contact" href="https://t.me/AlexOxitocin">Связаться</a>
         </nav>
       </header>
 
       <section class="hero" id="top">
-        <canvas class="hero-canvas" aria-hidden="true"></canvas>
-        <div class="hero-copy">
-          <p class="eyebrow">Алексей Грищенко · разработка · архитектура · ИИ</p>
-          <h1>Собираю технологии <span>вокруг реальных дел.</span></h1>
-          <p class="hero-lead">Проектирую ИИ-решения, создаю инструменты и помогаю людям разобраться, как применять их в работе и жизни — осмысленно и под своим контролем.</p>
-          <div class="hero-actions">
-            <a class="primary-button" href="#directions">Выбрать направление</a>
-            <a class="text-link" href="https://t.me/AlexOxitocin">Написать в Telegram ↗</a>
-          </div>
+        <div class="hero-intro" id="about">
+          <p class="eyebrow">Алексей Грищенко · архитектура · разработка · ИИ</p>
+          <h1>Я Алексей. Проектирую системы, пишу код и работаю с ИИ.</h1>
         </div>
-      </section>
-
-      <section class="about" id="about" aria-labelledby="about-title">
-        <div class="about-copy"><p class="eyebrow">Инженерный фундамент</p><h2 id="about-title">Не продаю магию. Собираю системы.</h2><p>Я Алексей Грищенко, AI Solutions Architect и бывший Senior Java Architect. Прошёл путь от C++ и инфраструктуры до enterprise-систем и агентных решений. Поэтому смотрю не только на эффектную демку, но и на то, как всё это будет жить после пятницы вечером.</p><a class="text-link" href="https://cv.godmodetools.com">Посмотреть профессиональный профиль ↗</a></div>
-        <figure class="about-portrait"><img src="/assets/alexey-grishchenko-about.jpg?v=natural-warm" alt="Алексей Грищенко" width="1122" height="1402" loading="lazy" decoding="async" /></figure>
-        <div class="evidence-grid" aria-label="Опыт в цифрах"><div class="evidence-item"><strong>20+</strong><span>лет в IT: от embedded и инфраструктуры до enterprise и AI</span></div><div class="evidence-item"><strong>10+</strong><span>лет в Java-разработке, техлидстве и архитектуре</span></div><div class="evidence-item"><strong>20+</strong><span>инженеров в командах, которые я вёл</span></div><div class="evidence-item"><strong>15 000+</strong><span>магазинов работали на системах, которые мы развивали</span></div></div>
+        <figure class="hero-portrait"><img src="/assets/alexey-grishchenko-about.jpg?v=natural-warm" alt="Алексей Грищенко" width="1122" height="1402" decoding="async" /></figure>
+        <div class="hero-body">
+          <p>В разработке я больше двадцати лет. Начинал с C++ и инфраструктуры, дальше были большие Java-системы, архитектура и управление командами.</p>
+          <p>Сейчас делаю AI-инструменты и автоматизацию — свои и для клиентов. Люблю задачи, после которых у людей становится меньше ручной работы, а у команды остаётся понятная система, которую можно поддерживать.</p>
+          <div class="hero-actions"><a class="primary-button" href="https://cv.godmodetools.com/showcase/">Посмотреть проекты</a><a class="text-link" href="https://t.me/AlexOxitocin">Написать мне ↗</a></div>
+        </div>
+        <div class="evidence-grid hero-evidence" aria-label="Опыт в цифрах"><div class="evidence-item"><strong>20+</strong><span>лет в IT: от embedded и инфраструктуры до enterprise и AI</span></div><div class="evidence-item"><strong>10+</strong><span>лет в Java-разработке, техлидстве и архитектуре</span></div><div class="evidence-item"><strong>20+</strong><span>инженеров в командах, которые я вёл</span></div><div class="evidence-item"><strong>15 000+</strong><span>магазинов работали на системах, которые мы развивали</span></div></div>
       </section>
 
       <section class="directions" id="directions" aria-labelledby="directions-title">
-        <div class="section-heading"><p class="eyebrow">Одна система · разные точки входа</p><h2 id="directions-title">С чего начнём?</h2></div>
+        <div class="section-heading"><h2 id="directions-title">Проекты, опыт и работа с ИИ</h2></div>
         <div class="direction-grid">
-          <a class="direction-card direction-card-cyan" href="https://ai.godmodetools.com"><span class="card-eyebrow">Обучение</span><h3>ИИ по делу</h3><p>Индивидуальная работа с ИИ на ваших реальных задачах — без привязки к одному сервису.</p><span class="card-action">Перейти к обучению ↗</span></a>
-          <a class="direction-card direction-card-violet" href="https://cv.godmodetools.com/showcase"><span class="card-eyebrow">Решения</span><h3>ИИ и автоматизация</h3><p>Клиентские кейсы, собственные продукты и инженерные подходы — от RAG и агентов до Temporal и управляемой разработки.</p><span class="card-action">Смотреть проекты и подходы ↗</span></a>
-          <a class="direction-card direction-card-blue" href="https://cv.godmodetools.com"><span class="card-eyebrow">Профессиональный профиль</span><h3>Опыт и роли</h3><p>Архитектура, Java-разработка, AI Solutions и реализованные проекты — в формате, удобном для партнёров и команд.</p><span class="card-action">Открыть профиль ↗</span></a>
-          <a class="direction-card direction-card-magenta direction-card-with-mark" href="https://allo.godmodetools.com"><img class="direction-card-mark" src="/assets/community-mark.jpg" alt="Логотип сообщества «Алло, Нейросеточная?»" width="96" height="96" loading="lazy" decoding="async" /><span class="card-eyebrow">Комьюнити и продукты</span><h3>Алло, Нейросеточная?</h3><p>Сообщество практиков, боты и полезные инструменты вокруг реальной работы с ИИ.</p><span class="card-action">Зайти в комьюнити ↗</span></a>
+          <a class="direction-card direction-card-cyan" href="https://ai.godmodetools.com"><span class="card-eyebrow">Обучение</span><h3>Разобраться с ИИ</h3><p>Индивидуальная работа с ИИ на ваших реальных задачах — без привязки к одному сервису.</p><span class="card-action">Перейти к обучению ↗</span></a>
+          <a class="direction-card direction-card-violet" href="https://cv.godmodetools.com/showcase"><span class="card-eyebrow">Решения и продукты</span><h3>Проекты и автоматизация</h3><p>Клиентские кейсы, собственные продукты и инженерные подходы — от RAG и агентов до Temporal и управляемой разработки.</p><span class="card-action">Смотреть проекты и подходы ↗</span></a>
+          <a class="direction-card direction-card-blue" href="https://cv.godmodetools.com"><span class="card-eyebrow">Профессиональный профиль</span><h3>Опыт и резюме</h3><p>Архитектура, Java-разработка, AI Solutions и реализованные проекты — в формате, удобном для партнёров и команд.</p><span class="card-action">Открыть профиль ↗</span></a>
+          <a class="direction-card direction-card-magenta direction-card-with-mark" href="https://allo.godmodetools.com"><img class="direction-card-mark" src="/assets/community-mark.jpg" alt="Логотип сообщества «Алло, Нейросеточная?»" width="96" height="96" loading="lazy" decoding="async" /><span class="card-eyebrow">Комьюнити</span><h3>Алло, Нейросеточная?</h3><p>Сообщество практиков, боты и полезные инструменты вокруг реальной работы с ИИ.</p><span class="card-action">Зайти в комьюнити ↗</span></a>
         </div>
       </section>
 

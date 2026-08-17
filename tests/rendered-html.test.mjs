@@ -14,7 +14,7 @@ async function render() {
   );
 }
 
-test("renders the personal hub with the neural hero", async () => {
+test("renders the personal hub with the portrait hero", async () => {
   const response = await render();
   assert.equal(response.status, 200);
   assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
@@ -22,9 +22,9 @@ test("renders the personal hub with the neural hero", async () => {
   const html = await response.text();
   assert.match(html, /<title>Alex Oxytocin — ИИ, архитектура и инструменты<\/title>/i);
   assert.match(html, /class="brand-logo"[^>]*src="\/assets\/alex-oxytocin-logo\.svg"/);
-  assert.match(html, /class="hero-canvas"/);
+  assert.doesNotMatch(html, /class="hero-canvas"/);
   assert.match(html, /class="direction-card-mark"[^>]*src="\/assets\/community-mark\.jpg"/);
-  assert.match(html, /class="about-portrait"/);
+  assert.match(html, /class="hero-portrait"/);
   assert.match(html, /src="\/assets\/alexey-grishchenko-about\.jpg\?v=natural-warm"/);
   assert.match(html, /<strong>10\+<\/strong>[\s\S]*лет в Java-разработке/);
   assert.match(html, /<strong>20\+<\/strong>[\s\S]*инженеров в командах/);
@@ -32,7 +32,8 @@ test("renders the personal hub with the neural hero", async () => {
   assert.match(html, /Смотреть проекты и подходы/);
   assert.doesNotMatch(html, /id="solutions"|Что я делаю для команд/);
   assert.match(html, /alt="Логотип сообщества «Алло, Нейросеточная\?»"/);
-  assert.match(html, /Собираю технологии/);
+  assert.match(html, /Я Алексей\. Проектирую системы, пишу код и работаю с ИИ\./);
+  assert.doesNotMatch(html, /Не продаю магию|Собираю технологии/);
   assert.doesNotMatch(html, /signal-core|signal-ring|codex-preview/);
 });
 
@@ -52,7 +53,7 @@ test("reuses the exact Alex Neon neural modules", async () => {
   assert.match(neural, /ambientEvery:\s*3400/);
 });
 
-test("static deployment carries the same interactive field", async () => {
+test("static deployment carries the same portrait hero", async () => {
   const [html, css, communityMark, portrait, brandLogo] = await Promise.all([
     readFile(new URL("../sites/hub/index.html", import.meta.url), "utf8"),
     readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
@@ -61,14 +62,12 @@ test("static deployment carries the same interactive field", async () => {
     readFile(new URL("../public/assets/alex-oxytocin-logo.svg", import.meta.url), "utf8"),
   ]);
 
-  assert.match(html, /<canvas class="hero-canvas"/);
-  assert.match(html, /<script type="module" src="\/assets\/neural\.js"><\/script>/);
-  assert.match(css, /\.hero-canvas\s*\{/);
-  assert.match(css, /\.hero::before[\s\S]*mask-image:\s*[\s\S]*linear-gradient\(to right,[\s\S]*transparent 100%\)/);
-  assert.match(css, /mask-composite:\s*intersect/);
+  assert.doesNotMatch(html, /<canvas class="hero-canvas"/);
+  assert.doesNotMatch(html, /<script type="module" src="\/assets\/neural\.js"><\/script>/);
+  assert.doesNotMatch(css, /\.hero-canvas\s*\{/);
   assert.match(html, /class="direction-card-mark"[^>]*community-mark\.jpg/);
   assert.ok(communityMark.byteLength > 8000, "community logo asset is missing or truncated");
-  assert.match(html, /class="about-portrait"/);
+  assert.match(html, /class="hero-portrait"/);
   assert.match(html, /alexey-grishchenko-about\.jpg\?v=natural-warm/);
   assert.ok(portrait.byteLength > 100000, "about portrait asset is missing or truncated");
   assert.match(html, /<strong>10\+<\/strong><span>лет в Java-разработке/);

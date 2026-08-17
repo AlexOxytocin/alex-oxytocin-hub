@@ -1,5 +1,3 @@
-import { NeuralField } from "./NeuralField";
-
 type Direction = {
   eyebrow: string;
   title: string;
@@ -13,7 +11,7 @@ type Direction = {
 const directions: Direction[] = [
   {
     eyebrow: "Обучение",
-    title: "ИИ по делу",
+    title: "Разобраться с ИИ",
     description:
       "Индивидуальная работа с ИИ на ваших реальных задачах — без привязки к одному сервису.",
     href: "https://ai.godmodetools.com",
@@ -21,8 +19,8 @@ const directions: Direction[] = [
     accent: "cyan",
   },
   {
-    eyebrow: "Решения",
-    title: "ИИ и автоматизация",
+    eyebrow: "Решения и продукты",
+    title: "Проекты и автоматизация",
     description:
       "Клиентские кейсы, собственные продукты и инженерные подходы — от RAG и агентов до Temporal и управляемой разработки.",
     href: "https://cv.godmodetools.com/showcase",
@@ -31,7 +29,7 @@ const directions: Direction[] = [
   },
   {
     eyebrow: "Профессиональный профиль",
-    title: "Опыт и роли",
+    title: "Опыт и резюме",
     description:
       "Архитектура, Java-разработка, AI Solutions и реализованные проекты — в формате, удобном для партнёров и команд.",
     href: "https://cv.godmodetools.com",
@@ -39,7 +37,7 @@ const directions: Direction[] = [
     accent: "blue",
   },
   {
-    eyebrow: "Комьюнити и продукты",
+    eyebrow: "Комьюнити",
     title: "Алло, Нейросеточная?",
     description:
       "Сообщество практиков, боты, полезные инструменты и веб-приложение вокруг реальной работы с ИИ.",
@@ -74,8 +72,8 @@ export default function Home() {
           />
         </a>
         <nav aria-label="Основные разделы">
-          <a href="#directions">Направления</a>
           <a href="#about">Обо мне</a>
+          <a href="#directions">Направления</a>
           <a className="nav-contact" href="https://t.me/AlexOxitocin">
             Связаться
           </a>
@@ -83,53 +81,42 @@ export default function Home() {
       </header>
 
       <section className="hero" id="top">
-        <NeuralField />
-        <div className="hero-copy">
-          <p className="eyebrow">Алексей Грищенко · разработка · архитектура · ИИ</p>
-          <h1>
-            Собираю технологии
-            <span> вокруг реальных дел.</span>
-          </h1>
-          <p className="hero-lead">
-            Проектирую ИИ-решения, создаю инструменты и помогаю людям разобраться,
-            как применять их в работе и жизни — осмысленно и под своим контролем.
-          </p>
-          <div className="hero-actions">
-            <a className="primary-button" href="#directions">
-              Выбрать направление
-            </a>
-            <a className="text-link" href="https://t.me/AlexOxitocin">
-              Написать в Telegram ↗
-            </a>
-          </div>
+        <div className="hero-intro" id="about">
+          <p className="eyebrow">Алексей Грищенко · архитектура · разработка · ИИ</p>
+          <h1>Я Алексей. Проектирую системы, пишу код и работаю с ИИ.</h1>
         </div>
-      </section>
 
-      <section className="about" id="about" aria-labelledby="about-title">
-        <div className="about-copy">
-          <p className="eyebrow">Инженерный фундамент</p>
-          <h2 id="about-title">Не продаю магию. Собираю системы.</h2>
-          <p>
-            Я Алексей Грищенко, AI Solutions Architect и бывший Senior Java
-            Architect. Прошёл путь от C++ и инфраструктуры до enterprise-систем и
-            агентных решений. Поэтому смотрю не только на эффектную демку, но и на
-            то, как всё это будет жить после пятницы вечером.
-          </p>
-          <a className="text-link" href="https://cv.godmodetools.com">
-            Посмотреть профессиональный профиль ↗
-          </a>
-        </div>
-        <figure className="about-portrait">
+        <figure className="hero-portrait">
           <img
             src="/assets/alexey-grishchenko-about.jpg?v=natural-warm"
             alt="Алексей Грищенко"
             width="1122"
             height="1402"
-            loading="lazy"
             decoding="async"
           />
         </figure>
-        <div className="evidence-grid" aria-label="Опыт в цифрах">
+
+        <div className="hero-body">
+          <p>
+            В разработке я больше двадцати лет. Начинал с C++ и инфраструктуры,
+            дальше были большие Java-системы, архитектура и управление командами.
+          </p>
+          <p>
+            Сейчас делаю AI-инструменты и автоматизацию — свои и для клиентов.
+            Люблю задачи, после которых у людей становится меньше ручной работы,
+            а у команды остаётся понятная система, которую можно поддерживать.
+          </p>
+          <div className="hero-actions">
+            <a className="primary-button" href="https://cv.godmodetools.com/showcase/">
+              Посмотреть проекты
+            </a>
+            <a className="text-link" href="https://t.me/AlexOxitocin">
+              Написать мне ↗
+            </a>
+          </div>
+        </div>
+
+        <div className="evidence-grid hero-evidence" aria-label="Опыт в цифрах">
           {evidence.map((item) => (
             <div className="evidence-item" key={item.label}>
               <strong>{item.value}</strong>
@@ -141,8 +128,7 @@ export default function Home() {
 
       <section className="directions" id="directions" aria-labelledby="directions-title">
         <div className="section-heading">
-          <p className="eyebrow">Одна система · разные точки входа</p>
-          <h2 id="directions-title">С чего начнём?</h2>
+          <h2 id="directions-title">Проекты, опыт и работа с ИИ</h2>
         </div>
 
         <div className="direction-grid">
