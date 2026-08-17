@@ -90,6 +90,7 @@ nav a {
 }
 
 .hero {
+  min-height: calc(100svh - 84px);
   position: relative;
   display: grid;
   grid-template-columns: minmax(0, 1.15fr) minmax(360px, 0.85fr);
@@ -99,13 +100,13 @@ nav a {
     "evidence evidence";
   align-items: start;
   column-gap: clamp(44px, 6vw, 78px);
-  row-gap: 28px;
-  padding: 72px 0 84px;
+  row-gap: clamp(14px, 1.8vh, 22px);
+  padding: clamp(24px, 3.8vh, 42px) 0 clamp(28px, 4.5vh, 50px);
 }
 
 .hero-intro {
   grid-area: intro;
-  align-self: end;
+  align-self: start;
   scroll-margin-top: 100px;
 }
 
@@ -115,27 +116,37 @@ nav a {
 
 .hero-body > p {
   max-width: 650px;
-  margin-bottom: 18px;
+  margin-bottom: 13px;
   color: var(--muted);
-  font-size: clamp(17px, 1.8vw, 20px);
-  line-height: 1.62;
+  font-size: clamp(15.5px, 1.4vw, 18px);
+  line-height: 1.48;
 }
 
 .hero-body > p:last-of-type {
-  margin-bottom: 32px;
+  margin-bottom: 22px;
 }
 
 .hero-portrait {
   width: 100%;
-  max-height: 650px;
+  height: 100%;
+  max-height: none;
   grid-area: portrait;
   align-self: stretch;
-  aspect-ratio: 4 / 5;
   margin: 0;
   overflow: hidden;
   background: transparent;
-  -webkit-mask-image: radial-gradient(ellipse 88% 92% at 62% 48%, #000 68%, transparent 100%);
-  mask-image: radial-gradient(ellipse 88% 92% at 62% 48%, #000 68%, transparent 100%);
+  -webkit-mask-image: radial-gradient(
+    ellipse 104% 104% at 58% 48%,
+    #000 72%,
+    rgba(0, 0, 0, 0.94) 84%,
+    transparent 100%
+  );
+  mask-image: radial-gradient(
+    ellipse 104% 104% at 58% 48%,
+    #000 72%,
+    rgba(0, 0, 0, 0.94) 84%,
+    transparent 100%
+  );
 }
 
 .hero-portrait img {
@@ -143,12 +154,12 @@ nav a {
   height: 100%;
   display: block;
   object-fit: cover;
-  object-position: center;
+  object-position: 62% center;
 }
 
 .hero-evidence {
   grid-area: evidence;
-  margin-top: 26px;
+  margin-top: 0;
 }
 
 .eyebrow,
@@ -181,7 +192,7 @@ p {
 h1 {
   max-width: 690px;
   margin-bottom: 0;
-  font-size: clamp(40px, 4.6vw, 58px);
+  font-size: clamp(36px, 4vw, 50px);
   line-height: 1.06;
   letter-spacing: -0.045em;
 }
@@ -371,18 +382,18 @@ h2 {
 }
 
 .evidence-item {
-  min-height: 180px;
+  min-height: clamp(126px, 16vh, 152px);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 26px;
-  padding: 26px;
+  gap: 16px;
+  padding: 20px;
   background: #0a0d16;
 }
 
 .evidence-item strong {
   color: var(--cyan);
-  font-size: clamp(34px, 5vw, 54px);
+  font-size: clamp(34px, 4.4vw, 50px);
   letter-spacing: -0.05em;
 }
 
@@ -427,6 +438,46 @@ h2 {
   color: var(--cyan);
 }
 
+@media (min-width: 821px) and (max-height: 850px) {
+  .hero {
+    row-gap: 12px;
+    padding: 18px 0 24px;
+  }
+
+  h1 {
+    font-size: clamp(32px, 3.4vw, 42px);
+  }
+
+  .hero-body > p {
+    margin-bottom: 9px;
+    font-size: 15px;
+    line-height: 1.38;
+  }
+
+  .hero-body > p:last-of-type {
+    margin-bottom: 17px;
+  }
+
+  .primary-button,
+  .text-link {
+    min-height: 44px;
+  }
+
+  .evidence-item {
+    min-height: 112px;
+    gap: 9px;
+    padding: 15px 18px;
+  }
+
+  .evidence-item strong {
+    font-size: 34px;
+  }
+
+  .evidence-item span {
+    font-size: 13px;
+  }
+}
+
 @media (max-width: 820px) {
   main {
     width: min(100% - 28px, 680px);
@@ -437,6 +488,7 @@ h2 {
   }
 
   .hero {
+    min-height: auto;
     grid-template-columns: 1fr;
     grid-template-areas:
       "intro"
@@ -456,6 +508,7 @@ h2 {
   }
 
   .hero-portrait {
+    height: auto;
     max-height: none;
     aspect-ratio: 4 / 3;
   }
@@ -492,7 +545,7 @@ h2 {
   }
 
   h1 {
-    font-size: clamp(35px, 10vw, 42px);
+    font-size: clamp(33px, 9.5vw, 40px);
   }
 
   .hero-actions {
