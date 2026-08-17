@@ -14,14 +14,14 @@ approaches:
   - { title: Reliability is product work, description: "Idempotency, retries, audit, observability, and recovery are designed with the happy path, not after the first incident." }
   - { title: Keep people in the loop, description: "Payments, publication, external mutations, and ambiguous decisions require explicit approval wherever an error costs more than an extra click." }
   - { title: Measure quality, description: "LLM workflows get testable contracts, evals, and acceptance criteria; impact is tied to time, cost, or output quality." }
-  - { title: Knowledge lives in the repository, description: "Specs, ADRs, decisions, and validation results are versioned so work can continue without hidden session context." }
+  - { title: Knowledge lives in repositories and trackers, description: "Specs, ADRs, and architecture decisions live in the repository; tasks, statuses, and acceptance results live in working trackers, so work can continue without hidden session context." }
 
 projects:
   - slug: construction-budget
     name: AI-driven construction budget management
     order: 10
     role: AI Solutions Architect
-    year: "2024–2025 · NDA"
+    year: "2025–2026 · NDA"
     description: Fault-tolerant agentic system inside a major Israeli developer's perimeter for portfolio budget consolidation, deviation forecasting, and executive reporting.
     platforms: [Enterprise, Private cloud]
     stack: [LangGraph, FastMCP, Python, PostgreSQL]
