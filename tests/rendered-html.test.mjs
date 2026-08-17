@@ -36,11 +36,11 @@ test("renders the personal hub with the portrait hero", async () => {
   assert.match(html, /Разрабатываю[\s\S]*hero-accent-tools[^>]*>ИИ-инструменты<[\s\S]*автоматизирую процессы\. Обучаю этому на[\s\S]*hero-accent-task[^>]*>ваших задачах</);
   assert.doesNotMatch(html, /Не продаю магию|Собираю технологии/);
   assert.match(html, /class="hero-summary"/);
-  assert.match(html, /тёплое и безопасное сообщество[\s\S]*с взаимопомощью/);
-  assert.match(html, /Индивидуально помогаю освоить ИИ на ваших задачах/);
+  assert.match(html, /тёплое и безопасное сообщество[\s\S]*взаимопомощи/);
+  assert.match(html, /Индивидуально обучаю работе с ИИ на ваших задачах/);
   assert.match(html, /href="https:\/\/github\.com\/AlexOxytocin">GitHub<\/a>/);
   assert.doesNotMatch(html, /github\.com\/alexgoodman53/i);
-  assert.match(html, /Опыт разработки, инфраструктуры и архитектуры[\s\S]*Хороший инструмент должен быть понятным/);
+  assert.match(html, /Смотрю на задачу целиком[\s\S]*применять его самостоятельно/);
   assert.doesNotMatch(html, /signal-core|signal-ring|codex-preview/);
 });
 
@@ -73,7 +73,8 @@ test("static deployment carries the same portrait hero", async () => {
   assert.doesNotMatch(html, /<script type="module" src="\/assets\/neural\.js"><\/script>/);
   assert.doesNotMatch(css, /\.hero-canvas\s*\{/);
   assert.doesNotMatch(css, /\.hero-portrait\s*\{[^}]*mask-image/);
-  assert.match(css, /\.hero-portrait::after[\s\S]*linear-gradient/);
+  assert.match(css, /\.hero-portrait img[\s\S]*mask-image:[\s\S]*linear-gradient/);
+  assert.match(css, /mask-composite:\s*intersect/);
   assert.doesNotMatch(css, /\.hero-portrait\s*\{[^}]*border:\s*1px solid/);
   assert.match(css, /\.hero-portrait\s*\{[^}]*aspect-ratio:\s*1122\s*\/\s*1402/);
   assert.match(css, /\.hero-portrait img\s*\{[^}]*object-fit:\s*contain/);
