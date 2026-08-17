@@ -173,7 +173,7 @@ export default function Home() {
         </div>
         <figure className="about-portrait">
           <img
-            src="/assets/alexey-grishchenko-about.jpg"
+            src="/assets/alexey-grishchenko-about.jpg?v=natural-warm"
             alt="Алексей Грищенко"
             width="1122"
             height="1402"

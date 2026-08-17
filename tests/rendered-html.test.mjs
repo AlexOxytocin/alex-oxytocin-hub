@@ -25,7 +25,7 @@ test("renders the personal hub with the neural hero", async () => {
   assert.match(html, /class="hero-canvas"/);
   assert.match(html, /class="direction-card-mark"[^>]*src="\/assets\/community-mark\.jpg"/);
   assert.match(html, /class="about-portrait"/);
-  assert.match(html, /src="\/assets\/alexey-grishchenko-about\.jpg"/);
+  assert.match(html, /src="\/assets\/alexey-grishchenko-about\.jpg\?v=natural-warm"/);
   assert.match(html, /<strong>10\+<\/strong>[\s\S]*лет в Java-разработке/);
   assert.match(html, /<strong>20\+<\/strong>[\s\S]*инженеров в командах/);
   assert.match(html, /alt="Логотип сообщества «Алло, Нейросеточная\?»"/);
@@ -66,7 +66,7 @@ test("static deployment carries the same interactive field", async () => {
   assert.match(html, /class="direction-card-mark"[^>]*community-mark\.jpg/);
   assert.ok(communityMark.byteLength > 8000, "community logo asset is missing or truncated");
   assert.match(html, /class="about-portrait"/);
-  assert.match(html, /alexey-grishchenko-about\.jpg/);
+  assert.match(html, /alexey-grishchenko-about\.jpg\?v=natural-warm/);
   assert.ok(portrait.byteLength > 100000, "about portrait asset is missing or truncated");
   assert.match(html, /<strong>10\+<\/strong><span>лет в Java-разработке/);
   assert.match(html, /<strong>20\+<\/strong><span>инженеров в командах/);
