@@ -46,7 +46,7 @@ const siteUrl = owner
   : 'https://cv.godmodetools.com';
 
 const metaDescription = description ?? t('meta.description');
-const metaImage = ogImage ?? `${siteUrl}/og-image.png`;
+const metaImage = ogImage ?? `${siteUrl}/og-image-aleksei.png`;
 const canonicalUrl = `${siteUrl}${Astro.url.pathname}`;
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
@@ -99,6 +99,9 @@ const authorGitHubPage = 'https://godmodetools.com';
     <meta property="og:title" content={title} />
     <meta property="og:description" content={metaDescription} />
     <meta property="og:image" content={metaImage} />
+    <meta property="og:image:width" content="1731" />
+    <meta property="og:image:height" content="909" />
+    <meta property="og:image:alt" content="Алексей Грищенко — AI-решения, enterprise-архитектура и инженерное лидерство" />
     <meta property="og:locale" content={t('meta.locale')} />
 
     <!-- Twitter Card -->
@@ -106,6 +109,7 @@ const authorGitHubPage = 'https://godmodetools.com';
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={metaDescription} />
     <meta name="twitter:image" content={metaImage} />
+    <meta name="twitter:image:alt" content="Алексей Грищенко — AI-решения, enterprise-архитектура и инженерное лидерство" />
 
     <script is:inline>
       const params = new URLSearchParams(window.location.search);
