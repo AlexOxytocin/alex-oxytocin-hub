@@ -36,6 +36,7 @@ test("renders the personal hub with the portrait hero", async () => {
   assert.doesNotMatch(html, /Не продаю магию|Собираю технологии/);
   assert.match(html, /тёплое и безопасное сообщество[\s\S]*с взаимопомощью/);
   assert.match(html, /Индивидуально помогаю осваивать их на реальных задачах/);
+  assert.match(html, /К ИИ я пришёл через разработку, инфраструктуру и архитектуру больших[\s\S]*Хороший[\s\S]*инструмент освобождает время и внимание/);
   assert.doesNotMatch(html, /signal-core|signal-ring|codex-preview/);
 });
 
