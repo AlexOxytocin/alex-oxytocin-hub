@@ -37,7 +37,7 @@ test("renders the personal hub with the portrait hero", async () => {
   assert.doesNotMatch(html, /Обучаю этому на|hero-accent-task/);
   assert.doesNotMatch(html, /Не продаю магию|Собираю технологии/);
   assert.match(html, /class="hero-summary"/);
-  assert.match(html, /тёплое и безопасное сообщество[\s\S]*взаимопомощи/);
+  assert.match(html, /тёплое и безопасное[\s\S]*ИТ-сообщество профессионалов[\s\S]*взаимопомощи/);
   assert.match(html, /Индивидуально обучаю работе с ИИ на ваших задачах/);
   assert.match(html, /href="https:\/\/github\.com\/AlexOxytocin">GitHub<\/a>/);
   assert.doesNotMatch(html, /github\.com\/alexgoodman53/i);
