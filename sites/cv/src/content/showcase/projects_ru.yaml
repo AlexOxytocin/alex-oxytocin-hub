@@ -56,7 +56,7 @@ projects:
     name: Автоматизированный media buyer
     order: 20
     role: AI Solutions Architect
-    year: "2024–2025 · NDA"
+    year: "2025–2026 · NDA"
     description: Мультиагентная система для планирования кампаний, анализа метрик, управления аккаунтами и проверки креативов при пяти- и шестизначном дневном бюджете.
     platforms: [Meta Ads, TikTok Ads, Google Ads]
     stack: [LangGraph, Anthropic API, FastMCP, Langfuse, ClickHouse, PostgreSQL]
@@ -69,7 +69,7 @@ projects:
     name: RAG-платформа для документации и онбординга
     order: 30
     role: AI Solutions Architect
-    year: "2024 · NDA"
+    year: "2025 · NDA"
     description: Корпоративный поиск и ассистент поверх PDF, Confluence и wiki — гибридный retrieval, reranker и ответы по процессам с контролем источников.
     platforms: [Web, Confluence]
     stack: [Python, LangChain, LangSmith, Vector DB, BM25, Docker]
@@ -82,7 +82,7 @@ projects:
     name: FlatScanner
     order: 40
     role: Автор продукта и архитектор
-    year: "2026 · развивается"
+    year: "2025–2026 · закончен"
     description: Telegram- и web-сервис для анализа объявлений об аренде — извлекает данные, изучает фотографии, замечает планировку, удобства и практические риски, которых нет в обычных фильтрах.
     platforms: [Telegram, Web, Airbnb]
     stack: [FastAPI, OpenRouter, Apify, Redis, PostgreSQL, Docker]
@@ -130,7 +130,7 @@ projects:
     name: Контур управляемой AI-разработки
     order: 80
     role: Архитектор процесса
-    year: "2026 · используется"
+    year: "2024–2026 · используется"
     description: Spec-driven цикл «задача → спецификация → isolated worker → PR → CI → AI review → merge», где память хранится в репозитории, а код не считается принятым до прохождения всего контура.
     platforms: [GitHub, CI/CD, Codex, Claude Code]
     stack: [Git Worktrees, GitHub Actions, Specs, ADR, Automated Review]

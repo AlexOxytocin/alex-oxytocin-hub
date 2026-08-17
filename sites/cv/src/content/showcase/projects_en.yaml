@@ -34,7 +34,7 @@ projects:
     name: Automated media buyer
     order: 20
     role: AI Solutions Architect
-    year: "2024–2025 · NDA"
+    year: "2025–2026 · NDA"
     description: Multi-agent system for campaign planning, metric analysis, account management, and creative review across five- and six-figure daily budgets.
     platforms: [Meta Ads, TikTok Ads, Google Ads]
     stack: [LangGraph, Anthropic API, FastMCP, Langfuse, ClickHouse, PostgreSQL]
@@ -46,7 +46,7 @@ projects:
     name: RAG platform for documentation & onboarding
     order: 30
     role: AI Solutions Architect
-    year: "2024 · NDA"
+    year: "2025 · NDA"
     description: Enterprise search and assistant over PDF, Confluence, and wikis with hybrid retrieval, reranking, and source-controlled process answers.
     platforms: [Web, Confluence]
     stack: [Python, LangChain, LangSmith, Vector DB, BM25, Docker]
@@ -58,7 +58,7 @@ projects:
     name: FlatScanner
     order: 40
     role: Product author & architect
-    year: "2026 · evolving"
+    year: "2025–2026 · completed"
     description: Telegram and web service that analyses rental listings and photos for layouts, amenities, and practical risks that ordinary filters miss.
     platforms: [Telegram, Web, Airbnb]
     stack: [FastAPI, OpenRouter, Apify, Redis, PostgreSQL, Docker]
@@ -102,7 +102,7 @@ projects:
     name: Controlled AI development loop
     order: 80
     role: Process architect
-    year: "2026 · in use"
+    year: "2024–2026 · in use"
     description: Spec-driven delivery loop from task and isolated worker to PR, CI, AI review, and merge, with repository-backed memory and full acceptance gates.
     platforms: [GitHub, CI/CD, Codex, Claude Code]
     stack: [Git Worktrees, GitHub Actions, Specs, ADR, Automated Review]
