@@ -3,9 +3,9 @@ intro: >
   separated from work in progress, and metrics appear only where they can be substantiated.
 
 groups:
-  - { id: client-systems, title: Enterprise AI systems, description: "Solutions built around real processes, data, and business constraints. Selected details are protected by NDA.", project_slugs: [construction-budget, media-buyer, rag-platform] }
+  - { id: client-systems, title: Enterprise AI systems, description: "Solutions built around real processes, data, and business constraints. Selected details are protected by NDA.", project_slugs: [construction-budget, media-buyer, rag-platform, symbioflow-engine] }
   - { id: products, title: Original products, description: "Tools that grew out of specific everyday and professional problems.", project_slugs: [flatscanner, community-platform] }
-  - { id: engineering-platforms, title: Engineering platforms & process, description: "Durable agent execution, architecture decisions, and controlled AI-assisted delivery.", project_slugs: [symbioflow-engine, architectura, development-automation] }
+  - { id: engineering-platforms, title: Engineering platforms & process, description: "Durable agent execution, architecture decisions, and controlled AI-assisted delivery.", project_slugs: [architectura, development-automation] }
   - { id: personal-operations, title: Personal operations automation, description: "Reproducible workflows for finance, reporting, and recurring obligations with human approval for critical actions.", project_slugs: [jarvis, argentina-migration-bot, georgia-ip-automation, binance-warehouse] }
   - { id: community-learning, title: Community & learning, description: "An environment where tools become practice, projects, and transferable skills.", project_slugs: [allo-community, ai-training] }
 
@@ -81,11 +81,11 @@ projects:
     name: SymbioFlow Engine
     order: 60
     role: Architecture author
-    year: "2026 · foundation"
+    year: "2026 · NDA"
     description: Corporate AI-agent execution platform on Java and Temporal with durable AgentRuns, retries, replay, idempotent tool calls, audit, and observability independent of one agent framework.
     platforms: [Enterprise, Temporal]
     stack: [Java 25, Spring Boot, Temporal, NATS JetStream, PostgreSQL, OpenTelemetry]
-    tags: [Durable Workflows, Agent Runtime, Control Plane, In development]
+    tags: [Durable Workflows, Agent Runtime, Control Plane, NDA]
     media: [{ type: image, src: /media/showcase/symbioflow-engine.jpg, alt: "Durable agent workflow with recovery and audit history", featured: true }]
   - slug: architectura
     name: Architectura

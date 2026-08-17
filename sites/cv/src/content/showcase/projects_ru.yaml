@@ -7,7 +7,7 @@ groups:
   - id: client-systems
     title: Корпоративные AI-системы
     description: Решения для реальных процессов, данных и ограничений бизнеса. Часть деталей закрыта NDA.
-    project_slugs: [construction-budget, media-buyer, rag-platform]
+    project_slugs: [construction-budget, media-buyer, rag-platform, symbioflow-engine]
   - id: products
     title: Собственные продукты
     description: Инструменты, которые выросли из конкретных бытовых и профессиональных задач.
@@ -15,7 +15,7 @@ groups:
   - id: engineering-platforms
     title: Инженерные платформы и процесс
     description: Надёжное исполнение агентов, архитектурные решения и управляемая AI-assisted разработка.
-    project_slugs: [symbioflow-engine, architectura, development-automation]
+    project_slugs: [architectura, development-automation]
   - id: personal-operations
     title: Автоматизация личных операций
     description: Воспроизводимые контуры для финансов, отчётности и регулярных обязательств с ручным подтверждением критичных действий.
@@ -107,11 +107,11 @@ projects:
     name: SymbioFlow Engine
     order: 60
     role: Автор архитектуры
-    year: "2026 · foundation"
+    year: "2026 · NDA"
     description: Корпоративная платформа исполнения AI-агентов на Java и Temporal — долгоживущие AgentRun, retries, replay, идемпотентные tool calls, аудит и наблюдаемость без привязки к одному агентному фреймворку.
     platforms: [Enterprise, Temporal]
     stack: [Java 25, Spring Boot, Temporal, NATS JetStream, PostgreSQL, OpenTelemetry]
-    tags: [Durable Workflows, Agent Runtime, Control Plane, In development]
+    tags: [Durable Workflows, Agent Runtime, Control Plane, NDA]
     media: [{ type: image, src: /media/showcase/symbioflow-engine.jpg, alt: "Долгоживущий агентный workflow с восстановлением и аудитом", featured: true }]
 
   - slug: architectura
