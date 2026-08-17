@@ -55,7 +55,7 @@ const directions: Direction[] = [
 
 const evidence = [
   { value: "20+", label: "лет в IT: от embedded и инфраструктуры до enterprise и AI" },
-  { value: "7+", label: "лет в Java-разработке, техлидстве и архитектуре" },
+  { value: "10+", label: "лет в Java-разработке, техлидстве и архитектуре" },
   { value: "20+", label: "инженеров в командах, которые я вёл" },
   { value: "15 000+", label: "магазинов работали на системах, которые мы развивали" },
 ];
