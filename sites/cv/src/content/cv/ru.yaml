@@ -1,0 +1,94 @@
+name: Алексей Грищенко
+title: AI Solutions Architect · Agentic Systems · Automation
+
+summary: >
+  AI Solutions Architect и Automation Lead с 20+ годами в IT — от embedded C++,
+  инфраструктуры и enterprise Java до прикладных LLM-систем. Проектирую решения,
+  которые проходят путь от аудита процесса до продакшена: агенты, MCP-интеграции,
+  RAG, оценка качества, human-in-the-loop и CI/CD.
+
+location: Буэнос-Айрес, Аргентина
+timezone: UTC−3
+
+contacts:
+  - label: Telegram
+    url: https://t.me/AlexOxitocin
+  - label: LinkedIn
+    url: https://www.linkedin.com/in/aleksei-grishchenko/
+  - label: GitHub
+    url: https://github.com/alexgoodman53
+  - label: Личный сайт
+    url: https://godmodetools.com
+
+achievements:
+  - "20+ лет в IT: embedded-разработка, инфраструктура, enterprise backend и прикладной ИИ"
+  - 7+ лет в Java-разработке, техлидстве и архитектуре; руководил командами из 10+ инженеров
+  - Развивал back-office платформу для 15 000+ магазинов и участвовал в декомпозиции монолита из ~12 000 классов
+  - Сократил время сборки enterprise-системы с 1,5 часа до 30 минут
+  - Более 2 лет проектирует и внедряет LLM-агентов, включая code review и acceptance-процессы в CI/CD
+  - Основал и развивает некоммерческое сообщество AI-практиков «Алло, Нейросеточная?»
+
+skills:
+  - group: AI и агентные системы
+    items: [LLM orchestration, LangGraph, LangChain, CrewAI, OpenAI Agents SDK, Anthropic SDK, RAG, Evals, Human-in-the-loop]
+  - group: Интеграции и автоматизация
+    items: [MCP, FastMCP, Tool Calling, n8n, Temporal, Airflow, REST API]
+  - group: Enterprise-разработка
+    items: [Java 17, Spring Boot, Spring Cloud, микросервисы, Kafka, SAGA, PostgreSQL]
+  - group: Инженерный стек
+    items: [Python, Java, Go, Docker, Kubernetes, AWS, CI/CD, Linux]
+  - group: AI-инструменты
+    items: [Codex, Claude Code, OpenAI, Anthropic, OpenRouter, LangSmith, Langfuse]
+
+experience:
+  - company: Self-Employed
+    role: AI Solutions Architect / Automation Engineer
+    period: 2023 — настоящее время
+    description:
+      - Проектирую и внедряю агентные системы для enterprise-клиентов — от аудита процесса и прототипа до продакшена и передачи команде
+      - Собираю agent pipelines, RAG-системы и MCP-серверы поверх внутренних API и корпоративных данных
+      - Встраиваю измерение качества, LLM-as-judge, human-in-the-loop, наблюдаемость и CI/CD
+      - Работаю с клиентами в LATAM, Израиле и международных SaaS-проектах; детали части кейсов закрыты NDA
+    stack: [LangGraph, LangChain, OpenAI Agents SDK, Anthropic SDK, FastMCP, RAG, LangSmith, Langfuse, n8n, Temporal, Java, Python, Go, Docker, Kubernetes, AWS]
+
+  - company: X5
+    role: Senior Java Developer / Team Lead / Architect
+    period: Янв 2018 — Апр 2023
+    description:
+      - Развивал back-office платформу, обслуживавшую 15 000+ магазинов
+      - "Участвовал в декомпозиции legacy-монолита из ~12 000 классов: модульный монолит, затем микросервисы"
+      - Сократил время сборки с 1,5 часа до 30 минут и модернизировал стек с Java 7 до Java 17 / Spring Boot
+      - Спроектировал систему доставки обновлений в магазины на Spring Cloud и развивал event-driven архитектуру на Kafka, SAGA и orchestration
+      - Руководил инженерными командами численностью более 10 человек
+    stack: [Java 17, Spring Boot, Spring Cloud, Kafka, SAGA, REST, Maven, Gradle, Swagger, Grafana, PostgreSQL]
+
+  - company: Wellink Company
+    role: Java Developer
+    period: 2016 — 2018
+    description:
+      - Разрабатывал backend SLA-платформы мониторинга и отчётности
+      - Работал с обработкой данных в PostgreSQL, Linux-деплоями, интеграциями и сетевым мониторингом
+    stack: [Java, PostgreSQL, Linux, REST, Monitoring]
+
+  - company: ImportFrut
+    role: System Administrator / Infrastructure Engineer
+    period: Ноя 2008 — Сен 2016
+    description:
+      - Отвечал за локальную сеть, физические и виртуальные серверы, хранилища и POS-инфраструктуру
+      - Обеспечивал надёжность, резервное копирование и безопасность Linux/Windows-систем
+    stack: [Linux, Windows Server, Proxmox, VMware, iptables, NFS, mdadm, LVM]
+
+  - company: БСКБ «Восток»
+    role: Software Engineer (C++ / DSP)
+    period: Сен 2004 — Ноя 2008
+    description:
+      - Разрабатывал embedded-системы на C++ для микроконтроллеров и участвовал в исследованиях цифровой обработки сигналов
+      - Работал в инженерной R&D-команде численностью более 20 человек
+    stack: [C++, DSP, MATLAB, ViewLab, Embedded Systems]
+
+education: []
+languages:
+  - language: Русский
+    level: Родной
+  - language: Английский
+    level: Рабочий

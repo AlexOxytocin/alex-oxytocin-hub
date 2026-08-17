@@ -1,0 +1,66 @@
+name: Aleksei Grishchenko
+title: Senior Java Architect · Team Lead · Enterprise Systems
+summary: >
+  Java architect with 7+ years in enterprise software and 20+ years of overall engineering experience.
+  I specialize in legacy modernization, monolith decomposition,
+  event-driven architecture, and technical team leadership.
+location: Buenos Aires, Argentina
+timezone: UTC−3
+contacts:
+  - { label: Telegram, url: "https://t.me/AlexOxitocin" }
+  - { label: LinkedIn, url: "https://www.linkedin.com/in/aleksei-grishchenko/" }
+  - { label: GitHub, url: "https://github.com/alexgoodman53" }
+  - { label: Personal site, url: "https://godmodetools.com" }
+achievements:
+  - 7+ years in Java development, technical leadership, and architecture
+  - Led engineering teams of more than 10 people
+  - Evolved a back-office platform serving 15,000+ stores
+  - Helped decompose a ~12,000-class legacy monolith
+  - Reduced an enterprise build pipeline from 1.5 hours to 30 minutes
+  - Modernized a core stack from Java 7 to Java 17 and Spring Boot
+skills:
+  - group: Java & Spring
+    items: [Java 17, Spring Boot, Spring Cloud, Spring Framework, Maven, Gradle]
+  - group: Architecture
+    items: [Microservices, Modular Monolith, Event-driven Architecture, SAGA, Orchestration, REST]
+  - group: Data & integrations
+    items: [Kafka, PostgreSQL, Swagger, RMI]
+  - group: Engineering practices
+    items: [CI/CD, Code Review, Observability, Grafana, Technical Leadership]
+  - group: Additional stack
+    items: [Python, Go, Docker, Kubernetes, Linux, AWS]
+experience:
+  - company: X5
+    role: Senior Java Developer / Team Lead / Architect
+    period: Jan 2018 — Apr 2023
+    description:
+      - Evolved a back-office platform serving 15,000+ stores
+      - Helped decompose a ~12,000-class legacy monolith into a modular monolith and later microservices
+      - Reduced build time from 1.5 hours to 30 minutes and modernized the stack from Java 7 to Java 17 / Spring Boot
+      - Designed a Spring Cloud store-update delivery system
+      - Moved integrations from RMI to REST and Kafka; developed SAGA and orchestration-based workflows
+      - Led engineering teams of more than 10 people
+    stack: [Java 17, Spring Boot, Spring Cloud, Kafka, SAGA, REST, Maven, Gradle, Swagger, Grafana, PostgreSQL]
+  - company: Wellink Company
+    role: Java Developer
+    period: 2016 — 2018
+    description:
+      - Developed the backend of an SLA monitoring and reporting platform
+      - Worked with PostgreSQL, Linux deployments, integrations, and network monitoring
+    stack: [Java, PostgreSQL, Linux, REST, Monitoring]
+  - company: ImportFrut
+    role: System Administrator / Infrastructure Engineer
+    period: Nov 2008 — Sep 2016
+    description:
+      - Owned the company's server, network, and virtualization infrastructure
+    stack: [Linux, Windows Server, Proxmox, VMware, Networking]
+  - company: BSKB Vostok
+    role: Software Engineer (C++ / DSP)
+    period: Sep 2004 — Nov 2008
+    description:
+      - Developed embedded C++ systems and contributed to digital signal processing R&D
+    stack: [C++, DSP, MATLAB, Embedded Systems]
+education: []
+languages:
+  - { language: Russian, level: Native }
+  - { language: English, level: Professional working proficiency }

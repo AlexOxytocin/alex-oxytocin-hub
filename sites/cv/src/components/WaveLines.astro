@@ -1,0 +1,310 @@
+---
+//  WaveLines.astro
+//  CV Hub
+//
+//  XMB-style glowing sine-wave lines canvas background.
+//  Lines are symmetric around centerY: middle line is brightest/widest,
+//  outer lines are dimmer/thinner.
+//  Drop into Layout.astro in place of AnimatedBackground or GalaxyBackground.
+//
+//  Bug note: original destination-in mask was applied to the full canvas each
+//  iteration, destroying the background at edges. Fixed via per-line offscreen
+//  canvas so compositing stays isolated.
+//
+//  Created by Alexander Gusarov on 26.04.2026.
+//  @spartan121
+//
+
+export interface Props {
+  // ── Lines ──────────────────────────────────────────────────────────────────
+  lines?:          number;  // total line count (odd = clean center)   default: 5
+  centerY?:        number;  // vertical center, fraction of H          default: 0.50
+  lineSpacing?:    number;  // spacing between lines, fraction of H    default: 0.04
+  baseAmplitude?:  number;  // center line amplitude, px               default: 40
+  ampStep?:        number;  // amplitude reduction per step from center default: 6
+  baseSpeed?:      number;  // center line animation speed             default: 0.0007
+  speedStep?:      number;  // speed increase per step from center     default: 0.0003
+  phaseOffset?:    number;  // per-line initial phase shift, rad       default: 1.4
+  // ── Glow ──────────────────────────────────────────────────────────────────
+  glowHeight?:     number;  // glow strip height below each line, px   default: 28
+  edgeFade?:       number;  // horizontal fade zone, fraction of W     default: 0.10
+  // ── Color ──────────────────────────────────────────────────────────────────
+  hueStep?:        number;  // hue degrees added per step from center  default: 22
+  saturation?:     number;  // line color saturation, %                default: 88
+  lineLightness?:  number;  // line stroke lightness, %                default: 76
+  glowLightness?:  number;  // glow fill lightness, %                  default: 72
+  // Brightness (opacity factor): computed per-line but base controllable
+  centerBright?:   number;  // brightness of center line               default: 0.80
+  brightStep?:     number;  // brightness decrease per step from center default: 0.21
+  // ── Background gradient ────────────────────────────────────────────────────
+  bgDarkSat?:      number;  // dark bg saturation, %                   default: 30
+  bgDarkLow?:      number;  // dark bg top lightness, %                default: 6
+  bgDarkHigh?:     number;  // dark bg bottom lightness, %             default: 11
+  bgHueShift?:     number;  // hue offset for bottom bg stop           default: 30
+  bgLightSat?:     number;  // light bg saturation, %                  default: 40
+  bgLightLow?:     number;  // light bg top lightness, %               default: 82
+  bgLightHigh?:    number;  // light bg bottom lightness, %            default: 72
+  // ── Quality ────────────────────────────────────────────────────────────────
+  drawStep?:       number;  // horizontal px step for wave path        default: 2
+}
+
+const {
+  lines         = 8,
+  centerY       = 0.75,
+  lineSpacing   = 0.02,
+  baseAmplitude = 40,
+  ampStep       = 6,
+  baseSpeed     = 0.01,
+  speedStep     = 0.005,
+  phaseOffset   = 1.4,
+  glowHeight    = 36,
+  edgeFade      = 0.10,
+  hueStep       = 22,
+  saturation    = 88,
+  lineLightness = 76,
+  glowLightness = 72,
+  centerBright  = 0.80,
+  brightStep    = 0.21,
+  bgDarkSat     = 30,
+  bgDarkLow     = 6,
+  bgDarkHigh    = 11,
+  bgHueShift    = 30,
+  bgLightSat    = 40,
+  bgLightLow    = 82,
+  bgLightHigh   = 72,
+  drawStep      = 2,
+} = Astro.props;
+---
+
+<canvas id="wl-canvas" aria-hidden="true"></canvas>
+
+<style>
+  #wl-canvas {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+    display: block;
+  }
+</style>
+
+<script define:vars={{
+  lines, centerY, lineSpacing,
+  baseAmplitude, ampStep,
+  baseSpeed, speedStep, phaseOffset,
+  glowHeight, edgeFade,
+  hueStep, saturation, lineLightness, glowLightness,
+  centerBright, brightStep,
+  bgDarkSat, bgDarkLow, bgDarkHigh, bgHueShift,
+  bgLightSat, bgLightLow, bgLightHigh,
+  drawStep,
+}}>
+(function () {
+  const canvas = document.getElementById('wl-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+
+  // ── CONFIG ─────────────────────────────────────────────────────────────────
+  const CFG = {
+    // Lines
+    lines,          // количество линий
+    centerY,        // центр по Y (доля высоты)
+    lineSpacing,    // расстояние между линиями (доля высоты)
+    baseAmplitude,  // амплитуда центральной линии (px)
+    ampStep,        // убыль амплитуды на шаг от центра (px)
+    baseSpeed,      // скорость центральной линии
+    speedStep,      // прирост скорости на шаг от центра
+    phaseOffset,    // фазовый сдвиг между линиями (рад)
+    // Glow
+    glowHeight,     // высота свечения под линией (px)
+    edgeFade,       // ширина горизонтального затухания (доля W)
+    // Color
+    hueStep,        // сдвиг hue на шаг от центра (°)
+    saturation,     // насыщенность (%)
+    lineLightness,  // светлота линии (%)
+    glowLightness,  // светлота свечения (%)
+    centerBright,   // яркость центральной линии
+    brightStep,     // убыль яркости на шаг от центра
+    // Background
+    bgDarkSat, bgDarkLow, bgDarkHigh, bgHueShift,
+    bgLightSat, bgLightLow, bgLightHigh,
+    // Quality
+    drawStep,       // шаг по X при построении волны (px)
+  };
+
+  // ── STATE ──────────────────────────────────────────────────────────────────
+  // Не стартуем с tick=0 — берём timestamp чтобы каждая загрузка
+  // начинала анимацию с разной фазы.
+  let tick = Date.now() % 50000;
+  let W = 0, H = 0;
+  let rafId = null;
+
+  // Offscreen canvas для изолированного compositing каждой линии.
+  // destination-in здесь не затрагивает основной canvas (и фон).
+  const off = document.createElement('canvas');
+  const offCtx = off.getContext('2d');
+
+  // ── HELPERS ────────────────────────────────────────────────────────────────
+
+  function getHue() {
+    const d = new Date();
+    return Math.round(((d.getHours() * 60 + d.getMinutes()) / 1440) * 360);
+  }
+
+  function isDark() {
+    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+  }
+
+  // Строим массив точек волны для одной линии
+  function buildPts(lineY, amp, phase) {
+    const pts = [];
+    for (let x = 0; x <= W; x += CFG.drawStep) {
+      const y = lineY
+        + Math.sin(x * 0.0022 + phase) * amp
+        + Math.sin(x * 0.0011 + phase * 0.4) * amp * 0.5;
+      pts.push([x, y]);
+    }
+    return pts;
+  }
+
+  // Горизонтальный fade: прозрачно у краёв, непрозрачно в центре
+  function makeHFade(ctx2, alpha, lHue) {
+    const g = ctx2.createLinearGradient(0, 0, W, 0);
+    const f = CFG.edgeFade;
+    g.addColorStop(0,     `hsla(${lHue},${CFG.saturation}%,${CFG.lineLightness}%,0)`);
+    g.addColorStop(f,     `hsla(${lHue},${CFG.saturation}%,${CFG.lineLightness}%,${alpha})`);
+    g.addColorStop(0.5,   `hsla(${lHue},${CFG.saturation}%,${CFG.lineLightness}%,${Math.min(alpha * 1.25, 1)})`);
+    g.addColorStop(1 - f, `hsla(${lHue},${CFG.saturation}%,${CFG.lineLightness}%,${alpha})`);
+    g.addColorStop(1,     `hsla(${lHue},${CFG.saturation}%,${CFG.lineLightness}%,0)`);
+    return g;
+  }
+
+  // Горизонтальная маска (чёрно-белая): для destination-in на offscreen
+  function makeMask(ctx2) {
+    const g = ctx2.createLinearGradient(0, 0, W, 0);
+    const f = CFG.edgeFade;
+    g.addColorStop(0,     'rgba(0,0,0,0)');
+    g.addColorStop(f,     'rgba(0,0,0,1)');
+    g.addColorStop(1 - f, 'rgba(0,0,0,1)');
+    g.addColorStop(1,     'rgba(0,0,0,0)');
+    return g;
+  }
+
+  // ── RESIZE ─────────────────────────────────────────────────────────────────
+  function resize() {
+    W = canvas.width = off.width  = window.innerWidth;
+    H = canvas.height = off.height = window.innerHeight;
+  }
+
+  // ── DRAW ───────────────────────────────────────────────────────────────────
+  function draw() {
+    const hue  = getHue();
+    const dark = isDark();
+
+    // Background gradient top → bottom
+    const bgSat  = dark ? CFG.bgDarkSat  : CFG.bgLightSat;
+    const bgLow  = dark ? CFG.bgDarkLow  : CFG.bgLightLow;
+    const bgHigh = dark ? CFG.bgDarkHigh : CFG.bgLightHigh;
+
+    const bgGrad = ctx.createLinearGradient(0, 0, 0, H);
+    bgGrad.addColorStop(0, `hsl(${hue},${bgSat}%,${bgLow}%)`);
+    bgGrad.addColorStop(1, `hsl(${(hue + CFG.bgHueShift) % 360},${bgSat}%,${bgHigh}%)`);
+    ctx.fillStyle = bgGrad;
+    ctx.fillRect(0, 0, W, H);
+
+    // Строим конфиг линий динамически из симметричной формулы
+    const half     = Math.floor(CFG.lines / 2);
+    const lineData = [];
+
+    for (let i = 0; i < CFG.lines; i++) {
+      const dist = i - half;                      // расстояние от центра (-2,-1,0,1,2)
+      const absDist = Math.abs(dist);
+      lineData.push({
+        t:        CFG.centerY + dist * CFG.lineSpacing,
+        hueShift: dist * CFG.hueStep,
+        speed:    CFG.baseSpeed + absDist * CFG.speedStep,
+        amp:      CFG.baseAmplitude - absDist * CFG.ampStep,
+        lw:       2.0 - absDist * 0.5,
+        bright:   CFG.centerBright - absDist * CFG.brightStep,
+      });
+    }
+
+    lineData.forEach((l, i) => {
+      const lHue      = (hue + l.hueShift + 360) % 360;
+      const phase     = tick * l.speed + i * CFG.phaseOffset;
+      const lineY     = H * l.t;
+      const pts       = buildPts(lineY, l.amp, phase);
+      const brightness = dark ? l.bright : l.bright * 0.5;
+
+      // ── Glow (только тёмная тема) ─────────────────────────────────────────
+      // Рисуем на offscreen, применяем destination-in там,
+      // затем composite на основной canvas. Фон не затрагивается.
+      if (dark) {
+        offCtx.clearRect(0, 0, W, H);
+
+        // Полоса свечения: от линии вниз на glowHeight
+        offCtx.beginPath();
+        pts.forEach(([x, y], j) => j === 0 ? offCtx.moveTo(x, y) : offCtx.lineTo(x, y));
+        for (let j = pts.length - 1; j >= 0; j--) {
+          offCtx.lineTo(pts[j][0], pts[j][1] + CFG.glowHeight);
+        }
+        offCtx.closePath();
+
+        // Вертикальный градиент: ярко у линии → прозрачно внизу
+        const vGrad = offCtx.createLinearGradient(0, lineY, 0, lineY + CFG.glowHeight);
+        vGrad.addColorStop(0, `hsla(${lHue},90%,${CFG.glowLightness}%,${brightness * 0.55})`);
+        vGrad.addColorStop(1, `hsla(${lHue},90%,${CFG.glowLightness}%,0)`);
+        offCtx.fillStyle = vGrad;
+        offCtx.fill();
+
+        // Горизонтальный fade: destination-in маска ТОЛЬКО на offscreen
+        offCtx.globalCompositeOperation = 'destination-in';
+        offCtx.fillStyle = makeMask(offCtx);
+        offCtx.fillRect(0, 0, W, H);
+        offCtx.globalCompositeOperation = 'source-over';
+
+        // Переносим готовый glow на основной canvas
+        ctx.drawImage(off, 0, 0);
+      }
+
+      // ── Линия ────────────────────────────────────────────────────────────
+      ctx.beginPath();
+      pts.forEach(([x, y], j) => j === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y));
+      ctx.strokeStyle = makeHFade(ctx, brightness, lHue);
+      ctx.lineWidth   = Math.max(l.lw, 0.5);
+      ctx.stroke();
+    });
+
+    tick++;
+    rafId = requestAnimationFrame(draw);
+  }
+
+  // ── REDUCED MOTION ─────────────────────────────────────────────────────────
+  const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  function start() {
+    if (rafId) return;
+    rafId = requestAnimationFrame(draw);
+  }
+
+  function stop() {
+    cancelAnimationFrame(rafId);
+    rafId = null;
+    draw();
+    cancelAnimationFrame(rafId);
+    rafId = null;
+  }
+
+  motionQuery.addEventListener('change', () => {
+    motionQuery.matches ? stop() : start();
+  });
+
+  // ── BOOT ───────────────────────────────────────────────────────────────────
+  window.addEventListener('resize', resize, { passive: true });
+  resize();
+
+  motionQuery.matches ? stop() : start();
+})();
+</script>

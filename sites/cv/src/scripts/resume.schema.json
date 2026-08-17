@@ -1,0 +1,91 @@
+
+
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Minimal JSON Resume Schema",
+  "type": "object",
+  "required": ["basics"],
+  "properties": {
+    "basics": {
+      "type": "object",
+      "required": ["name"],
+      "properties": {
+        "name": { "type": "string" },
+        "label": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "summary": { "type": "string" },
+        "profiles": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["network", "url"],
+            "properties": {
+              "network": { "type": "string" },
+              "url": { "type": "string", "format": "uri" }
+            }
+          }
+        }
+      }
+    },
+
+    "skills": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name"],
+        "properties": {
+          "name": { "type": "string" },
+          "keywords": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+
+    "work": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "position"],
+        "properties": {
+          "name": { "type": "string" },
+          "position": { "type": "string" },
+          "startDate": { "type": "string" },
+          "endDate": { "type": "string" },
+          "highlights": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+
+    "education": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["institution"],
+        "properties": {
+          "institution": { "type": "string" },
+          "studyType": { "type": "string" },
+          "area": { "type": "string" },
+          "startDate": { "type": "string" },
+          "endDate": { "type": "string" }
+        }
+      }
+    },
+
+    "languages": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["language"],
+        "properties": {
+          "language": { "type": "string" },
+          "fluency": { "type": "string" }
+        }
+      }
+    }
+  }
+}

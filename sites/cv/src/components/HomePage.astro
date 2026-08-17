@@ -1,0 +1,177 @@
+---
+//
+//  HomePage.astro
+//  CV Hub
+//
+//  Created by Alexander Gusarov on 03.03.2026.
+//  @spartan121
+//
+import Layout from './Layout.astro';
+
+const {
+  lang = 'en',
+  data = {},
+  pdfUrl,
+  docxUrl,
+  txtUrl,
+  t: tProp = {},
+  profile = "" 
+} = Astro.props;
+
+const t = {
+  nameFallback: tProp.nameFallback ?? 'Unnamed',
+  contacts:     tProp.contacts     ?? 'Contacts',
+  skills:       tProp.skills       ?? 'Skills',
+  experience:   tProp.experience   ?? 'Experience',
+  achievements: tProp.achievements ?? 'Achievements',
+  downloads:    tProp.downloads    ?? 'Download',
+  company:      tProp.company      ?? 'Company',
+  empty_skills:      tProp.empty_skills      ?? 'Add skills to YAML — tags will appear here.',
+  empty_experience:  tProp.empty_experience  ?? 'Add experience to YAML — your timeline will appear here.',
+  pdf:  'PDF',
+  docx: 'DOCX',
+  txt:  'TXT',
+};
+
+const pageTitle = `${data?.name ?? t.nameFallback} — CV`;
+
+const contacts     = Array.isArray(data?.contacts)    ? data.contacts    : [];
+const rawSkills    = Array.isArray(data?.skills)      ? data.skills      : [];
+const experience   = Array.isArray(data?.experience)  ? data.experience  : [];
+const achievements = Array.isArray(data?.achievements)? data.achievements: [];
+
+const normalizeBullet = (v) => {
+  if (typeof v === 'string') return v;
+  if (v && typeof v === 'object') {
+    if (typeof v.text === 'string') return v.text;
+    if (typeof v.label === 'string' && typeof v.value === 'string') return `${v.label}: ${v.value}`;
+    return Object.entries(v).map(([k, val]) => `${k}: ${String(val)}`).join(' · ');
+  }
+  return String(v);
+};
+
+const skillGroups = rawSkills
+  .map((s) =>
+    typeof s === 'string'
+      ? { group: null, items: [s] }
+      : { group: s?.group ?? null, items: Array.isArray(s?.items) ? s.items : [] }
+  )
+  .filter((g) => g.items.length > 0);
+---
+
+<Layout title={pageTitle} lang={lang} section="main" profile={profile}>
+  <section class="container">
+    <div class="page-grid">
+
+      {/* ── SIDEBAR ── */}
+      <aside class="sidebar">
+
+        {/* 1. Download */}
+        <article class="card card--downloads">
+          <h2 class="h2">{t.downloads}</h2>
+          <div class="btnrow" aria-label={t.downloads}>
+            <a class="btn btn--ghost" href={pdfUrl}  download>{t.pdf}</a>
+            <a class="btn btn--ghost" href={docxUrl} download>{t.docx}</a>
+            <a class="btn btn--ghost" href={txtUrl}  download>{t.txt}</a>
+          </div>
+        </article>
+
+        {/* 2. Skills */}
+        <article class="card card--skills">
+          <h2 class="h2">{t.skills}</h2>
+          {skillGroups.length > 0 ? (
+            <div class="skillsgrid">
+              {skillGroups.map((g) => (
+                <div class="skillsgroup">
+                  {g.group && <div class="skillsgroup__title">{g.group}</div>}
+                  <ul class="tags">
+                    {g.items.map((s) => <li class="tag">{s}</li>)}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p class="muted">
+              {t.empty_skills}
+            </p>
+          )}
+        </article>
+
+      </aside>
+
+      {/* ── MAIN CONTENT ── */}
+      <main class="main-content">
+
+        {/* 1. Hero */}
+        <div class="card hero">
+          <div class="hero__top">
+            <div>
+              <h1 class="hero__name">{data?.name ?? t.nameFallback}</h1>
+              {data?.title   && <p class="hero__title">{data.title}</p>}
+              {data?.summary && <p class="hero__summary">{data.summary}</p>}
+            </div>
+          </div>
+
+          {contacts.length > 0 && (
+            <div class="hero__contacts">
+              <div class="section__title">{t.contacts}</div>
+              <div class="pillrow">
+                {contacts.map((c) => (
+                  <a
+                    class="pill"
+                    href={c.url}
+                    target={c.url?.startsWith('mailto:') ? undefined : '_blank'}
+                    rel={c.url?.startsWith('mailto:')    ? undefined : 'noopener'}
+                  >
+                    {c.label}
+                  </a>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* 2. Achievements */}
+        {achievements.length > 0 && (
+          <article class="card card--achievements">
+            <h2 class="h2">{t.achievements}</h2>
+            <ul class="list">
+              {achievements.map((a) => <li>{a}</li>)}
+            </ul>
+          </article>
+        )}
+
+        {/* 3. Experience */}
+        <section class="section section--experience">
+          <h2 class="h2">{t.experience}</h2>
+
+          {experience.length > 0 ? (
+            <div class="stack">
+              {experience.map((e) => (
+                <article class="card item">
+                  <div class="item__top">
+                    <strong>{e.company ?? t.company}</strong>
+                    <span class="muted">{e.period ?? ''}</span>
+                  </div>
+                  {e.role && <div class="muted">{e.role}</div>}
+                  {Array.isArray(e.description) && e.description.length > 0 && (
+                    <ul class="list">
+                      {e.description.map((d) => <li>{normalizeBullet(d)}</li>)}
+                    </ul>
+                  )}
+                </article>
+              ))}
+            </div>
+          ) : (
+            <article class="card">
+              <p class="muted">
+                {t.empty_experience}
+              </p>
+            </article>
+          )}
+        </section>
+
+      </main>
+    </div>
+  </section>
+</Layout>

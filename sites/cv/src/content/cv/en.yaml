@@ -1,0 +1,94 @@
+name: Aleksei Grishchenko
+title: AI Solutions Architect · Agentic Systems · Automation
+
+summary: >
+  AI Solutions Architect and Automation Lead with 20+ years in IT, spanning
+  embedded C++, infrastructure, enterprise Java, and applied LLM systems.
+  I take AI solutions from process audit to production: agents, MCP integrations,
+  RAG, evaluation, human-in-the-loop controls, and CI/CD.
+
+location: Buenos Aires, Argentina
+timezone: UTC−3
+
+contacts:
+  - label: Telegram
+    url: https://t.me/AlexOxitocin
+  - label: LinkedIn
+    url: https://www.linkedin.com/in/aleksei-grishchenko/
+  - label: GitHub
+    url: https://github.com/alexgoodman53
+  - label: Personal site
+    url: https://godmodetools.com
+
+achievements:
+  - 20+ years in IT across embedded development, infrastructure, enterprise backend, and applied AI
+  - 7+ years in Java development, technical leadership, and architecture; led teams of 10+ engineers
+  - Evolved a back-office platform serving 15,000+ stores and helped decompose a ~12,000-class legacy monolith
+  - Reduced an enterprise build pipeline from 1.5 hours to 30 minutes
+  - 2+ years designing and deploying LLM agents, including code review and acceptance workflows integrated with CI/CD
+  - Founder and mentor of the non-commercial AI practitioner community “Hello, Neural Network?”
+
+skills:
+  - group: AI & agentic systems
+    items: [LLM orchestration, LangGraph, LangChain, CrewAI, OpenAI Agents SDK, Anthropic SDK, RAG, Evals, Human-in-the-loop]
+  - group: Integrations & automation
+    items: [MCP, FastMCP, Tool Calling, n8n, Temporal, Airflow, REST APIs]
+  - group: Enterprise engineering
+    items: [Java 17, Spring Boot, Spring Cloud, Microservices, Kafka, SAGA, PostgreSQL]
+  - group: Engineering stack
+    items: [Python, Java, Go, Docker, Kubernetes, AWS, CI/CD, Linux]
+  - group: AI tooling
+    items: [Codex, Claude Code, OpenAI, Anthropic, OpenRouter, LangSmith, Langfuse]
+
+experience:
+  - company: Self-Employed
+    role: AI Solutions Architect / Automation Engineer
+    period: 2023 — Present
+    description:
+      - Design and deploy production agentic systems for enterprise clients, from process audit and prototype through rollout and team handoff
+      - Build agent pipelines, RAG systems, and custom MCP servers over internal APIs and enterprise data
+      - Integrate evaluations, LLM-as-judge, human-in-the-loop controls, observability, and CI/CD
+      - Work with clients across LATAM, Israel, and international SaaS projects; selected case details are protected by NDA
+    stack: [LangGraph, LangChain, OpenAI Agents SDK, Anthropic SDK, FastMCP, RAG, LangSmith, Langfuse, n8n, Temporal, Java, Python, Go, Docker, Kubernetes, AWS]
+
+  - company: X5
+    role: Senior Java Developer / Team Lead / Architect
+    period: Jan 2018 — Apr 2023
+    description:
+      - Evolved a back-office platform serving 15,000+ stores
+      - Helped decompose a ~12,000-class legacy monolith into a modular monolith and later microservices
+      - Reduced build time from 1.5 hours to 30 minutes and modernized the stack from Java 7 to Java 17 / Spring Boot
+      - Designed a Spring Cloud store-update delivery system and developed event-driven flows with Kafka, SAGA, and orchestration
+      - Led engineering teams of more than 10 people
+    stack: [Java 17, Spring Boot, Spring Cloud, Kafka, SAGA, REST, Maven, Gradle, Swagger, Grafana, PostgreSQL]
+
+  - company: Wellink Company
+    role: Java Developer
+    period: 2016 — 2018
+    description:
+      - Developed the backend of an SLA monitoring and reporting platform
+      - Worked with PostgreSQL data processing, Linux deployments, integrations, and network monitoring
+    stack: [Java, PostgreSQL, Linux, REST, Monitoring]
+
+  - company: ImportFrut
+    role: System Administrator / Infrastructure Engineer
+    period: Nov 2008 — Sep 2016
+    description:
+      - Owned local networking, physical and virtual servers, storage, and POS infrastructure
+      - Maintained reliability, backups, and security across Linux and Windows systems
+    stack: [Linux, Windows Server, Proxmox, VMware, iptables, NFS, mdadm, LVM]
+
+  - company: BSKB Vostok
+    role: Software Engineer (C++ / DSP)
+    period: Sep 2004 — Nov 2008
+    description:
+      - Developed embedded C++ systems for microcontrollers and contributed to digital signal processing R&D
+      - Worked in an engineering R&D team of more than 20 people
+    stack: [C++, DSP, MATLAB, ViewLab, Embedded Systems]
+
+education: []
+languages:
+  - language: Russian
+    level: Native
+  - language: English
+    level: Professional working proficiency

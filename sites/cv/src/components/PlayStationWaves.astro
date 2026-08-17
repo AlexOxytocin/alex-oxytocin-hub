@@ -1,0 +1,226 @@
+---
+//  PlayStationWaves.astro
+//  CV Hub
+//
+//  XMB-inspired sine-wave canvas background.
+//  Drop into Layout.astro in place of AnimatedBackground or GalaxyBackground.
+//  Canvas covers full viewport (position: fixed). Respects prefers-reduced-motion.
+//
+//  Created by Alexander Gusarov on 26.04.2026.
+//  @spartan121
+//
+
+export interface Props {
+  // ── Waves ──────────────────────────────────────────────────────────────────
+  waves?:          number;  // total wave count                        default: 6
+  baseSpeed?:      number;  // animation speed of wave 0               default: 0.0025
+  speedStep?:      number;  // per-wave speed increment                default: 0.001
+  baseAmplitude?:  number;  // px amplitude of wave 0                  default: 22
+  amplitudeStep?:  number;  // px amplitude added per each wave        default: 16
+  yStart?:         number;  // Y of wave 0, fraction of canvas height  default: 0.22
+  yStep?:          number;  // Y spacing between waves, fraction of H  default: 0.13
+  phaseOffset?:    number;  // initial phase shift between waves, rad  default: 1.2
+  // ── Color ──────────────────────────────────────────────────────────────────
+  hueStep?:        number;  // hue degrees added per wave              default: 15
+  saturation?:     number;  // wave color saturation, %                default: 72
+  lightness?:      number;  // wave color lightness, %                 default: 62
+  alphaDark?:      number;  // wave fill opacity in dark mode          default: 0.055
+  alphaLight?:     number;  // wave fill opacity in light mode         default: 0.08
+  // ── Background gradient ────────────────────────────────────────────────────
+  bgDarkSat?:      number;  // dark bg saturation, %                   default: 28
+  bgDarkLow?:      number;  // dark bg top color lightness, %          default: 7
+  bgDarkHigh?:     number;  // dark bg bottom color lightness, %       default: 13
+  bgLightSat?:     number;  // light bg saturation, %                  default: 38
+  bgLightLow?:     number;  // light bg top color lightness, %         default: 90
+  bgLightHigh?:    number;  // light bg bottom color lightness, %      default: 80
+  // ── Quality ────────────────────────────────────────────────────────────────
+  drawStep?:       number;  // horizontal px step, lower = smoother    default: 4
+  secondaryBlend?: number;  // secondary sine mix factor (0..1)        default: 0.5
+}
+
+const {
+  waves          = 6,
+  baseSpeed      = 0.0025,
+  speedStep      = 0.001,
+  baseAmplitude  = 18,
+  amplitudeStep  = 14,
+  yStart         = 0.22,
+  yStep          = 0.13,
+  phaseOffset    = 1.2,
+  hueStep        = 15,
+  saturation     = 72,
+  lightness      = 62,
+  alphaDark      = 0.055,
+  alphaLight     = 0.08,
+  bgDarkSat      = 28,
+  bgDarkLow      = 7,
+  bgDarkHigh     = 13,
+  bgLightSat     = 38,
+  bgLightLow     = 90,
+  bgLightHigh    = 80,
+  drawStep       = 4,
+  secondaryBlend = 0.5,
+} = Astro.props;
+---
+
+<canvas id="psw-canvas" aria-hidden="true"></canvas>
+
+<style>
+  #psw-canvas {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+    display: block;
+  }
+</style>
+
+<script define:vars={{
+  waves, baseSpeed, speedStep,
+  baseAmplitude, amplitudeStep,
+  yStart, yStep, phaseOffset,
+  hueStep, saturation, lightness,
+  alphaDark, alphaLight,
+  bgDarkSat, bgDarkLow, bgDarkHigh,
+  bgLightSat, bgLightLow, bgLightHigh,
+  drawStep, secondaryBlend,
+}}>
+(function () {
+  const canvas = document.getElementById('psw-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+
+  // ── CONFIG ─────────────────────────────────────────────────────────────────
+  // Все визуальные параметры — здесь. Props переопределяют дефолты выше.
+  const CFG = {
+    // Waves
+    waves,           // количество волн
+    baseSpeed,       // скорость волны 0
+    speedStep,       // прирост скорости на каждую следующую волну
+    baseAmplitude,   // амплитуда волны 0 (px)
+    amplitudeStep,   // прирост амплитуды на волну (px)
+    yStart,          // Y-позиция первой волны (доля высоты)
+    yStep,           // шаг между волнами по Y (доля высоты)
+    phaseOffset,     // фазовый сдвиг между соседними волнами (рад)
+    // Color
+    hueStep,         // сдвиг hue на волну (°)
+    saturation,      // насыщенность волн (%)
+    lightness,       // светлота волн (%)
+    alphaDark,       // прозрачность в тёмной теме
+    alphaLight,      // прозрачность в светлой теме
+    // Background gradient
+    bgDarkSat,       // насыщенность фона тёмной темы (%)
+    bgDarkLow,       // светлота верхнего цвета фона (%)
+    bgDarkHigh,      // светлота нижнего цвета фона (%)
+    bgLightSat,      // насыщенность фона светлой темы (%)
+    bgLightLow,      // светлота верхнего цвета (%)
+    bgLightHigh,     // светлота нижнего цвета (%)
+    // Quality
+    drawStep,        // шаг отрисовки по X (px, меньше = плавнее)
+    secondaryBlend,  // вклад вторичной синусоиды (0..1)
+  };
+
+  // ── STATE ──────────────────────────────────────────────────────────────────
+  // Начинаем не с нуля — берём timestamp чтобы волны не стартовали
+  // из одной позиции при каждой загрузке страницы.
+  let tick = Date.now() % 50000;
+  let W = 0, H = 0;
+  let rafId = null;
+
+  // ── HELPERS ────────────────────────────────────────────────────────────────
+
+  // Hue на основе времени суток: полный оборот 360° за 24 часа
+  function getHue() {
+    const d = new Date();
+    return Math.round(((d.getHours() * 60 + d.getMinutes()) / 1440) * 360);
+  }
+
+  function isDark() {
+    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+  }
+
+  function resize() {
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+
+  // ── DRAW ───────────────────────────────────────────────────────────────────
+  function draw() {
+    const hue  = getHue();
+    const dark = isDark();
+
+    // Background gradient top → bottom
+    const bgSat  = dark ? CFG.bgDarkSat  : CFG.bgLightSat;
+    const bgLow  = dark ? CFG.bgDarkLow  : CFG.bgLightLow;
+    const bgHigh = dark ? CFG.bgDarkHigh : CFG.bgLightHigh;
+
+    const grad = ctx.createLinearGradient(0, 0, 0, H);
+    grad.addColorStop(0, `hsl(${hue},${bgSat}%,${bgLow}%)`);
+    grad.addColorStop(1, `hsl(${hue},${bgSat}%,${bgHigh}%)`);
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, W, H);
+
+    const alpha = dark ? CFG.alphaDark : CFG.alphaLight;
+
+    // Waves
+    for (let i = 0; i < CFG.waves; i++) {
+      const speed  = CFG.baseSpeed + i * CFG.speedStep;
+      const amp    = CFG.baseAmplitude + i * CFG.amplitudeStep;
+      const yBase  = H * (CFG.yStart + i * CFG.yStep);
+      const phase  = tick * speed + i * CFG.phaseOffset;
+      const wHue   = (hue + i * CFG.hueStep) % 360;
+
+      ctx.beginPath();
+      for (let x = 0; x <= W; x += CFG.drawStep) {
+        const y = yBase
+          + Math.sin(x * 0.008 + phase) * amp
+          + Math.sin(x * 0.004 + phase * 0.6) * amp * CFG.secondaryBlend;
+        x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+      }
+      ctx.lineTo(W, H);
+      ctx.lineTo(0, H);
+      ctx.closePath();
+      ctx.fillStyle = `hsla(${wHue},${CFG.saturation}%,${CFG.lightness}%,${alpha})`;
+      ctx.fill();
+    }
+
+    tick++;
+    rafId = requestAnimationFrame(draw);
+  }
+
+  // ── REDUCED MOTION ─────────────────────────────────────────────────────────
+  const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  function start() {
+    if (rafId) return;
+    rafId = requestAnimationFrame(draw);
+  }
+
+  function stop() {
+    if (rafId) {
+      cancelAnimationFrame(rafId);
+      rafId = null;
+    }
+    // Static single frame when motion is off
+    draw();
+    cancelAnimationFrame(rafId);
+    rafId = null;
+  }
+
+  motionQuery.addEventListener('change', () => {
+    motionQuery.matches ? stop() : start();
+  });
+
+  // ── BOOT ───────────────────────────────────────────────────────────────────
+  window.addEventListener('resize', resize, { passive: true });
+  resize();
+
+  if (motionQuery.matches) {
+    stop();
+  } else {
+    start();
+  }
+})();
+</script>

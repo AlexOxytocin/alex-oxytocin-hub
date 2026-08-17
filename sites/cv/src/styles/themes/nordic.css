@@ -1,0 +1,26 @@
+/* Nord — arctic blue */
+:root {
+  --bg: #2e3440;
+  --bg-glow-1: rgba(136 192 208 / 0.12);
+  --bg-glow-2: rgba(129 161 193 / 0.08);
+  --text: rgba(236, 239, 244, 0.95);
+  --text-strong: rgba(236, 239, 244, 0.98);
+  --muted: rgba(144, 162, 183, 0.80);
+  --border: rgba(255, 255, 255, 0.10);
+  --border-2: rgba(255, 255, 255, 0.18);
+  --accent: #88c0d0;
+  --accent-2: #81a1c1;
+  --accent-rgb: 136 192 208;
+  --accent-2-rgb: 129 161 193;
+  --brand-grad: linear-gradient(90deg, var(--accent), var(--accent-2));
+  --card-bg: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+  --shadow: 0 16px 44px rgba(0,0,0,0.45);
+  --shadow-soft: 0 8px 24px rgba(0,0,0,0.30);
+  --r-lg: 12px;
+  --r-pill: 999px;
+  --header-bg: rgba(46, 52, 64, 0.85);
+  --container: 980px;
+  --ease: cubic-bezier(.2,.8,.2,1);
+  --t: 180ms var(--ease);
+  --ring: 0 0 0 3px rgba(var(--accent-rgb) / 0.22);
+}

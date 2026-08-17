@@ -1,0 +1,123 @@
+nav:
+  home:
+    en: "Home"
+    ru: "Главная"
+    zh: "首页"
+  showcase:
+    en: "Showcase"
+    ru: "Проекты"
+    zh: "项目"
+  changelog:
+    en: "Changelog"
+    ru: "Лог обновлений"
+    zh: "更新日志"
+  role:
+    en: "Role"
+    ru: "Роль"
+    zh: "职位"
+
+cv:
+  unnamed:
+    en: "Unnamed"
+    ru: "Без имени"
+    zh: "未命名"
+  contacts:
+    en: "Contacts"
+    ru: "Контакты"
+    zh: "联系方式"
+  skills:
+    en: "Skills"
+    ru: "Навыки"
+    zh: "技能"
+  experience:
+    en: "Experience"
+    ru: "Опыт"
+    zh: "经验"
+  achievements:
+    en: "Achievements"
+    ru: "Достижения"
+    zh: "成就"
+  download:
+    en: "Download"
+    ru: "Скачать"
+    zh: "下载"
+  company_fallback:
+    en: "Company"
+    ru: "Компания"
+    zh: "公司"
+  empty_skills:
+    en: "Add skills to YAML — tags will appear here."
+    ru: "Добавь skills в YAML — и тут появятся теги."
+    zh: "在 YAML 中添加技能，标签会显示在这里。"
+  empty_experience:
+    en: "Add experience to YAML — your timeline will appear here."
+    ru: "Добавь experience в YAML — тут появится таймлайн опыта."
+    zh: "在 YAML 中添加经验，这里会显示你的时间线。"
+
+showcase:
+  platforms:
+    en: "Platforms"
+    ru: "Платформы"
+    zh: "平台"
+  stack:
+    en: "Stack"
+    ru: "Стек"
+    zh: "技术栈"
+  tags:
+    en: "Tags"
+    ru: "Теги"
+    zh: "标签"
+  featured:
+    en: "Featured"
+    ru: "Избранное"
+    zh: "精选"
+  title:
+    en: "Showcase"
+    ru: "Проекты"
+    zh: "项目展示"
+  page_title:
+    en: "Projects"
+    ru: "Проекты"
+    zh: "项目"
+  empty:
+    en: "No projects yet."
+    ru: "Здесь пока ничего."
+    zh: "暂无项目。"
+  case_study:
+    en: "Case Study"
+    ru: "Case Study"
+    zh: "Case Study"
+
+changelog:
+  title:
+    en: "Changelog"
+    ru: "Лог активности"
+    zh: "更新日志"
+  subtitle:
+    en: "Version history of CV Hub"
+    ru: "История версий CV Hub"
+    zh: "CV Hub 版本历史"
+  empty:
+    en: "No entries yet."
+    ru: "Записей пока нет."
+    zh: "暂无记录。"
+
+notfound404:
+  title: 
+    en: "404"
+    ru: "404"
+    zh: "404"
+  subtitle:
+    en: ""
+    ru: ""
+    zh: ""
+
+meta:
+  description:
+    en: "Professional profile of Aleksei Grishchenko: AI solutions, enterprise architecture, and engineering leadership."
+    ru: "Профессиональный профиль Алексея Грищенко: AI-решения, enterprise-архитектура и инженерное лидерство."
+    zh: "CV Hub — 一个展示你最新简历的地方。"
+  locale:
+    en: "en_US"
+    ru: "ru_RU"
+    zh: "zh_CN"

@@ -1,0 +1,9 @@
+profiles:
+  - id: default
+    label: "AI Solutions"
+    slug: ""
+    spec: null
+  - id: java
+    label: "Java Architect"
+    slug: "java"
+    spec: java

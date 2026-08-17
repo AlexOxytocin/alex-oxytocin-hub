@@ -1,0 +1,86 @@
+name: John Appleseed
+title: Distributed Systems Tinkerer | Occasional Inventor
+summary: >
+  Curious engineer obsessed with building strange but functional systems.
+  Designs experimental platforms, over-engineers side projects for fun,
+  and treats infrastructure like a playground. Enjoys blending low-level
+  networking, creative coding and absurd prototypes that somehow work.
+  Believes everything is a system — including coffee machines.
+
+contacts:
+  - label: Email
+    url: mailto:john.appleseed@example.com
+  - label: GitHub
+    url: https://github.com/johnappleseed
+  - label: Website
+    url: https://johnappleseed.dev
+  - label: Mastodon
+    url: https://mastodon.social/@johnappleseed
+
+achievements:
+  - Built a peer-to-peer note-sharing protocol for offline communities
+  - Designed a home-lab cluster powered by recycled hardware and solar panels
+  - Created a procedural music generator used in 12 indie game jams
+  - Published an experimental TCP congestion visualizer for education
+
+skills:
+  - group: Languages
+    items: [Go, Rust, Python, Zig, TypeScript, Elixir]
+  - group: Systems
+    items: [Linux internals, eBPF, Networking, Distributed consensus, WebAssembly]
+  - group: DevOps
+    items: [Kubernetes, Nomad, Terraform, Pulumi, Docker, GitHub Actions]
+  - group: Data
+    items: [PostgreSQL, ClickHouse, Redis, InfluxDB]
+  - group: Observability
+    items: [Prometheus, Grafana, Loki, OpenTelemetry]
+  - group: Creative Tech
+    items: [Generative art, Shaders, WebGL, Audio synthesis]
+  - group: Tools
+    items: [Neovim, tmux, Make, Git, Wireshark]
+  - group: Languages (spoken)
+    items: [English, Esperanto]
+
+experience:
+  - company: Orchard Labs
+    role: Principal Systems Engineer
+    period: Jan 2022 — Present
+    description:
+      - Designed a globally distributed edge computing platform running across 18 regions
+      - Reduced cold-start latency by 70% through custom scheduler extensions
+      - Built internal chaos-testing tooling to simulate partial internet failures
+      - Introduced infrastructure-as-code across 300+ services
+    stack: [Go, Kubernetes, Terraform, PostgreSQL, Prometheus]
+
+  - company: Cloud Cartographers
+    role: Infrastructure Architect
+    period: Mar 2019 — Dec 2021
+    description:
+      - Built multi-cloud networking layer connecting AWS, GCP and on-prem clusters
+      - Implemented zero-trust internal network with mutual TLS and short-lived certs
+      - Reduced cloud spending by 35% through workload reshaping and autoscaling policies
+      - Led incident response for high-traffic distributed APIs
+    stack: [Rust, AWS, GCP, Istio, Vault, Linux]
+
+  - company: Pixel Mechanics
+    role: Creative Engineer
+    period: Aug 2016 — Feb 2019
+    description:
+      - Developed real-time shader systems for interactive installations
+      - Built procedural terrain engine for experimental sandbox game
+      - Optimized rendering pipeline, increasing FPS by 45% on mid-range hardware
+    stack: [C++, OpenGL, GLSL, Unity, Python]
+
+education:
+  - institution: Institute of Applied Curiosity
+    degree: MSc in Distributed Systems and Emergent Behavior
+    period: 2014–2016
+  - institution: Self-Directed Learning
+    degree: Open-source contributor and lifelong experimenter
+    period: Ongoing
+
+languages:
+  - language: English
+    level: Native
+  - language: Esperanto
+    level: Conversational

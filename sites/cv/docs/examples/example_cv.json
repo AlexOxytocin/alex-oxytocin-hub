@@ -1,0 +1,58 @@
+{
+  "basics": {
+    "name": "John Appleseed",
+    "label": "Distributed Systems Tinkerer | Occasional Inventor",
+    "email": "john.appleseed@example.com",
+    "summary": "Curious engineer obsessed with building strange but functional systems.",
+    "profiles": [
+      { "network": "GitHub", "url": "https://github.com/johnappleseed" },
+      { "network": "Website", "url": "https://johnappleseed.dev" },
+      { "network": "Mastodon", "url": "https://mastodon.social/@johnappleseed" }
+    ]
+  },
+  "skills": [
+    { "name": "Languages", "keywords": ["Go", "Rust", "Python", "Zig"] },
+    { "name": "DevOps", "keywords": ["Kubernetes", "Terraform", "Docker"] },
+    { "name": "Observability", "keywords": ["Prometheus", "Grafana", "Loki"] }
+  ],
+  "work": [
+    {
+      "name": "Orchard Labs",
+      "position": "Principal Systems Engineer",
+      "startDate": "2022-01",
+      "highlights": [
+        "Designed a globally distributed edge computing platform across 18 regions",
+        "Reduced cold-start latency by 70% through custom scheduler extensions"
+      ],
+      "keywords": ["Go", "Kubernetes", "Terraform", "PostgreSQL", "Prometheus"]
+    },
+    {
+      "name": "Pixel Mechanics",
+      "position": "Creative Engineer",
+      "startDate": "2016-08",
+      "endDate": "2019-02",
+      "highlights": [
+        "Developed real-time shader systems for interactive installations",
+        "Optimized rendering pipeline, increasing FPS by 45%"
+      ],
+      "keywords": ["C++", "OpenGL", "GLSL", "Unity"]
+    }
+  ],
+  "education": [
+    {
+      "institution": "Institute of Applied Curiosity",
+      "studyType": "MSc",
+      "area": "Distributed Systems and Emergent Behavior",
+      "startDate": "2014",
+      "endDate": "2016"
+    }
+  ],
+  "languages": [
+    { "language": "English", "fluency": "Native" },
+    { "language": "Esperanto", "fluency": "Conversational" }
+  ],
+  "x_achievements": [
+    "Built a peer-to-peer note-sharing protocol for offline communities",
+    "Created a procedural music generator used in 12 indie game jams"
+  ]
+}

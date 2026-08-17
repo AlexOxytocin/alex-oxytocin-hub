@@ -1,0 +1,26 @@
+/* Web3 Light — frosted glass, electric gradient */
+:root {
+  --bg: #f0f4ff;
+  --bg-glow-1: rgba(99 102 241 / 0.14);
+  --bg-glow-2: rgba(168 85 247 / 0.10);
+  --text: rgba(15, 17, 35, 0.92);
+  --text-strong: rgba(15, 17, 35, 0.98);
+  --muted: rgba(80, 85, 120, 0.70);
+  --border: rgba(99, 102, 241, 0.14);
+  --border-2: rgba(99, 102, 241, 0.26);
+  --accent: #6366f1;
+  --accent-2: #a855f7;
+  --accent-rgb: 99 102 241;
+  --accent-2-rgb: 168 85 247;
+  --brand-grad: linear-gradient(90deg, var(--accent), var(--accent-2));
+  --card-bg: linear-gradient(180deg, rgba(255,255,255,0.82), rgba(255,255,255,0.56));
+  --shadow: 0 20px 50px rgba(99,102,241,0.12);
+  --shadow-soft: 0 8px 24px rgba(99,102,241,0.08);
+  --r-lg: 24px;
+  --r-pill: 999px;
+  --header-bg: rgba(240, 244, 255, 0.80);
+  --container: 980px;
+  --ease: cubic-bezier(.2,.8,.2,1);
+  --t: 180ms var(--ease);
+  --ring: 0 0 0 3px rgba(var(--accent-rgb) / 0.22);
+}

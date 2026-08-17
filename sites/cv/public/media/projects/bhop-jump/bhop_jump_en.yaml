@@ -1,0 +1,154 @@
+title: "Bhop Jump"
+role: "Gameplay & Multiplayer Engineer"
+year: "2017"
+tagline: "The first real Source-style bunny-hop on mobile — movement ported from the engine up, sold on the faithfulness of its feel."
+shareable: true
+
+platforms: [iOS, Android]
+stack: [Unity, C#, Photon]
+
+links:
+  - label: App Store
+    url: https://apps.apple.com/app/bhop-jump/id1227774947
+  - label: Google Play
+    url: https://play.google.com/store/apps/details?id=com.dgs.bhop
+
+blocks:
+
+  - type: image
+    src: /media/projects/bhop-jump/01.jpg
+    alt: "Bhop Jump — gameplay"
+
+  - type: text
+    title: "Overview"
+    body: |
+      Bhop Jump is a competitive mobile game built around bunny-hopping — the Source-engine movement skill where precise jump timing and air-strafing let you accelerate and carry speed through a map.
+
+      It was a commission. A client came with one clear demand: bring real bhop to phones. At the time nobody had — there was a single earlier attempt and it was broken. The challenge was not making "a runner"; it was making the actual mechanic feel authentic on a touchscreen.
+
+      It shipped on iOS and Android in 2017 and earned **$160K+ in Q1 alone** — almost entirely from rewarded ads — on roughly 100K downloads.
+
+  - type: divider
+
+  - type: text
+    title: "The brief — and the hidden dragon"
+    body: |
+      The game was produced under DragonGameStudios (hence the `com.dgs.bhop` bundle id). The client wanted it on their own account, and paid a 50% premium to white-label it — no studio logo, no mention of DragonGameStudios anywhere.
+
+      They agreed to one thing: a custom menu backdrop. So the backdrop is a CS screenshot — with the studio's dragon quietly worked into a doorway. The client paid to erase the studio, and the dragon has been sitting in that doorway ever since.
+
+      The logo leans on the same source: a counter-terrorist mid-jump with a knife, cut by hand out of a Counter-Strike 1.6 screenshot, flattened onto a single fill and — after a palette pass in Figma — set in white on dark grey because it simply read best as an iOS icon.
+
+  - type: divider
+
+  - type: text
+    title: "What bunny-hopping actually is"
+    body: |
+      In Source games, you don't just run — you jump repeatedly and steer in the air. Time each landing-to-jump correctly, strafe in sync with the camera, and you gain speed instead of losing it. Done well, you flow through a map far faster than running; done badly, you stall.
+
+      That's the whole appeal: a high skill ceiling hidden behind a simple input. It rewards consistency, not reflexes. Translating that to mobile — without dumbing it into yet another auto-runner — was the entire project.
+
+  - type: text
+    title: "Porting Source movement to Unity"
+    body: |
+      You can't fake bhop. If the acceleration curves, friction, air-control and timing windows don't match what players' muscle memory expects, it feels wrong instantly.
+
+      So the movement wasn't "inspired by" Source — it was ported from it. I pulled the engine's real metrics, character dimensions and movement behaviour, converted Source units into Unity units, and effectively rewrote that physics in Unity so the acceleration and air-strafing behaved like the genuine article. Getting the numbers and timing windows faithful was the hardest single piece of engineering in the game.
+
+  - type: text
+    title: "Mobile controls — one concession"
+    body: |
+      The touch scheme is deliberately minimal. The only real mobile accommodation is an **auto-jump** — the game hops for you, so your fingers are free for the part that matters. Beyond that: the left and right edges of the screen are your turns, and that's it.
+
+      Everything hard stays hard. The skill gap isn't in the controls — it's in the **consistency of movement**: holding the line, hitting the timing, carrying speed lap after lap.
+
+  - type: divider
+
+  - type: image
+    title: "Three modes"
+    src: /media/projects/bhop-jump/menu.jpg
+    alt: "Mode-select menu — Bhop Classic, Bhop Speed, Multiplayer, BP currency"
+    body: |
+      The game splits three ways, spent in BP (the in-game points). **Bhop Classic** is the core — faithful bhop on the ported community maps. **Bhop Speed** is its stylised counterpart, a neon wireframe tunnel stripped down to pure speed and timing. **Multiplayer** is the eight-player sessions covered below.
+
+  - type: divider
+
+  - type: text
+    title: "Maps: community classics, rebuilt by hand"
+    body: |
+      The maps are named community bhop maps — the ones players already knew. Using them meant tracking down their authors for permission, which was its own saga: many never replied, so the game ships a DMCA notice with contacts in-world, in case any creator ever objected.
+
+      Bringing each map in was manual, laborious work. Maps were extracted as raw models and textures, then rebuilt in Unity by hand — meshes, materials reworked for Unity's renderer, lighting placed by eye, triggers and start/finish zones wired up per map. Multiply that by a full roster, sorted into subjective difficulty tiers. This was the most time-consuming part of the whole project.
+
+  - type: image
+    src: /media/projects/bhop-jump/map-1-2.jpg
+    alt: "A ported community map — brick Source-style courtyard"
+
+  - type: image
+    src: /media/projects/bhop-jump/map-2-1.jpg
+    alt: "A desert-themed bhop map with crates"
+    caption: "The in-world plate is the DMCA notice — contacts left in case a map author ever objected."
+
+  - type: image
+    src: /media/projects/bhop-jump/map-3-1.jpg
+    alt: "A stone dungeon bhop map with block jumps over water"
+
+  - type: image
+    src: /media/projects/bhop-jump/map-4-1.jpg
+    alt: "A stylized Aztec-themed bhop map"
+
+  - type: image
+    src: /media/projects/bhop-jump/map-5-1.jpg
+    alt: "An icy canyon bhop map over water"
+
+  - type: divider
+
+  - type: text
+    title: "Multiplayer"
+    body: |
+      Movement this precise is brutal to synchronise — a few milliseconds of desync turns a clean run into teleporting.
+
+      The netcode runs on Unity + Photon: a master server handles connection and matchmaking, a host spins up a session for up to eight players, and everyone runs on a shared tick. Remote players are interpolated (lerped) between authoritative updates, which keeps movement smooth on every screen instead of stuttering with the network.
+
+  - type: divider
+
+  - type: text
+    title: "Cosmetics & economy"
+    body: |
+      Progression is cosmetic — skins, pulled from crates on honest random odds (the base loadout, a pair of gloves and a knife, drops as two separate items). I modelled and textured the skins myself in Marmoset and Maya, painting directly onto the finished models to get the textures sitting right.
+
+      BP — the in-game points — open crates, and you earn it by playing: clearing maps against the clock, taking part online, or buying it outright via in-app purchases.
+
+  - type: text
+    title: "Monetization & growth"
+    body: |
+      The money model was ads plus IAP, and the split is the interesting part: **rewarded ads were the engine** — the bulk of the $160K+ — while in-app purchases were only about 5% of total revenue.
+
+      Launch marketing was lean: roughly $1.5K spent on targeted ads across niche subreddits, Google and Facebook. The bhop community and store discovery did the rest. The Google Play trailer was deliberately unfancy too — about ninety seconds of raw gameplay with a Celldweller track laid over the top.
+
+  - type: divider
+
+  - type: text
+    title: "War stories"
+    bullets:
+      - "Sitting at 3 a.m. on Skype talking an American CSGO mapmaker into letting his map into the game."
+      - "Hand-fighting Marmoset and Maya to make custom skins sit right — painting straight onto the finished model."
+      - "Three weeks after launch, getting served a YouTube recommendation for a review of my own game by some random kid — the algorithm pitching me back the thing I'd just shipped."
+
+  - type: divider
+
+  - type: text
+    title: "Outcome"
+    body: |
+      After the revenue split and three months of support, the game was handed over to the client. There was apparently some drama afterward that I wasn't part of, and I can't vouch for what the project became — plenty of people said it went downhill once it changed hands.
+
+      What I keep from it is the engineering: a genuinely hard PC movement mechanic, ported faithfully enough to feel real on a phone, on a roster of hand-rebuilt maps — and a product that found an audience and made money on the strength of that faithfulness.
+
+  - type: divider
+
+  - type: text
+    title: "Takeaways"
+    body: |
+      Bhop Jump worked because it refused the easy version. The whole bet was that the niche, demanding feel of real bunny-hopping was worth porting exactly — not approximating — and that an audience would pay for the genuine article on a platform that had never had it.
+
+      The hard parts were unglamorous: matching engine physics down to the units, and rebuilding every map by hand. But that fidelity was the product. It's a reminder that for skill-based mechanics, "close enough" isn't — the feel is the feature.
