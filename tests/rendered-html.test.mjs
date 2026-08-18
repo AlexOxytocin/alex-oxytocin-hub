@@ -2,13 +2,13 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 
-async function render() {
+async function render(path = "/") {
   const workerUrl = new URL("../dist/server/index.js", import.meta.url);
   workerUrl.searchParams.set("test", `${process.pid}-${Date.now()}`);
   const { default: worker } = await import(workerUrl.href);
 
   return worker.fetch(
-    new Request("http://localhost/", { headers: { accept: "text/html" } }),
+    new Request(`http://localhost${path}`, { headers: { accept: "text/html" } }),
     { ASSETS: { fetch: async () => new Response("Not found", { status: 404 }) } },
     { waitUntil() {}, passThroughOnException() {} },
   );
@@ -44,7 +44,21 @@ test("renders the personal hub with the portrait hero", async () => {
   assert.match(html, /href="https:\/\/github\.com\/AlexOxytocin">GitHub<\/a>/);
   assert.doesNotMatch(html, /github\.com\/alexgoodman53/i);
   assert.match(html, /Смотрю на задачу целиком[\s\S]*применять его самостоятельно/);
+  assert.match(html, /class="lang"[\s\S]*href="\/en\/"[\s\S]*>EN<[\s\S]*class="active"[^>]*href="\/"[^>]*>RU</);
   assert.doesNotMatch(html, /signal-core|signal-ring|codex-preview/);
+});
+
+test("renders a complete English home page", async () => {
+  const response = await render("/en");
+  assert.equal(response.status, 200);
+  const html = await response.text();
+  assert.match(html, /<title>Alex Oxytocin — AI, architecture, and practical tools<\/title>/i);
+  assert.match(html, /<main[^>]*lang="en"/);
+  assert.match(html, /I build[\s\S]*hero-accent-tools[^>]*>AI tools<[\s\S]*automate processes/);
+  assert.match(html, /I teach people to use AI on their own real tasks/);
+  assert.match(html, /warm, safe community for IT professionals/);
+  assert.match(html, /href="https:\/\/cv\.godmodetools\.com\/showcase\/en"/);
+  assert.match(html, /class="lang"[\s\S]*class="active"[^>]*href="\/en\/"[^>]*>EN<[\s\S]*href="\/"[^>]*>RU</);
 });
 
 test("reuses the exact Alex Neon neural modules", async () => {
@@ -63,9 +77,10 @@ test("reuses the exact Alex Neon neural modules", async () => {
   assert.match(neural, /ambientEvery:\s*3400/);
 });
 
-test("static deployment carries the same portrait hero", async () => {
-  const [html, css, communityMark, portrait, brandLogo] = await Promise.all([
+test("static deployment carries both localized portrait pages", async () => {
+  const [html, englishHtml, css, communityMark, portrait, brandLogo] = await Promise.all([
     readFile(new URL("../sites/hub/index.html", import.meta.url), "utf8"),
+    readFile(new URL("../sites/hub/en/index.html", import.meta.url), "utf8"),
     readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
     readFile(new URL("../public/assets/community-mark.jpg", import.meta.url)),
     readFile(new URL("../public/assets/alexey-grishchenko-about.jpg", import.meta.url)),
@@ -110,6 +125,14 @@ test("static deployment carries the same portrait hero", async () => {
   assert.match(css, /\.directions\s*\{[^}]*border:\s*0/);
   assert.doesNotMatch(html, /Обучаю этому на|hero-accent-task/);
   assert.match(html, /href="\/styles\.css"/);
+  assert.match(html, /hreflang="en" href="https:\/\/godmodetools\.com\/en\/"/);
+  assert.match(englishHtml, /<html lang="en">/);
+  assert.match(englishHtml, /<title>Alex Oxytocin — AI, architecture, and practical tools<\/title>/);
+  assert.match(englishHtml, /class="active" href="\/en\/" lang="en" aria-current="page">EN<\/a>/);
+  assert.match(englishHtml, /I look at the whole problem/);
+  assert.match(englishHtml, /href="https:\/\/cv\.godmodetools\.com\/showcase\/en"/);
+  assert.match(css, /\.header-tools\s*\{[^}]*display:\s*flex/);
+  assert.match(css, /\.lang a\.active\s*\{[^}]*border-color:\s*var\(--line\)/);
 });
 
 test("all site headers use the canonical Alex Oxytocin wordmark", async () => {

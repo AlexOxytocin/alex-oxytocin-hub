@@ -68,6 +68,13 @@ main {
   display: block;
 }
 
+.header-tools {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
 nav {
   display: flex;
   align-items: center;
@@ -80,13 +87,45 @@ nav a {
   min-height: 44px;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
 }
 
+.nav-about { min-width: 72px; }
+.nav-directions { min-width: 100px; }
+
 .nav-contact {
+  min-width: 104px;
   padding: 0 18px;
   border: 1px solid var(--line);
   border-radius: 12px;
   color: var(--text);
+}
+
+.lang {
+  display: flex;
+  flex-shrink: 0;
+  gap: 8px;
+}
+
+.lang a {
+  padding: 7px 10px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1;
+  transition: color 180ms ease, background 180ms ease, border-color 180ms ease;
+}
+
+.lang a:hover {
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.lang a.active {
+  color: var(--text);
+  border-color: var(--line);
+  background: rgba(37, 227, 211, 0.1);
 }
 
 .hero {
@@ -113,6 +152,21 @@ nav a {
 
 .hero-body {
   grid-area: body;
+}
+
+.locale-stack {
+  display: grid;
+}
+
+.locale-panel {
+  min-width: 0;
+  grid-area: 1 / 1;
+}
+
+.layout-reference {
+  visibility: hidden;
+  pointer-events: none;
+  user-select: none;
 }
 
 .hero-summary {
@@ -332,6 +386,17 @@ h1 {
   line-height: 1.65;
 }
 
+.direction-card-copy {
+  min-width: 0;
+  flex: 1;
+}
+
+.direction-card-copy-panel {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
 .card-action {
   margin-top: auto;
   font-size: 14px;
@@ -500,6 +565,19 @@ h1 {
     display: none;
   }
 
+  .header-tools {
+    gap: 8px;
+  }
+
+  .lang {
+    gap: 4px;
+  }
+
+  .lang a {
+    padding: 6px 8px;
+    font-size: 13px;
+  }
+
   .hero {
     min-height: auto;
     grid-template-columns: 1fr;
@@ -549,10 +627,26 @@ h1 {
 @media (max-width: 520px) {
   .site-header {
     min-height: 72px;
+    gap: 8px;
   }
 
   .nav-contact {
-    padding: 0 13px;
+    min-width: 0;
+    padding: 0 6px;
+    font-size: 13px;
+  }
+
+  .header-tools {
+    gap: 4px;
+  }
+
+  .lang {
+    gap: 2px;
+  }
+
+  .lang a {
+    padding: 6px 5px;
+    font-size: 12px;
   }
 
   .hero {

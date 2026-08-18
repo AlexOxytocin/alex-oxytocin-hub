@@ -39,11 +39,13 @@ const hubAssetVersion = createHash("sha256")
   .update(hubNeural)
   .digest("hex")
   .slice(0, 12);
-const hubHtmlPath = resolve(release, "hub", "index.html");
-const hubHtml = (await readFile(hubHtmlPath, "utf8"))
-  .replace('href="/styles.css"', `href="/styles.css?v=${hubAssetVersion}"`)
-  .replace('src="/assets/neural.js"', `src="/assets/neural.js?v=${hubAssetVersion}"`);
-await writeFile(hubHtmlPath, hubHtml);
+for (const relativeHtmlPath of ["index.html", "en/index.html"]) {
+  const hubHtmlPath = resolve(release, "hub", relativeHtmlPath);
+  const hubHtml = (await readFile(hubHtmlPath, "utf8"))
+    .replace('href="/styles.css"', `href="/styles.css?v=${hubAssetVersion}"`)
+    .replace('src="/assets/neural.js"', `src="/assets/neural.js?v=${hubAssetVersion}"`);
+  await writeFile(hubHtmlPath, hubHtml);
+}
 
 await cp(resolve(root, "sites", "ai", "website", "dist"), resolve(release, "ai"), { recursive: true });
 
