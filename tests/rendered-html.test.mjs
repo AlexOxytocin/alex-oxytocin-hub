@@ -25,7 +25,7 @@ test("renders the personal hub with the portrait hero", async () => {
   assert.doesNotMatch(html, /class="hero-canvas"/);
   assert.match(html, /class="direction-card-mark"[^>]*src="\/assets\/community-mark\.jpg"/);
   assert.match(html, /class="hero-portrait"/);
-  assert.match(html, /src="\/assets\/alexey-grishchenko-about\.jpg\?v=natural-warm"/);
+  assert.match(html, /src="\/assets\/alexey-grishchenko-about-wide\.png\?v=portrait-outpaint-left-20260818"/);
   assert.match(html, /<strong>10\+<\/strong>[\s\S]*лет в Java-разработке/);
   assert.match(html, /<strong>20\+<\/strong>[\s\S]*инженеров в командах/);
   assert.match(html, /href="https:\/\/cv\.godmodetools\.com\/showcase"/);
@@ -42,9 +42,12 @@ test("renders the personal hub with the portrait hero", async () => {
   assert.match(html, /тёплое и безопасное[\s\S]*ИТ-сообщество профессионалов[\s\S]*взаимопомощи/);
   assert.match(html, /Индивидуально обучаю работе с ИИ на ваших задачах/);
   assert.match(html, /href="https:\/\/github\.com\/AlexOxytocin">GitHub<\/a>/);
+  assert.match(html, /href="https:\/\/t\.me\/AlexOxytocin">Telegram<\/a>/);
+  assert.match(html, /href="https:\/\/www\.linkedin\.com\/in\/aleksei-grishchenko\/">LinkedIn<\/a>/);
+  assert.doesNotMatch(html, /AlexOxitocin|spartan121/i);
   assert.doesNotMatch(html, /github\.com\/alexgoodman53/i);
   assert.match(html, /Смотрю на задачу целиком[\s\S]*применять его самостоятельно/);
-  assert.match(html, /class="lang"[\s\S]*href="\/en\/"[\s\S]*>EN<[\s\S]*class="active"[^>]*href="\/"[^>]*>RU</);
+  assert.match(html, /class="ecosystem-nav__locale"[\s\S]*href="\/en\/?"[\s\S]*>EN<[\s\S]*href="\/"[^>]*aria-current="page"[^>]*>RU</);
   assert.doesNotMatch(html, /signal-core|signal-ring|codex-preview/);
 });
 
@@ -58,7 +61,7 @@ test("renders a complete English home page", async () => {
   assert.match(html, /I teach people to use AI on their own real tasks/);
   assert.match(html, /warm, safe community for IT professionals/);
   assert.match(html, /href="https:\/\/cv\.godmodetools\.com\/showcase\/en"/);
-  assert.match(html, /class="lang"[\s\S]*class="active"[^>]*href="\/en\/"[^>]*>EN<[\s\S]*href="\/"[^>]*>RU</);
+  assert.match(html, /class="ecosystem-nav__locale"[\s\S]*href="\/en\/?"[^>]*aria-current="page"[^>]*>EN<[\s\S]*href="\/"[^>]*>RU</);
 });
 
 test("reuses the exact Alex Neon neural modules", async () => {
@@ -78,39 +81,37 @@ test("reuses the exact Alex Neon neural modules", async () => {
 });
 
 test("static deployment carries both localized portrait pages", async () => {
-  const [html, englishHtml, css, communityMark, portrait, brandLogo] = await Promise.all([
+  const [html, englishHtml, css, ecosystemCss, communityMark, portrait, heroBackground, brandLogo] = await Promise.all([
     readFile(new URL("../sites/hub/index.html", import.meta.url), "utf8"),
     readFile(new URL("../sites/hub/en/index.html", import.meta.url), "utf8"),
     readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
+    readFile(new URL("../shared/ecosystem-nav.css", import.meta.url), "utf8"),
     readFile(new URL("../public/assets/community-mark.jpg", import.meta.url)),
-    readFile(new URL("../public/assets/alexey-grishchenko-about.jpg", import.meta.url)),
+    readFile(new URL("../public/assets/alexey-grishchenko-about-wide.png", import.meta.url)),
+    readFile(new URL("../public/assets/alexey-grishchenko-hero-original-v4.png", import.meta.url)),
     readFile(new URL("../public/assets/alex-oxytocin-logo.png", import.meta.url)),
   ]);
 
   assert.doesNotMatch(html, /<canvas class="hero-canvas"/);
   assert.doesNotMatch(html, /<script type="module" src="\/assets\/neural\.js"><\/script>/);
   assert.doesNotMatch(css, /\.hero-canvas\s*\{/);
-  assert.doesNotMatch(css, /\.hero-portrait\s*\{[^}]*mask-image/);
-  assert.match(css, /\.hero-portrait img[\s\S]*mask-image:[\s\S]*linear-gradient/);
-  assert.match(css, /mask-composite:\s*intersect/);
-  assert.doesNotMatch(css, /\.hero-portrait\s*\{[^}]*border:\s*1px solid/);
-  assert.match(css, /\.hero-portrait\s*\{[^}]*aspect-ratio:\s*1122\s*\/\s*1402/);
-  assert.match(css, /\.hero-portrait\s*\{[^}]*width:\s*min\(85\.846%,\s*394\.9px\)/);
-  assert.match(css, /\.hero-portrait\s*\{[^}]*transform:\s*translateY\(clamp\(-32px,\s*-3vh,\s*-20px\)\)\s*scale\(1\.148\)/);
-  assert.match(css, /\.hero-evidence\s*\{[^}]*margin-top:\s*calc\(clamp\(38px,\s*5vh,\s*48px\)\s*-\s*12\.5px\)/);
-  assert.match(css, /@media \(min-width:\s*821px\) and \(max-height:\s*850px\)[\s\S]*\.hero-evidence\s*\{[^}]*margin-top:\s*calc\(clamp\(38px,\s*5vh,\s*48px\)\s*-\s*10\.1px\)/);
+  assert.match(css, /\.hero\s*\{[^}]*row-gap:\s*10px/);
+  assert.match(css, /\.hero-primary-card\s*\{[^}]*height:\s*485px/);
+  assert.match(css, /\.hero-primary-card\s*\{[^}]*alexey-grishchenko-hero-original-v4\.png/);
+  assert.match(css, /\.hero-portrait\s*\{[^}]*display:\s*none/);
+  assert.doesNotMatch(css, /mask-composite:\s*intersect/);
   assert.match(css, /\.directions\s*\{[^}]*padding:\s*calc\(50px\s*-\s*clamp\(12px,\s*1\.8vh,\s*19px\)\)\s*0\s*110px/);
   assert.match(css, /@media \(min-width:\s*821px\) and \(max-height:\s*850px\)[\s\S]*\.directions\s*\{[^}]*padding-top:\s*38px/);
   assert.match(css, /@media \(max-width:\s*820px\)[\s\S]*\.hero\s*\{[^}]*padding:\s*64px 0 24px/);
   assert.match(css, /@media \(max-width:\s*820px\)[\s\S]*\.directions\s*\{[^}]*padding-top:\s*32px/);
-  assert.match(css, /\.hero-portrait img\s*\{[^}]*object-fit:\s*contain/);
-  assert.doesNotMatch(css, /\.hero-portrait img\s*\{[^}]*object-fit:\s*cover/);
+  assert.match(css, /\.hero-portrait img\s*\{[^}]*object-fit:\s*cover/);
   assert.match(css, /\.hero-summary\s*\{[\s\S]*list-style:\s*none/);
   assert.match(html, /class="direction-card-mark"[^>]*community-mark\.jpg/);
   assert.ok(communityMark.byteLength > 8000, "community logo asset is missing or truncated");
   assert.match(html, /class="hero-portrait"/);
-  assert.match(html, /alexey-grishchenko-about\.jpg\?v=natural-warm/);
-  assert.ok(portrait.byteLength > 100000, "about portrait asset is missing or truncated");
+  assert.match(html, /alexey-grishchenko-about-wide\.png\?v=portrait-outpaint-left-20260818/);
+  assert.ok(portrait.byteLength > 100000, "wide portrait asset is missing or truncated");
+  assert.ok(heroBackground.byteLength > 100000, "hero background asset is missing or truncated");
   assert.match(html, /<strong>10\+<\/strong><span>лет в Java-разработке/);
   assert.match(html, /<strong>20\+<\/strong><span>инженеров в командах/);
   assert.match(html, /href="https:\/\/cv\.godmodetools\.com\/showcase"/);
@@ -128,11 +129,11 @@ test("static deployment carries both localized portrait pages", async () => {
   assert.match(html, /hreflang="en" href="https:\/\/godmodetools\.com\/en\/"/);
   assert.match(englishHtml, /<html lang="en">/);
   assert.match(englishHtml, /<title>Alex Oxytocin — AI, architecture, and practical tools<\/title>/);
-  assert.match(englishHtml, /class="active" href="\/en\/" lang="en" aria-current="page">EN<\/a>/);
+  assert.match(englishHtml, /href="\/en\/" lang="en" aria-current="page">EN<\/a>/);
   assert.match(englishHtml, /I look at the whole problem/);
   assert.match(englishHtml, /href="https:\/\/cv\.godmodetools\.com\/showcase\/en"/);
-  assert.match(css, /\.header-tools\s*\{[^}]*display:\s*flex/);
-  assert.match(css, /\.lang a\.active\s*\{[^}]*border-color:\s*var\(--line\)/);
+  assert.match(ecosystemCss, /\.ecosystem-header\s*\{[^}]*position:\s*fixed/);
+  assert.match(ecosystemCss, /\.ecosystem-nav__link\[aria-current="page"\]/);
 });
 
 test("all site headers use the canonical Alex Oxytocin wordmark", async () => {
@@ -147,7 +148,27 @@ test("all site headers use the canonical Alex Oxytocin wordmark", async () => {
   for (const source of [ai, ai404, cv, allo]) {
     assert.match(source, canonical);
     assert.match(source, /width="216" height="30"/);
+    assert.match(source, /class="ecosystem-header(?:\s+site-header)?"|class="site-header ecosystem-header"/);
   }
   assert.doesNotMatch(cv, />ALEX \/ CV</);
   assert.doesNotMatch(allo, /← экосистема Алексея/);
+});
+
+test("every site exposes the complete ecosystem navigation", async () => {
+  const sources = await Promise.all([
+    readFile(new URL("../sites/hub/index.html", import.meta.url), "utf8"),
+    readFile(new URL("../sites/cv/src/components/Layout.astro", import.meta.url), "utf8"),
+    readFile(new URL("../sites/ai/website/src/index.html", import.meta.url), "utf8"),
+    readFile(new URL("../sites/allo/index.html", import.meta.url), "utf8"),
+  ]);
+  const labels = ["Главная", "Опыт", "Проекты", "Обучение", "Комьюнити"];
+
+  for (const source of sources) {
+    assert.match(source, /ecosystem-nav__links/);
+  }
+  for (const label of labels) {
+    assert.ok(sources.some((source) => source.includes(label)), `missing navigation label: ${label}`);
+  }
+  assert.doesNotMatch(sources[2], /ecosystem-nav__locale/);
+  assert.doesNotMatch(sources[3], /ecosystem-nav__locale/);
 });
