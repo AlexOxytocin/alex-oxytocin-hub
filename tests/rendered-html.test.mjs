@@ -80,9 +80,10 @@ test("static deployment carries the same portrait hero", async () => {
   assert.match(css, /mask-composite:\s*intersect/);
   assert.doesNotMatch(css, /\.hero-portrait\s*\{[^}]*border:\s*1px solid/);
   assert.match(css, /\.hero-portrait\s*\{[^}]*aspect-ratio:\s*1122\s*\/\s*1402/);
-  assert.match(css, /\.hero-portrait\s*\{[^}]*width:\s*min\(95%,\s*437px\)/);
+  assert.match(css, /\.hero-portrait\s*\{[^}]*width:\s*min\(92\.15%,\s*423\.9px\)/);
   assert.match(css, /\.hero-portrait\s*\{[^}]*transform:\s*translateY\(clamp\(-32px,\s*-3vh,\s*-20px\)\)\s*scale\(1\.148\)/);
-  assert.match(css, /\.hero-evidence\s*\{[^}]*margin-top:\s*calc\(clamp\(38px,\s*5vh,\s*48px\)\s*-\s*4px\)/);
+  assert.match(css, /\.hero-evidence\s*\{[^}]*margin-top:\s*calc\(clamp\(38px,\s*5vh,\s*48px\)\s*-\s*7\.1px\)/);
+  assert.match(css, /@media \(min-width:\s*821px\) and \(max-height:\s*850px\)[\s\S]*\.hero-evidence\s*\{[^}]*margin-top:\s*calc\(clamp\(38px,\s*5vh,\s*48px\)\s*-\s*5\.6px\)/);
   assert.match(css, /\.hero-portrait img\s*\{[^}]*object-fit:\s*contain/);
   assert.doesNotMatch(css, /\.hero-portrait img\s*\{[^}]*object-fit:\s*cover/);
   assert.match(css, /\.hero-summary\s*\{[\s\S]*list-style:\s*none/);
