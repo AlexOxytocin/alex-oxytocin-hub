@@ -6,8 +6,8 @@ export const metadata: Metadata = {
   description:
     "Личный сайт Алексея Грищенко: ИИ по делу, разработка решений, профессиональный опыт и комьюнити «Алло, Нейросеточная?».",
   icons: {
-    icon: "/favicon.svg",
-    shortcut: "/favicon.svg",
+    icon: "/favicon.svg?v=alex-a-20260818",
+    shortcut: "/favicon.svg?v=alex-a-20260818",
   },
 };
 
