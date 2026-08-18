@@ -1,49 +1,11 @@
 /* ==========================================================================
    Alex Neon — section blocks built from the components layer.
-   Inventory: video placeholder · compare columns · scenario cards · finale
-   panel · about chip and expertise items · community
+   Inventory: compare columns · scenario cards · finale panel · about chip and
+   expertise items · community
    access line · FAQ · contact channels.
    Informational cards deliberately have no hover state; only real controls
    and links react to the pointer.
    ========================================================================== */
-
-/* ---- Video placeholder (not interactive: no hover by design) -------- */
-
-.video-shell {
-  max-width: 56rem;
-  aspect-ratio: 16 / 9;
-  display: grid;
-  place-content: center;
-  justify-items: center;
-  text-align: center;
-  gap: var(--sp-3);
-  padding: var(--sp-6);
-  background: radial-gradient(60% 80% at 50% 0%, rgba(139, 92, 246, 0.06), transparent),
-    var(--surface);
-  border: 1px solid var(--line);
-  border-radius: var(--r-lg);
-}
-
-.play-badge {
-  width: 4.25rem;
-  height: 4.25rem;
-  display: grid;
-  place-items: center;
-  border: 1px solid var(--line-strong);
-  border-radius: var(--r-pill);
-  margin-bottom: var(--sp-2);
-}
-
-.video-title {
-  font-weight: 650;
-  font-size: var(--fs-h4);
-}
-
-.video-sub {
-  color: var(--text-3);
-  font-size: var(--fs-small);
-  max-width: 26rem;
-}
 
 /* ---- Compare columns ------------------------------------------------ */
 
