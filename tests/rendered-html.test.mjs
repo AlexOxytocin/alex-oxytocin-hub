@@ -84,6 +84,8 @@ test("static deployment carries the same portrait hero", async () => {
   assert.match(css, /\.hero-portrait\s*\{[^}]*transform:\s*translateY\(clamp\(-32px,\s*-3vh,\s*-20px\)\)\s*scale\(1\.148\)/);
   assert.match(css, /\.hero-evidence\s*\{[^}]*margin-top:\s*calc\(clamp\(38px,\s*5vh,\s*48px\)\s*-\s*10\.2px\)/);
   assert.match(css, /@media \(min-width:\s*821px\) and \(max-height:\s*850px\)[\s\S]*\.hero-evidence\s*\{[^}]*margin-top:\s*calc\(clamp\(38px,\s*5vh,\s*48px\)\s*-\s*8\.2px\)/);
+  assert.match(css, /\.directions\s*\{[^}]*padding:\s*calc\(50px\s*-\s*clamp\(12px,\s*1\.8vh,\s*19px\)\)\s*0\s*110px/);
+  assert.match(css, /@media \(min-width:\s*821px\) and \(max-height:\s*850px\)[\s\S]*\.directions\s*\{[^}]*padding-top:\s*38px/);
   assert.match(css, /@media \(max-width:\s*820px\)[\s\S]*\.hero\s*\{[^}]*padding:\s*64px 0 24px/);
   assert.match(css, /@media \(max-width:\s*820px\)[\s\S]*\.directions\s*\{[^}]*padding-top:\s*32px/);
   assert.match(css, /\.hero-portrait img\s*\{[^}]*object-fit:\s*contain/);

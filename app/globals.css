@@ -241,7 +241,7 @@ h1 {
 }
 
 .directions {
-  padding: 100px 0 110px;
+  padding: calc(50px - clamp(12px, 1.8vh, 19px)) 0 110px;
   border: 0;
 }
 
@@ -470,6 +470,10 @@ h1 {
 
   .hero-evidence {
     margin-top: calc(clamp(38px, 5vh, 48px) - 8.2px);
+  }
+
+  .directions {
+    padding-top: 38px;
   }
 
   .evidence-item {
