@@ -125,7 +125,7 @@ test("static deployment carries both localized portrait pages", async () => {
   assert.doesNotMatch(css, /\.signal(?:-|\s*\{)/);
   assert.match(css, /\.directions\s*\{[^}]*border:\s*0/);
   assert.doesNotMatch(html, /Обучаю этому на|hero-accent-task/);
-  assert.match(html, /href="\/styles\.css"/);
+  assert.match(html, /href="\/styles\.css(?:\?[^\"]+)?"/);
   assert.match(html, /hreflang="en" href="https:\/\/godmodetools\.com\/en\/"/);
   assert.match(englishHtml, /<html lang="en">/);
   assert.match(englishHtml, /<title>Alex Oxytocin — AI, architecture, and practical tools<\/title>/);
