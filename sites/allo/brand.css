@@ -125,6 +125,10 @@ h1 span {
   -webkit-text-stroke: 0;
 }
 
+h1.title-en {
+  font-size: clamp(48px, 6.4vw, 92px);
+}
+
 .lead {
   color: var(--muted);
   font-size: clamp(18px, 1.8vw, 22px);
@@ -317,6 +321,10 @@ footer a {
     font-size: clamp(38px, 11vw, 46px);
     line-height: 0.94;
     overflow-wrap: anywhere;
+  }
+
+  h1.title-en {
+    font-size: clamp(34px, 9.5vw, 42px);
   }
 
   .community-network-art {

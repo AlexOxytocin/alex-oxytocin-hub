@@ -28,7 +28,8 @@ const pages = [
   { name: "projects-ru", url: `${origins.cv}/showcase/`, active: "Проекты", locale: true },
   { name: "projects-en", url: `${origins.cv}/showcase/en/`, active: "Projects", locale: true },
   { name: "training", url: `${origins.ai}/`, active: "Обучение", locale: false },
-  { name: "community", url: `${origins.allo}/`, active: "Комьюнити", locale: false },
+  { name: "community-ru", url: `${origins.allo}/`, active: "Комьюнити", locale: true },
+  { name: "community-en", url: `${origins.allo}/en/`, active: "Community", locale: true },
 ];
 
 const viewports = [
