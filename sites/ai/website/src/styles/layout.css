@@ -106,17 +106,6 @@
   max-width: min(34rem, 52%);
 }
 
-/* ---- Demo card band -------------------------------------------------- */
-
-.demo-section {
-  padding-block: 0 var(--section);
-}
-
-.demo-inner {
-  display: flex;
-  justify-content: center;
-}
-
 .hero-copy h1 {
   font-size: var(--fs-h1);
   font-weight: 400;
