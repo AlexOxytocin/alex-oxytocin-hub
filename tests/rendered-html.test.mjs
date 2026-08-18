@@ -100,10 +100,10 @@ test("static deployment carries both localized portrait pages", async () => {
   assert.match(css, /\.hero-primary-card\s*\{[^}]*alexey-grishchenko-hero-original-v4\.png/);
   assert.match(css, /\.hero-portrait\s*\{[^}]*display:\s*none/);
   assert.doesNotMatch(css, /mask-composite:\s*intersect/);
-  assert.match(css, /\.directions\s*\{[^}]*padding:\s*calc\(50px\s*-\s*clamp\(12px,\s*1\.8vh,\s*19px\)\)\s*0\s*110px/);
-  assert.match(css, /@media \(min-width:\s*821px\) and \(max-height:\s*850px\)[\s\S]*\.directions\s*\{[^}]*padding-top:\s*38px/);
-  assert.match(css, /@media \(max-width:\s*820px\)[\s\S]*\.hero\s*\{[^}]*padding:\s*64px 0 24px/);
-  assert.match(css, /@media \(max-width:\s*820px\)[\s\S]*\.directions\s*\{[^}]*padding-top:\s*32px/);
+  assert.match(css, /\.directions\s*\{[^}]*padding:\s*30px\s*0\s*110px/);
+  assert.match(css, /@media \(min-width:\s*821px\) and \(max-height:\s*850px\)[\s\S]*\.directions\s*\{[^}]*padding-top:\s*30px/);
+  assert.match(css, /@media \(max-width:\s*820px\)[\s\S]*\.hero\s*\{[^}]*padding:\s*64px 0 0/);
+  assert.match(css, /@media \(max-width:\s*820px\)[\s\S]*\.directions\s*\{[^}]*padding-top:\s*18px/);
   assert.match(css, /\.hero-portrait img\s*\{[^}]*object-fit:\s*cover/);
   assert.match(css, /\.hero-summary\s*\{[\s\S]*list-style:\s*none/);
   assert.match(html, /class="direction-card-mark"[^>]*community-mark\.jpg/);

@@ -108,7 +108,7 @@ main {
   align-content: start;
   column-gap: 0;
   row-gap: 30px;
-  padding: 12px 0 16px;
+  padding: 12px 0 0;
 }
 
 .hero-primary-card {
@@ -295,7 +295,7 @@ h1 {
 }
 
 .directions {
-  padding: calc(50px - clamp(12px, 1.8vh, 19px)) 0 110px;
+  padding: 30px 0 110px;
   border: 0;
 }
 
@@ -517,7 +517,7 @@ h1 {
 @media (min-width: 821px) and (max-height: 850px) {
   .hero {
     row-gap: 30px;
-    padding: 12px 0 16px;
+    padding: 12px 0 0;
   }
 
   h1 {
@@ -543,7 +543,7 @@ h1 {
   }
 
   .directions {
-    padding-top: 38px;
+    padding-top: 30px;
   }
 
   .evidence-item {
@@ -582,7 +582,7 @@ h1 {
       "primary"
       "evidence";
     gap: 18px;
-    padding: 64px 0 24px;
+    padding: 64px 0 0;
   }
 
   .hero-primary-card {
@@ -598,7 +598,7 @@ h1 {
   }
 
   .directions {
-    padding-top: 32px;
+    padding-top: 18px;
   }
 
   .direction-grid {
