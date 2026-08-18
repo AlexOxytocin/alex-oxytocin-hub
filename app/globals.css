@@ -155,10 +155,12 @@ nav a {
 }
 
 .hero-portrait {
-  width: min(100%, 460px);
+  width: clamp(280px, calc(53.7vh - 88px), 432px);
   height: auto;
   aspect-ratio: 1122 / 1402;
-  position: relative;
+  position: absolute;
+  top: clamp(-32px, -3vh, -20px);
+  right: 0;
   grid-area: portrait;
   align-self: start;
   justify-self: end;
@@ -462,7 +464,7 @@ h1 {
   }
 
   .hero-portrait {
-    width: min(100%, 410px);
+    top: -18px;
   }
 
   .evidence-item {
@@ -513,6 +515,9 @@ h1 {
     width: min(100%, 420px);
     height: auto;
     aspect-ratio: 1122 / 1402;
+    position: relative;
+    top: auto;
+    right: auto;
     justify-self: center;
   }
 
