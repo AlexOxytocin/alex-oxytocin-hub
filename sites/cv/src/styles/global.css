@@ -176,12 +176,15 @@ a:hover { text-decoration: underline; }
 }
 
 .brand {
-  font-weight: 750;
-  letter-spacing: 0.2px;
-  background: var(--brand-grad);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.brand-logo {
+  width: auto;
+  height: 30px;
+  display: block;
 }
 
 .nav {
@@ -234,6 +237,10 @@ a:hover { text-decoration: underline; }
 @media (max-width: 768px) {
   .header__row {
     gap: 6px;
+  }
+
+  .brand-logo {
+    height: 22px;
   }
 
   .nav {

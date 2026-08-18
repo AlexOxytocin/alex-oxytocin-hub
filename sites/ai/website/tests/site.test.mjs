@@ -336,7 +336,7 @@ test("scroll and touch glow stay behind the same gates as the pulses", async () 
 
 test("the wordmark is the ALEX OXYTOCIN logo with an accessible name", () => {
   assert.equal(
-    (html.match(/src="https:\/\/godmodetools\.com\/assets\/alex-oxytocin-logo\.svg"/g) ?? []).length,
+    (html.match(/src="https:\/\/godmodetools\.com\/assets\/alex-oxytocin-logo\.svg\?v=wordmark-20260817"/g) ?? []).length,
     1,
     "the canonical logo from the main site must be used once, in the header"
   );

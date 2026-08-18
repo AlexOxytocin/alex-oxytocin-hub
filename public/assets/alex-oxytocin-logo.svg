@@ -1,15 +1,15 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 178 18.4">
+<svg xmlns="http://www.w3.org/2000/svg" width="216" height="30" viewBox="0 0 216 30">
   <title>Alex Oxytocin</title>
   <text
-    x="0"
-    y="15.1"
+    x="1"
+    y="24.2"
     fill="#f3f5fb"
     font-family="Inter, Manrope, 'Segoe UI', Arial, sans-serif"
-    font-size="15"
+    font-size="24"
     font-weight="800"
-    letter-spacing="2.7"
-    textLength="176"
-    lengthAdjust="spacing"
+    letter-spacing="2.2"
+    textLength="214"
+    lengthAdjust="spacingAndGlyphs"
     xml:space="preserve"
   ><tspan fill="#25e3d3">ALEX</tspan><tspan fill="#8668ff"> OXYTOCIN</tspan></text>
 </svg>
