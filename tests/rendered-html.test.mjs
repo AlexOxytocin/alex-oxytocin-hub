@@ -95,8 +95,8 @@ test("static deployment carries both localized portrait pages", async () => {
   assert.doesNotMatch(html, /<canvas class="hero-canvas"/);
   assert.doesNotMatch(html, /<script type="module" src="\/assets\/neural\.js"><\/script>/);
   assert.doesNotMatch(css, /\.hero-canvas\s*\{/);
-  assert.match(css, /\.hero\s*\{[^}]*row-gap:\s*10px/);
-  assert.match(css, /\.hero-primary-card\s*\{[^}]*height:\s*485px/);
+  assert.match(css, /\.hero\s*\{[^}]*row-gap:\s*30px/);
+  assert.match(css, /\.hero-primary-card\s*\{[^}]*height:\s*465px/);
   assert.match(css, /\.hero-primary-card\s*\{[^}]*alexey-grishchenko-hero-original-v4\.png/);
   assert.match(css, /\.hero-portrait\s*\{[^}]*display:\s*none/);
   assert.doesNotMatch(css, /mask-composite:\s*intersect/);

@@ -107,12 +107,12 @@ main {
   align-items: stretch;
   align-content: start;
   column-gap: 0;
-  row-gap: 10px;
+  row-gap: 30px;
   padding: 12px 0 16px;
 }
 
 .hero-primary-card {
-  height: 485px;
+  height: 465px;
   min-width: 0;
   position: relative;
   grid-area: primary;
@@ -516,7 +516,7 @@ h1 {
 
 @media (min-width: 821px) and (max-height: 850px) {
   .hero {
-    row-gap: 10px;
+    row-gap: 30px;
     padding: 12px 0 16px;
   }
 
