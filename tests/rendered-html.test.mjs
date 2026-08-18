@@ -21,7 +21,7 @@ test("renders the personal hub with the portrait hero", async () => {
 
   const html = await response.text();
   assert.match(html, /<title>Alex Oxytocin — ИИ, архитектура и инструменты<\/title>/i);
-  assert.match(html, /class="brand-logo"[^>]*src="\/assets\/alex-oxytocin-logo\.svg\?v=wordmark-20260817"/);
+  assert.match(html, /class="brand-logo"[^>]*src="\/assets\/alex-oxytocin-logo\.svg\?v=custom-wordmark-20260817"/);
   assert.doesNotMatch(html, /class="hero-canvas"/);
   assert.match(html, /class="direction-card-mark"[^>]*src="\/assets\/community-mark\.jpg"/);
   assert.match(html, /class="hero-portrait"/);
@@ -93,13 +93,13 @@ test("static deployment carries the same portrait hero", async () => {
   assert.match(html, /href="https:\/\/cv\.godmodetools\.com\/showcase"/);
   assert.doesNotMatch(html, /id="solutions"|Что я делаю для команд/);
   assert.match(html, /class="brand-logo"[^>]*alex-oxytocin-logo\.svg/);
-  assert.match(brandLogo, /font-weight="800"/);
   assert.match(brandLogo, /viewBox="0 0 216 30"/);
   assert.match(brandLogo, /width="216" height="30"/);
-  assert.match(brandLogo, /font-size="24"/);
-  assert.match(brandLogo, /textLength="214"/);
-  assert.match(brandLogo, /lengthAdjust="spacingAndGlyphs"/);
-  assert.match(brandLogo, /<tspan fill="#25e3d3">ALEX<\/tspan><tspan fill="#8668ff"> OXYTOCIN<\/tspan>/);
+  assert.match(brandLogo, /id="custom-letterforms"/);
+  assert.match(brandLogo, /width="211" height="13"/);
+  assert.match(brandLogo, /mask="url\(#custom-letterforms\)"/);
+  assert.match(brandLogo, /fill="url\(#wordmark-colour\)"/);
+  assert.doesNotMatch(brandLogo, /<text|<tspan|font-family/);
   assert.doesNotMatch(css, /\.signal(?:-|\s*\{)/);
   assert.match(css, /\.directions\s*\{[^}]*border:\s*0/);
   assert.doesNotMatch(html, /Обучаю этому на|hero-accent-task/);
@@ -114,7 +114,7 @@ test("all site headers use the canonical Alex Oxytocin wordmark", async () => {
     readFile(new URL("../sites/allo/index.html", import.meta.url), "utf8"),
   ]);
 
-  const canonical = /alex-oxytocin-logo\.svg\?v=wordmark-20260817/;
+  const canonical = /alex-oxytocin-logo\.svg\?v=custom-wordmark-20260817/;
   for (const source of [ai, ai404, cv, allo]) {
     assert.match(source, canonical);
     assert.match(source, /width="216" height="30"/);

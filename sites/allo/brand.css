@@ -5,13 +5,7 @@
 }
 
 .brand-logo {
-  width: auto;
+  width: 216px;
   height: 30px;
   display: block;
-}
-
-@media (max-width: 520px) {
-  .brand-logo {
-    height: 24px;
-  }
 }
