@@ -1,8 +1,7 @@
 /* ==========================================================================
    Alex Neon — section blocks built from the components layer.
    Inventory: compare columns · scenario cards · about chip and expertise
-   items · community
-   access line · FAQ · contact channels.
+   items · community access line · contact channels.
    Informational cards deliberately have no hover state; only real controls
    and links react to the pointer.
    ========================================================================== */
@@ -108,57 +107,6 @@
 .benefit-label {
   display: block;
   margin-bottom: var(--sp-1);
-}
-
-/* ---- FAQ ------------------------------------------------------------ */
-
-.faq-list {
-  border-top: 1px solid var(--line);
-}
-
-.faq-list details {
-  border-bottom: 1px solid var(--line);
-}
-
-.faq-list summary {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: var(--sp-4);
-  padding-block: var(--sp-4);
-  font-weight: 600;
-  font-size: var(--fs-h4);
-  cursor: pointer;
-  list-style: none;
-}
-
-.faq-list summary::-webkit-details-marker {
-  display: none;
-}
-
-.faq-list summary::after {
-  content: "+";
-  flex-shrink: 0;
-  font-size: 1.25rem;
-  font-weight: 400;
-  line-height: 1;
-  color: var(--text-3);
-  transition: transform var(--t-med) var(--ease), color var(--t-fast) var(--ease);
-}
-
-.faq-list summary:hover::after,
-.faq-list details[open] summary::after {
-  color: var(--teal);
-}
-
-.faq-list details[open] summary::after {
-  transform: rotate(45deg);
-}
-
-.faq-list details p {
-  padding-bottom: var(--sp-5);
-  color: var(--text-2);
-  max-width: 42rem;
 }
 
 /* ---- Contact channels ----------------------------------------------- */

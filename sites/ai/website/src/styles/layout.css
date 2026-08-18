@@ -230,14 +230,7 @@
   color: var(--text-2);
 }
 
-/* FAQ and contact structure. */
-.faq-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 4.5fr) minmax(0, 7fr);
-  gap: clamp(2.5rem, 5vw, 5rem);
-  align-items: start;
-}
-
+/* Contact structure. */
 .contact-grid {
   display: grid;
   grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
@@ -399,7 +392,6 @@
 
   .compare-grid,
   .cards-3,
-  .faq-grid,
   .contact-grid {
     grid-template-columns: 1fr;
   }
