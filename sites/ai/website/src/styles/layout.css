@@ -248,39 +248,6 @@
   color: var(--text-2);
 }
 
-/* About: text column + expertise rail. */
-.about-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
-  gap: clamp(2.5rem, 5vw, 5rem);
-  align-items: start;
-}
-
-.about-text > p {
-  color: var(--text-2);
-  max-width: 40rem;
-}
-
-.about-text > p + p {
-  margin-top: var(--sp-4);
-}
-
-.about-links {
-  margin-top: var(--sp-6);
-  display: flex;
-  gap: var(--sp-5);
-  flex-wrap: wrap;
-}
-
-.xp-item {
-  border-top: 1px solid var(--line);
-  padding-block: var(--sp-4);
-}
-
-.xp-item:last-child {
-  border-bottom: 1px solid var(--line);
-}
-
 /* Community: one framed panel. */
 .community-panel {
   border: 1px solid var(--line-strong);
@@ -464,7 +431,6 @@
   .compare-grid,
   .cards-3,
   .finale .n-list,
-  .about-grid,
   .faq-grid,
   .contact-grid {
     grid-template-columns: 1fr;

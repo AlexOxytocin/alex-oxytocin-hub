@@ -48,7 +48,6 @@ const REQUIRED_TEXT = [
   "Личный ассистент с памятью",
   "И это только начало",
   "Сначала ваша задача. Потом инструменты.",
-  "Меня зовут Алексей Грищенко.",
   "Алло, Нейросеточная?",
   "Коротко о важном",
   "Нужно уметь программировать?",
@@ -67,7 +66,9 @@ const REQUIRED_TEXT = [
 const REMOVED_TEXT = [
   "Индивидуальное обучение практической работе с ИИ.",
   "Без привязки к одной модели, сервису или приложению.",
-  "Алексей · ИИ по делу"
+  "Алексей · ИИ по делу",
+  "Программист, который смотрит на ИИ как на рабочий инструмент",
+  "Меня зовут Алексей Грищенко."
 ];
 
 const REQUIRED_LINKS = [
@@ -157,7 +158,7 @@ test("mutable CSS and neural assets share a content version", () => {
 });
 
 test("navigation anchor targets exist", () => {
-  for (const id of ["examples", "control", "process", "about", "contact"]) {
+  for (const id of ["examples", "control", "process", "contact"]) {
     assert.ok(new RegExp(`id="${id}"`).test(html), `missing #${id}`);
   }
 });
@@ -499,6 +500,7 @@ test("the footer pairs the copyright with the linked KS Design signature", async
   for (const phrase of REMOVED_TEXT) {
     assert.ok(!text.includes(phrase), `text was removed but is still present: ${phrase}`);
   }
+  assert.ok(!html.includes('id="about"'), "the removed about section returned");
 });
 
 test("the community mark is self-hosted and described", () => {

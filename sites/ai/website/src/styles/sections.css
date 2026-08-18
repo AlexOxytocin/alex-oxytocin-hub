@@ -302,42 +302,6 @@
     linear-gradient(300deg, var(--tint-violet), transparent 45%), var(--surface);
 }
 
-/* ---- About chip and expertise items --------------------------------- */
-
-.about-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--sp-3);
-  border: 1px solid var(--line-strong);
-  border-radius: var(--r-pill);
-  padding: 0.5rem 1.125rem 0.5rem 0.5rem;
-  background: var(--surface);
-  font-size: var(--fs-meta);
-  font-weight: 600;
-  color: var(--text-2);
-  margin-bottom: var(--sp-5);
-}
-
-.about-chip .brand-mark {
-  width: 1.75rem;
-  height: 1.75rem;
-  font-size: 0.8125rem;
-  border-radius: var(--r-pill);
-}
-
-.xp-title {
-  display: block;
-  margin-top: var(--sp-2);
-  font-weight: 650;
-  font-size: var(--fs-h4);
-}
-
-.xp-desc {
-  margin-top: var(--sp-1);
-  font-size: var(--fs-small);
-  color: var(--text-2);
-}
-
 /* ---- Community ------------------------------------------------------ */
 
 /* Mark and name lockup: the community's own avatar with its label above its
