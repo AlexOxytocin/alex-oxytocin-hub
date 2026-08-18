@@ -1,7 +1,7 @@
 /* ==========================================================================
    Alex Neon — section blocks built from the components layer.
-   Inventory: compare columns · scenario cards · finale panel · about chip and
-   expertise items · community
+   Inventory: compare columns · scenario cards · about chip and expertise
+   items · community
    access line · FAQ · contact channels.
    Informational cards deliberately have no hover state; only real controls
    and links react to the pointer.
@@ -14,8 +14,7 @@
   padding: var(--sp-6);
 }
 
-.compare-col h3,
-.finale h3 {
+.compare-col h3 {
   margin-top: var(--sp-3);
 }
 
@@ -109,17 +108,6 @@
 .benefit-label {
   display: block;
   margin-bottom: var(--sp-1);
-}
-
-/* ---- Finale panel («И это только начало») --------------------------- */
-
-.finale {
-  margin-top: clamp(3rem, 2.5rem + 2vw, 4.5rem);
-  border: 1px solid var(--line-strong);
-  border-radius: var(--r-lg);
-  padding: clamp(2rem, 1.5rem + 2vw, 3rem);
-  background: linear-gradient(120deg, var(--tint-teal), transparent 45%),
-    linear-gradient(300deg, var(--tint-violet), transparent 45%), var(--surface);
 }
 
 /* ---- FAQ ------------------------------------------------------------ */

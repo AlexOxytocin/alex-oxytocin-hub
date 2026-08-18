@@ -167,13 +167,6 @@
   margin-top: var(--sp-2);
 }
 
-.finale .n-list {
-  margin-top: var(--sp-5);
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--sp-3) var(--sp-6);
-}
-
 .cta-bridge {
   margin-top: clamp(2.5rem, 2rem + 2vw, 3.5rem);
   display: flex;
@@ -406,7 +399,6 @@
 
   .compare-grid,
   .cards-3,
-  .finale .n-list,
   .faq-grid,
   .contact-grid {
     grid-template-columns: 1fr;
