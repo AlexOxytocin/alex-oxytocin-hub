@@ -1,3 +1,5 @@
+import EcosystemHeader from "./EcosystemHeader";
+
 type Locale = "ru" | "en";
 
 type Direction = {
@@ -11,10 +13,6 @@ type Direction = {
 };
 
 type HomeContent = {
-  brandHomeLabel: string;
-  navLabel: string;
-  languageLabel: string;
-  nav: { about: string; directions: string; contact: string };
   eyebrow: string;
   headline: { before: string; accent: string; after: string };
   portraitAlt: string;
@@ -28,10 +26,6 @@ type HomeContent = {
 
 const content: Record<Locale, HomeContent> = {
   ru: {
-    brandHomeLabel: "Alex Oxytocin — на главную",
-    navLabel: "Основные разделы",
-    languageLabel: "Выбор языка",
-    nav: { about: "Обо мне", directions: "Направления", contact: "Связаться" },
     eyebrow: "Алексей Грищенко · архитектура · разработка · ИИ",
     headline: {
       before: "Разрабатываю",
@@ -90,10 +84,6 @@ const content: Record<Locale, HomeContent> = {
     footer: "Алексей Грищенко · AI Solutions Architect · Buenos Aires",
   },
   en: {
-    brandHomeLabel: "Alex Oxytocin — home",
-    navLabel: "Main sections",
-    languageLabel: "Choose language",
-    nav: { about: "About", directions: "Directions", contact: "Contact" },
     eyebrow: "Aleksei Grishchenko · architecture · engineering · AI",
     headline: { before: "I build", accent: "AI tools", after: "and automate processes." },
     portraitAlt: "Aleksei Grishchenko",
@@ -155,47 +145,37 @@ export default function HomePage({ locale }: { locale: Locale }) {
   const isEnglish = locale === "en";
 
   return (
-    <main lang={locale}>
-      <header className="site-header">
-        <a className="brand" href="#top" aria-label={copy.brandHomeLabel}>
-          <img className="brand-logo" src="/assets/alex-oxytocin-logo.png?v=official-master-20260817" alt="" width="216" height="30" />
-        </a>
-        <div className="header-tools">
-          <nav aria-label={copy.navLabel}>
-            <a className="nav-about" href="#about">{copy.nav.about}</a>
-            <a className="nav-directions" href="#directions">{copy.nav.directions}</a>
-            <a className="nav-contact" href="https://t.me/AlexOxitocin">{copy.nav.contact}</a>
-          </nav>
-          <div className="lang" aria-label={copy.languageLabel}>
-            <a className={isEnglish ? "active" : ""} href="/en/" lang="en" aria-current={isEnglish ? "page" : undefined}>EN</a>
-            <a className={!isEnglish ? "active" : ""} href="/" lang="ru" aria-current={!isEnglish ? "page" : undefined}>RU</a>
-          </div>
-        </div>
-      </header>
-
-      <section className="hero" id="top">
-        <div className={`hero-intro${isEnglish ? " locale-stack" : ""}`} id="about">
-          <div className={isEnglish ? "locale-panel" : undefined}>
-            <p className="eyebrow">{copy.eyebrow}</p>
-            <h1>{copy.headline.before} <span className="hero-accent-tools">{copy.headline.accent}</span> {copy.headline.after}</h1>
-          </div>
-          {isEnglish && (
-            <div className="locale-panel layout-reference" aria-hidden="true">
-              <p className="eyebrow">{russian.eyebrow}</p>
-              <h1>{russian.headline.before} <span className="hero-accent-tools">{russian.headline.accent}</span> {russian.headline.after}</h1>
+    <>
+      <EcosystemHeader locale={locale} active="home" />
+      <img className="community-network-art" src="/assets/community-network.png" alt="" width="2138" height="735" decoding="async" aria-hidden="true" />
+      <main lang={locale}>
+        <section className="hero" id="top">
+        <div className="hero-primary-card">
+        <div className="hero-copy-card">
+          <div className={`hero-intro${isEnglish ? " locale-stack" : ""}`} id="about">
+            <div className={isEnglish ? "locale-panel" : undefined}>
+              <p className="eyebrow">{copy.eyebrow}</p>
+              <h1>{copy.headline.before} <span className="hero-accent-tools">{copy.headline.accent}</span> {copy.headline.after}</h1>
             </div>
-          )}
+            {isEnglish && (
+              <div className="locale-panel layout-reference" aria-hidden="true">
+                <p className="eyebrow">{russian.eyebrow}</p>
+                <h1>{russian.headline.before} <span className="hero-accent-tools">{russian.headline.accent}</span> {russian.headline.after}</h1>
+              </div>
+            )}
+          </div>
+          <div className={`hero-body${isEnglish ? " locale-stack" : ""}`}>
+            <ul className={`hero-summary${isEnglish ? " locale-panel" : ""}`}>{copy.summary.map((item) => <li key={item}>{item}</li>)}</ul>
+            {isEnglish && (
+              <ul className="hero-summary locale-panel layout-reference" aria-hidden="true">
+                {russian.summary.map((item) => <li key={item}>{item}</li>)}
+              </ul>
+            )}
+          </div>
         </div>
         <figure className="hero-portrait">
-          <img src="/assets/alexey-grishchenko-about.jpg?v=natural-warm" alt={copy.portraitAlt} width="1122" height="1402" decoding="async" />
+          <img src="/assets/alexey-grishchenko-about-wide.png?v=portrait-outpaint-left-20260818" alt={copy.portraitAlt} width="1166" height="1349" decoding="async" />
         </figure>
-        <div className={`hero-body${isEnglish ? " locale-stack" : ""}`}>
-          <ul className={`hero-summary${isEnglish ? " locale-panel" : ""}`}>{copy.summary.map((item) => <li key={item}>{item}</li>)}</ul>
-          {isEnglish && (
-            <ul className="hero-summary locale-panel layout-reference" aria-hidden="true">
-              {russian.summary.map((item) => <li key={item}>{item}</li>)}
-            </ul>
-          )}
         </div>
         <div className={`hero-evidence${isEnglish ? " locale-stack" : " evidence-grid"}`} aria-label={copy.evidenceLabel}>
           {isEnglish ? (
@@ -211,9 +191,9 @@ export default function HomePage({ locale }: { locale: Locale }) {
             copy.evidence.map((item) => <div className="evidence-item" key={item.label}><strong>{item.value}</strong><span>{item.label}</span></div>)
           )}
         </div>
-      </section>
+        </section>
 
-      <section className="directions" id="directions" aria-label={copy.directionsLabel}>
+        <section className="directions" id="directions" aria-label={copy.directionsLabel}>
         <div className="direction-grid">
           {copy.directions.map((direction, index) => (
             <a className={`direction-card direction-card-${direction.accent}${direction.image ? " direction-card-with-mark" : ""}`} href={direction.href} key={direction.title}>
@@ -244,16 +224,17 @@ export default function HomePage({ locale }: { locale: Locale }) {
             </a>
           ))}
         </div>
-      </section>
+        </section>
 
-      <footer className="about-strip">
+        <footer className="about-strip">
         <p>{copy.footer}</p>
         <div className="footer-links">
           <a href="https://github.com/AlexOxytocin">GitHub</a>
           <a href="https://www.linkedin.com/in/aleksei-grishchenko/">LinkedIn</a>
-          <a href="https://t.me/AlexOxitocin">Telegram</a>
+          <a href="https://t.me/AlexOxytocin">Telegram</a>
         </div>
-      </footer>
-    </main>
+        </footer>
+      </main>
+    </>
   );
 }
