@@ -24,8 +24,8 @@ await cp(
   resolve(release, "hub", "assets", "community-mark.jpg")
 );
 await cp(
-  resolve(root, "public", "assets", "alex-oxytocin-logo.svg"),
-  resolve(release, "hub", "assets", "alex-oxytocin-logo.svg")
+  resolve(root, "public", "assets", "alex-oxytocin-logo.png"),
+  resolve(release, "hub", "assets", "alex-oxytocin-logo.png")
 );
 await cp(
   resolve(root, "public", "assets", "alexey-grishchenko-about.jpg"),

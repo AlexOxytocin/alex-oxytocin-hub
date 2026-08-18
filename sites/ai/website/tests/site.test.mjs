@@ -79,7 +79,7 @@ const REQUIRED_LINKS = [
 /* Any URL in built output must start with one of these. */
 const ALLOWED_URL_PREFIXES = [
   ...REQUIRED_LINKS,
-  "https://godmodetools.com/assets/alex-oxytocin-logo.svg",
+  "https://godmodetools.com/assets/alex-oxytocin-logo.png",
   "https://alex-neon.ks-design.workers.dev",
   "http://www.w3.org/",
   "https://www.w3.org/",
@@ -336,7 +336,7 @@ test("scroll and touch glow stay behind the same gates as the pulses", async () 
 
 test("the wordmark is the ALEX OXYTOCIN logo with an accessible name", () => {
   assert.equal(
-    (html.match(/src="https:\/\/godmodetools\.com\/assets\/alex-oxytocin-logo\.svg\?v=vector-wordmark-20260817"/g) ?? []).length,
+    (html.match(/src="https:\/\/godmodetools\.com\/assets\/alex-oxytocin-logo\.png\?v=official-master-20260817"/g) ?? []).length,
     1,
     "the canonical logo from the main site must be used once, in the header"
   );
