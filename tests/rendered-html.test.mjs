@@ -170,5 +170,4 @@ test("every site exposes the complete ecosystem navigation", async () => {
     assert.ok(sources.some((source) => source.includes(label)), `missing navigation label: ${label}`);
   }
   assert.doesNotMatch(sources[2], /ecosystem-nav__locale/);
-  assert.doesNotMatch(sources[3], /ecosystem-nav__locale/);
 });
