@@ -103,7 +103,7 @@ test("static deployment carries the same portrait hero", async () => {
   assert.doesNotMatch(css, /\.signal(?:-|\s*\{)/);
   assert.match(css, /\.directions\s*\{[^}]*border:\s*0/);
   assert.doesNotMatch(html, /Обучаю этому на|hero-accent-task/);
-  assert.match(html, /href="\/styles\.css\?v=hero-cleanup-20260817"/);
+  assert.match(html, /href="\/styles\.css"/);
 });
 
 test("all site headers use the canonical Alex Oxytocin wordmark", async () => {
