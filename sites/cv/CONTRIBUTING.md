@@ -3,7 +3,7 @@
   CV Hub
 
   Created by Alexander Gusarov on 03.03.2026.
-  @spartan121
+  @AlexOxytocin
 -->
 
 # Contributing to CV Hub

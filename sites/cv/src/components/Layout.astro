@@ -4,12 +4,14 @@
 //  CV Hub
 //
 //  Created by Alexander Gusarov on 03.03.2026.
-//  @spartan121
+//  @AlexOxytocin
 //
 import '../styles/global.css';
-import AnimatedBackground from './AnimatedBackground.astro';
+import '../../../../shared/ecosystem-nav.css';
+import EcosystemBackground from './EcosystemBackground.astro';
 import { getEntry } from 'astro:content';
 import { makeT } from '../scripts/t';
+import ecosystemNav from '../../../../shared/ecosystem-nav.json';
 
 // Change theme here
 //
@@ -29,13 +31,10 @@ const {
 
 // --- Config ---
 const langConfig    = await getEntry('languages', 'languages');
-let profileConfig = null;
-try { profileConfig = await getEntry('profiles', 'profiles'); } catch {}
 const translations  = await getEntry('i18n', 'translations');
 
 const defaultLang = langConfig?.data?.default ?? 'en';
 const allLangs    = langConfig?.data?.languages ?? [];
-const allProfiles = profileConfig?.data?.profiles ?? [];
 const t = makeT(translations?.data ?? {}, lang);
 
 // --- Meta ---
@@ -60,7 +59,7 @@ function buildHref(profileSlug: string, langId: string): string {
 
 const homeHref     = buildHref(profile, lang);
 
-const isShowcaseIndex = Astro.url.pathname === `${base}/showcase`;
+const isShowcase = Astro.url.pathname.startsWith(`${base}/showcase`);
 const showcaseHref = lang === defaultLang
   ? `${base}/showcase`
   : `${base}/showcase/${lang}`;
@@ -72,12 +71,20 @@ const langLinks = customLangLinks ?? allLangs.map(l => ({
   active: l.id === lang,
 }));
 
-const profileLinks = allProfiles.map(p => ({
-  id:     p.id,
-  label:  p.label,
-  href:   buildHref(p.slug, lang),
-  active: p.slug === profile,
+const ecosystemLinks = ecosystemNav.sections.map(item => ({
+  ...item,
+  label: item.labels[lang === 'en' ? 'en' : 'ru'],
+  href: item.id === 'experience'
+    ? homeHref
+    : item.id === 'projects'
+      ? showcaseHref
+      : item.hrefs[lang === 'en' ? 'en' : 'ru'],
+  active: item.id === (isShowcase ? 'projects' : 'experience'),
 }));
+
+const ecosystemNavLabel = lang === 'en' ? 'Ecosystem sections' : 'Разделы экосистемы';
+const languageLabel = lang === 'en' ? 'Choose language' : 'Выбор языка';
+const brandLabel = lang === 'en' ? 'Alex Oxytocin — home' : 'Alex Oxytocin — на главную';
 
 const currentYear = new Date().getFullYear();
 const authorGit = 'https://github.com/AlexOxytocin';
@@ -91,7 +98,7 @@ const authorGitHubPage = 'https://godmodetools.com';
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={metaDescription} />
-    <link rel="icon" href={`${base}/favicon.svg?v=alex-a-20260818`} type="image/svg+xml" />
+    <link rel="icon" href={`${base}/favicon.png?v=alex-a-solid-20260818`} type="image/png" sizes="28x28" />
     <link rel="canonical" href={canonicalUrl} />
 
     <!-- Open Graph -->
@@ -127,45 +134,22 @@ const authorGitHubPage = 'https://godmodetools.com';
     </script>
   </head>
   <body>
-    <AnimatedBackground />
-    <header class="header">
-      <div class="container header__row">
-        <a class="brand" href={homeHref} aria-label="Alex Oxytocin — на главную">
+    <EcosystemBackground />
+    <header class="ecosystem-header">
+      <div class="ecosystem-nav__inner">
+        <a class="ecosystem-nav__brand" href={lang === 'en' ? 'https://godmodetools.com/en/' : 'https://godmodetools.com/'} aria-label={brandLabel}>
           <img class="brand-logo" src="https://godmodetools.com/assets/alex-oxytocin-logo.png?v=official-master-20260817" alt="" width="216" height="30" />
         </a>
-
-        <nav class="nav">
-          <a href={homeHref}>{t('nav.home')}</a>
-
-          {profileLinks.length > 1 && (
-            <div class="dropdown">
-              <button
-                class="dropdown__trigger"
-                type="button"
-                aria-haspopup="true"
-                aria-expanded="false"
-                aria-controls="role-menu"
-              >
-                {t('nav.role')} ▾
-              </button>
-              <ul class="dropdown__menu" id="role-menu">
-                {profileLinks.map(p => (
-                  <li>
-                    <a href={p.href} class={p.active ? 'active' : ''}>
-                      {p.label}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-
-          <a href={showcaseHref}>{t('nav.showcase')}</a>
+        <nav class="ecosystem-nav__links" aria-label={ecosystemNavLabel}>
+          {ecosystemLinks.map(item => (
+            <a class="ecosystem-nav__link" href={item.href} aria-current={item.active ? 'page' : undefined}>
+              {item.label}
+            </a>
+          ))}
         </nav>
-
-        <div class="lang">
+        <div class="ecosystem-nav__locale" aria-label={languageLabel}>
           {langLinks.map(l => (
-            <a class={l.active ? 'active' : ''} href={l.href}>{l.label}</a>
+            <a href={l.href} lang={l.id} aria-current={l.active ? 'page' : undefined}>{l.label}</a>
           ))}
         </div>
       </div>
@@ -174,48 +158,6 @@ const authorGitHubPage = 'https://godmodetools.com';
     <main>
       <slot />
     </main>
-
-    <script>
-      // Dropdown: click-toggle + click-outside to close.
-      // Pure CSS :hover закрывает меню при малейшем выходе курсора за контейнер.
-      // Sync aria-expanded with open state for screen readers.
-      const setExpanded = (dropdown: Element, open: boolean) => {
-        dropdown.querySelector('.dropdown__trigger')?.setAttribute('aria-expanded', String(open));
-      };
-
-      const closeAll = () => {
-        document.querySelectorAll('.dropdown.is-open').forEach(d => {
-          d.classList.remove('is-open');
-          setExpanded(d, false);
-        });
-      };
-
-      document.querySelectorAll<HTMLElement>('.dropdown').forEach(dropdown => {
-        const trigger = dropdown.querySelector<HTMLElement>('.dropdown__trigger');
-        if (!trigger) return;
-
-        trigger.addEventListener('click', e => {
-          e.stopPropagation();
-          const willOpen = !dropdown.classList.contains('is-open');
-          closeAll();
-          if (willOpen) {
-            dropdown.classList.add('is-open');
-            setExpanded(dropdown, true);
-          }
-        });
-      });
-
-      // Клик вне любого дропдауна — закрываем все
-      document.addEventListener('click', () => closeAll());
-
-      // Escape — закрываем все и возвращаем фокус на триггер
-      document.addEventListener('keydown', e => {
-        if (e.key !== 'Escape') return;
-        const open = document.querySelector<HTMLElement>('.dropdown.is-open .dropdown__trigger');
-        closeAll();
-        open?.focus();
-      });
-    </script>
 
     <footer class="footer">
       <div class="container footer__inner">

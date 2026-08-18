@@ -7,15 +7,15 @@ summary: >
 location: Буэнос-Айрес, Аргентина
 timezone: UTC−3
 contacts:
-  - { label: Telegram, url: "https://t.me/AlexOxitocin" }
+  - { label: Telegram, url: "https://t.me/AlexOxytocin" }
   - { label: LinkedIn, url: "https://www.linkedin.com/in/aleksei-grishchenko/" }
   - { label: GitHub, url: "https://github.com/AlexOxytocin" }
   - { label: Личный сайт, url: "https://godmodetools.com" }
 achievements:
-  - 7+ лет в Java-разработке, техлидстве и архитектуре
+  - Более 7 лет работаю с Java-разработкой, техлидством и архитектурой
   - Руководил инженерными командами численностью более 10 человек
   - Развивал back-office платформу для 15 000+ магазинов
-  - Участвовал в декомпозиции legacy-монолита из ~12 000 классов
+  - Руководил декомпозицией legacy-монолита из ~12 000 классов
   - Сократил время сборки enterprise-системы с 1,5 часа до 30 минут
   - Провёл модернизацию ключевого стека с Java 7 до Java 17 и Spring Boot
 skills:
@@ -35,7 +35,7 @@ experience:
     period: Янв 2018 — Апр 2023
     description:
       - Развивал back-office платформу, обслуживавшую 15 000+ магазинов
-      - Участвовал в декомпозиции legacy-монолита из ~12 000 классов — сначала в модульный монолит, затем в микросервисы
+      - Руководил декомпозицией legacy-монолита из ~12 000 классов — сначала в модульный монолит, затем в микросервисы
       - Сократил время сборки с 1,5 часа до 30 минут и модернизировал стек с Java 7 до Java 17 / Spring Boot
       - Спроектировал систему доставки обновлений в магазины на Spring Cloud
       - Переводил интеграции с RMI на REST и Kafka; развивал процессы на базе SAGA и orchestration

@@ -30,8 +30,6 @@ approaches:
     description: Нахожу ручную работу, источник данных, владельца решения и цену ошибки; только после этого выбираю агент, RAG или обычную автоматизацию.
   - title: Надёжность — часть продукта
     description: Идемпотентность, retries, аудит, наблюдаемость и управляемое восстановление проектируются вместе с happy path, а не после первой аварии.
-  - title: Человек остаётся в контуре
-    description: Платёж, публикация, изменение внешней системы и неоднозначное решение требуют явного подтверждения там, где ошибка дороже лишнего клика.
   - title: Качество измеряется
     description: Для LLM-процессов задаю проверяемые контракты, evals и критерии приёмки; эффект связываю со временем, стоимостью или качеством результата.
   - title: Знание живёт в репозитории и трекерах
@@ -47,7 +45,7 @@ projects:
     platforms: [Enterprise, Private cloud]
     stack: [LangGraph, FastMCP, Python, PostgreSQL]
     tags: [Agentic AI, Human-in-the-loop, Budgeting, NDA]
-    metrics: [{ label: Ручная консолидация, value: "из рабочей недели в часы" }]
+    metrics: [{ value: "Консолидация: неделя → часы" }]
     media: [{ type: image, src: /media/showcase/construction-budget.jpg, alt: "Архитектурная модель строительного бюджета и поток управленческих данных", featured: true }]
     links: [{ label: Контекст в LinkedIn, url: "https://www.linkedin.com/in/aleksei-grishchenko/", type: article }]
     featured: true
@@ -61,7 +59,7 @@ projects:
     platforms: [Meta Ads, TikTok Ads, Google Ads]
     stack: [LangGraph, Anthropic API, FastMCP, Langfuse, ClickHouse, PostgreSQL]
     tags: [Multi-agent, AdTech, Observability, NDA]
-    metrics: [{ label: Скорость гипотез, value: "×4–5" }, { label: ROAS, value: "+15–20%" }]
+    metrics: [{ value: "Гипотезы ×4–5" }, { value: "ROAS +15–20%" }]
     media: [{ type: image, src: /media/showcase/media-buyer.jpg, alt: "Мультиагентная система управления рекламными кампаниями", featured: true }]
     links: [{ label: Контекст в LinkedIn, url: "https://www.linkedin.com/in/aleksei-grishchenko/", type: article }]
 
@@ -74,7 +72,7 @@ projects:
     platforms: [Web, Confluence]
     stack: [Python, LangChain, LangSmith, Vector DB, BM25, Docker]
     tags: [RAG, Hybrid Search, Reranking, Onboarding]
-    metrics: [{ label: Время онбординга, value: "−30–40%" }, { label: Без эскалации, value: "60–70% вопросов" }]
+    metrics: [{ value: "Онбординг −30–40%" }, { value: "Без эскалации 60–70%" }]
     media: [{ type: image, src: /media/showcase/rag-platform.jpg, alt: "Поиск ответа в корпоративном архиве документов", featured: true }]
     links: [{ label: Контекст в LinkedIn, url: "https://www.linkedin.com/in/aleksei-grishchenko/", type: article }]
 
@@ -108,7 +106,7 @@ projects:
     order: 60
     role: Автор архитектуры
     year: "2026 · в разработке · NDA"
-    description: Корпоративная платформа исполнения AI-агентов на Java и Temporal — долгоживущие AgentRun, retries, replay, идемпотентные tool calls, аудит и наблюдаемость без привязки к одному агентному фреймворку.
+    description: Корпоративная платформа исполнения AI-агентов на Java и Temporal — долгоживущие AgentRun, retries, replay, идемпотентные tool calls, аудит и наблюдаемость без привязки к одному агентному фреймворку. После сбоя выполнение восстанавливается по сохранённому состоянию без повторения завершённых шагов.
     platforms: [Enterprise, Temporal]
     stack: [Java 25, Spring Boot, Temporal, NATS JetStream, PostgreSQL, OpenTelemetry]
     tags: [Durable Workflows, Agent Runtime, Control Plane, NDA]
@@ -119,7 +117,7 @@ projects:
     order: 70
     role: Автор и архитектор
     year: "2026 · развивается"
-    description: Repository-backed движок формирования архитектуры — независимые роли готовят варианты, решения фиксируются явно, разногласия закрываются кворумом, а итоговый план проходит отдельную проверку.
+    description: Repository-backed движок формирования архитектуры — независимые роли готовят варианты, решения фиксируются явно, разногласия закрываются кворумом, а итоговый план проходит отдельную проверку. История решений остаётся воспроизводимой и доступной для аудита.
     platforms: [Codex, CLI, Git]
     stack: [Python, JSON Schema, Repository Memory, MemPalace]
     tags: [Architecture Council, Quorum, Decision Records, Validation]
@@ -131,7 +129,7 @@ projects:
     order: 80
     role: Архитектор процесса
     year: "2024–2026 · используется"
-    description: Spec-driven цикл «задача → спецификация → isolated worker → PR → CI → AI review → merge», где память хранится в репозитории, а код не считается принятым до прохождения всего контура.
+    description: Spec-driven цикл «задача → спецификация → isolated worker → PR → CI → AI review → merge», где память хранится в репозитории, а код не считается принятым до прохождения всего контура. Каждый переход оставляет проверяемый артефакт и проходит собственный quality gate.
     platforms: [GitHub, CI/CD, Codex, Claude Code]
     stack: [Git Worktrees, GitHub Actions, Specs, ADR, Automated Review]
     tags: [AI-assisted Development, Quality Gates, Repository Memory]
@@ -154,11 +152,11 @@ projects:
     order: 85
     role: Автор системы и оператор
     year: "2026 · используется"
-    description: Персональная AI-операционная среда с едиными правилами разработки, долгоживущим контекстом и мониторингом рабочих процессов. Связывает Telegram и доставку документов, read-only доступ к Gmail и Drive, выпуск инвойсов, личные финансы через фиатные и криптосервисы, контроль юридических документов и статусов, учёт расходов, статистику тренировок и медицинские данные.
+    description: Персональная AI-операционная среда с едиными правилами, долгоживущим контекстом и мониторингом. Связывает Telegram, Gmail, Drive, документы, инвойсы, финансы и юридические статусы; критические действия требуют подтверждения. Все действия журналируются и доступны для последующего аудита.
     platforms: [Codex, Telegram, Google Workspace]
     stack: [PowerShell, Python, Node.js, SQLite, Scheduled Automations]
     tags: [Personal AI OS, Integrations, Human Approval, Audit]
-    metrics: [{ label: Рабочие контуры, value: "финансы + документы" }, { label: Критические действия, value: "с подтверждением" }]
+    metrics: [{ value: "Финансы + документы" }, { value: "С подтверждением" }]
     media: [{ type: image, src: /media/showcase/jarvis.jpg, alt: "Jarvis связывает рабочие интеграции, расписания, проверки и подтверждения", featured: true }]
 
   - slug: argentina-migration-bot
@@ -166,11 +164,11 @@ projects:
     order: 87
     role: Автор автоматизации и оператор
     year: "2026 · используется"
-    description: Интеграция с официальными государственными сервисами Аргентины для сопровождения дела в Migraciones — ежедневно проверяет expediente, сравнивает этапы и даты, отслеживает доступность продления, скачивает обновлённые precaria и disposición и уведомляет об изменениях. Подача и продление выполняются только после явного подтверждения.
+    description: "Автоматизация сопровождения дела в Migraciones: ежедневно проверяет expediente, этапы и даты, отслеживает продление, скачивает precaria и disposición и сообщает об изменениях. Подача документов выполняется только после подтверждения."
     platforms: [Argentina Migraciones, Consulta Unificada, Codex]
     stack: [PowerShell, Official AJAX, Scheduled Monitoring, Sanitized Snapshots, PDF Downloads]
     tags: [GovTech Integration, Legal Operations, Document Monitoring, Human Approval]
-    metrics: [{ label: Проверка статуса, value: "ежедневно" }, { label: Подача документов, value: "только с подтверждением" }]
+    metrics: [{ value: "Статус ежедневно" }, { value: "Подача по согласию" }]
     media: [{ type: image, src: /media/showcase/argentina-migration-bot.jpg, alt: "Бот проверяет этапы миграционного дела, документы и доступность продления", featured: true }]
 
   - slug: binance-warehouse

@@ -12,7 +12,6 @@ groups:
 approaches:
   - { title: Process before model, description: "Identify manual work, data sources, the decision owner, and the cost of error before choosing an agent, RAG, or conventional automation." }
   - { title: Reliability is product work, description: "Idempotency, retries, audit, observability, and recovery are designed with the happy path, not after the first incident." }
-  - { title: Keep people in the loop, description: "Payments, publication, external mutations, and ambiguous decisions require explicit approval wherever an error costs more than an extra click." }
   - { title: Measure quality, description: "LLM workflows get testable contracts, evals, and acceptance criteria; impact is tied to time, cost, or output quality." }
   - { title: Knowledge lives in repositories and trackers, description: "Specs, ADRs, and architecture decisions live in the repository; tasks, statuses, and acceptance results live in working trackers, so work can continue without hidden session context." }
 
@@ -26,7 +25,7 @@ projects:
     platforms: [Enterprise, Private cloud]
     stack: [LangGraph, FastMCP, Python, PostgreSQL]
     tags: [Agentic AI, Human-in-the-loop, Budgeting, NDA]
-    metrics: [{ label: Manual consolidation, value: "from a workweek to hours" }]
+    metrics: [{ value: "Consolidation: week → hours" }]
     media: [{ type: image, src: /media/showcase/construction-budget.jpg, alt: "Construction budget architecture and management data flows", featured: true }]
     links: [{ label: LinkedIn context, url: "https://www.linkedin.com/in/aleksei-grishchenko/", type: article }]
     featured: true
@@ -39,7 +38,7 @@ projects:
     platforms: [Meta Ads, TikTok Ads, Google Ads]
     stack: [LangGraph, Anthropic API, FastMCP, Langfuse, ClickHouse, PostgreSQL]
     tags: [Multi-agent, AdTech, Observability, NDA]
-    metrics: [{ label: Hypothesis velocity, value: "4–5×" }, { label: ROAS, value: "+15–20%" }]
+    metrics: [{ value: "Hypotheses 4–5×" }, { value: "ROAS +15–20%" }]
     media: [{ type: image, src: /media/showcase/media-buyer.jpg, alt: "Multi-agent advertising operations system", featured: true }]
     links: [{ label: LinkedIn context, url: "https://www.linkedin.com/in/aleksei-grishchenko/", type: article }]
   - slug: rag-platform
@@ -51,7 +50,7 @@ projects:
     platforms: [Web, Confluence]
     stack: [Python, LangChain, LangSmith, Vector DB, BM25, Docker]
     tags: [RAG, Hybrid Search, Reranking, Onboarding]
-    metrics: [{ label: Onboarding time, value: "−30–40%" }, { label: Without escalation, value: "60–70% of questions" }]
+    metrics: [{ value: "Onboarding −30–40%" }, { value: "No escalation 60–70%" }]
     media: [{ type: image, src: /media/showcase/rag-platform.jpg, alt: "Retrieving a trusted answer from an enterprise document archive", featured: true }]
     links: [{ label: LinkedIn context, url: "https://www.linkedin.com/in/aleksei-grishchenko/", type: article }]
   - slug: flatscanner
@@ -59,7 +58,7 @@ projects:
     order: 40
     role: Product author & architect
     year: "2025–2026 · completed"
-    description: Telegram and web service that analyses rental listings and photos for layouts, amenities, and practical risks that ordinary filters miss.
+    description: Telegram and web service that analyses rental listings and photos for layouts, amenities, and practical risks that ordinary filters miss. Findings are assembled into a concise report for comparing options.
     platforms: [Telegram, Web, Airbnb]
     stack: [FastAPI, OpenRouter, Apify, Redis, PostgreSQL, Docker]
     tags: [Computer Vision, Rental Search, AI Analysis, Product]
@@ -82,7 +81,7 @@ projects:
     order: 60
     role: Architecture author
     year: "2026 · in development · NDA"
-    description: Corporate AI-agent execution platform on Java and Temporal with durable AgentRuns, retries, replay, idempotent tool calls, audit, and observability independent of one agent framework.
+    description: Corporate AI-agent execution platform on Java and Temporal with durable AgentRuns, retries, replay, idempotent tool calls, audit, and observability independent of one agent framework. After a failure, execution resumes from stored state without repeating completed steps.
     platforms: [Enterprise, Temporal]
     stack: [Java 25, Spring Boot, Temporal, NATS JetStream, PostgreSQL, OpenTelemetry]
     tags: [Durable Workflows, Agent Runtime, Control Plane, NDA]
@@ -92,7 +91,7 @@ projects:
     order: 70
     role: Author & architect
     year: "2026 · evolving"
-    description: Repository-backed architecture engine where isolated roles draft options, decisions are explicit, disagreements close by quorum, and the final plan receives independent validation.
+    description: Repository-backed architecture engine where isolated roles draft options, decisions are explicit, disagreements close by quorum, and the final plan receives independent validation. The decision trail remains reproducible and auditable.
     platforms: [Codex, CLI, Git]
     stack: [Python, JSON Schema, Repository Memory, MemPalace]
     tags: [Architecture Council, Quorum, Decision Records, Validation]
@@ -103,7 +102,7 @@ projects:
     order: 80
     role: Process architect
     year: "2024–2026 · in use"
-    description: Spec-driven delivery loop from task and isolated worker to PR, CI, AI review, and merge, with repository-backed memory and full acceptance gates.
+    description: Spec-driven delivery loop from task and isolated worker to PR, CI, AI review, and merge, with repository-backed memory and full acceptance gates. Every transition leaves a verifiable artifact and passes its own quality gate.
     platforms: [GitHub, CI/CD, Codex, Claude Code]
     stack: [Git Worktrees, GitHub Actions, Specs, ADR, Automated Review]
     tags: [AI-assisted Development, Quality Gates, Repository Memory]
@@ -124,29 +123,29 @@ projects:
     order: 85
     role: System author & operator
     year: "2026 · in use"
-    description: Personal AI operations environment with shared development rules, durable context, and work-process monitoring. It connects Telegram and document delivery, read-only Gmail and Drive access, invoice generation, personal finance across fiat and crypto services, legal-document and status tracking, expense accounting, training statistics, and medical data.
+    description: Personal AI operations environment with shared rules, durable context, and monitoring. It connects Telegram, Gmail, Drive, documents, invoicing, finance, and legal statuses; critical actions require approval. Every action is logged and remains available for audit.
     platforms: [Codex, Telegram, Google Workspace]
     stack: [PowerShell, Python, Node.js, SQLite, Scheduled Automations]
     tags: [Personal AI OS, Integrations, Human Approval, Audit]
-    metrics: [{ label: Operational workflows, value: "finance + documents" }, { label: Critical actions, value: "approval required" }]
+    metrics: [{ value: "Finance + docs" }, { value: "Approval required" }]
     media: [{ type: image, src: /media/showcase/jarvis.jpg, alt: "Jarvis connects work integrations, schedules, checks, and approval gates", featured: true }]
   - slug: argentina-migration-bot
     name: Argentina migration case bot
     order: 87
     role: Automation author & operator
     year: "2026 · in use"
-    description: Integration with official Argentine government services for managing a Migraciones case — checks the expediente daily, compares stages and dates, tracks renewal availability, downloads updated precaria and disposición documents, and reports changes. Submission and renewal require explicit approval.
+    description: Migraciones case automation that checks the expediente, stages, and dates daily, tracks renewals, downloads precaria and disposición documents, and reports changes. Document submission requires explicit approval.
     platforms: [Argentina Migraciones, Consulta Unificada, Codex]
     stack: [PowerShell, Official AJAX, Scheduled Monitoring, Sanitized Snapshots, PDF Downloads]
     tags: [GovTech Integration, Legal Operations, Document Monitoring, Human Approval]
-    metrics: [{ label: Status check, value: "daily" }, { label: Document submission, value: "approval required" }]
+    metrics: [{ value: "Daily status" }, { value: "Approved submission" }]
     media: [{ type: image, src: /media/showcase/argentina-migration-bot.jpg, alt: "Bot monitoring migration-case stages, documents, and renewal availability", featured: true }]
   - slug: binance-warehouse
     name: Binance History Warehouse
     order: 100
     role: Integration author
     year: "2026 · in use"
-    description: Read-only integration combining exports and multiple Binance API history streams in local SQLite, with normalization, destination labels, reconciliation, and reproducible reports.
+    description: Read-only integration combining exports and multiple Binance API history streams in local SQLite, with normalization, destination labels, reconciliation, and reproducible reports. Synchronization can be rerun without modifying source data.
     platforms: [Binance, Local-first]
     stack: [Python, SQLite, Ed25519, REST API, Scheduled Sync]
     tags: [Financial Data, Reconciliation, Read-only, Audit]

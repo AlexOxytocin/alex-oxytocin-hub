@@ -6,7 +6,7 @@
   Feed this document to any AI tool before making changes to the project.
 
   Created by Alexander Gusarov on 02.04.2026.
-  @spartan121
+  @AlexOxytocin
 -->
 
 # CV Hub — LLM Context

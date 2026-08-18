@@ -3,7 +3,7 @@
 //  CV Hub
 //
 //  Created by Alexander Gusarov on 11.03.2026.
-//  @spartan121
+//  @AlexOxytocin
 //
 //  Usage: node src/scripts/merge.mjs
 //  Reads profiles.yml + languages.yml, merges base + spec YAMLs,

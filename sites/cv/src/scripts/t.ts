@@ -3,7 +3,7 @@
 //  CV Hub
 //
 //  Created by Alexander Gusarov on 11.03.2026.
-//  @spartan121
+//  @AlexOxytocin
 //
 //  Usage: import { makeT } from '../scripts/t';
 //  const t = makeT(translations, lang);

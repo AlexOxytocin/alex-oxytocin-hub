@@ -57,7 +57,7 @@ async function extractText(filePath) {
     .replace(/[\u00AD\u200B\u200C\u200D\u2060\uFEFF]/g, '');
 
   // Heal common broken URLs where PDF text inserts spaces/newlines in the middle of the URL.
-  // Example: "www.linkedin.com/in/alexander- gusarov-..." -> "www.linkedin.com/in/alexander-gusarov-..."
+  // Example: "www.linkedin.com/in/example- profile-..." -> "www.linkedin.com/in/example-profile-..."
   const healed = sanitized
     .replace(/((?:https?:\/\/)?(?:www\.)?linkedin\.com\/in\/[A-Za-z0-9-]+)\s+([A-Za-z0-9-]+)/g, '$1$2')
     .replace(/((?:https?:\/\/)?(?:www\.)?github\.com\/[A-Za-z0-9-]+)\s+([A-Za-z0-9-]+)/g, '$1$2')
