@@ -1,0 +1,29 @@
+{
+  "sections": [
+    {
+      "id": "home",
+      "labels": { "ru": "Главная", "en": "Home" },
+      "hrefs": { "ru": "https://godmodetools.com/", "en": "https://godmodetools.com/en/" }
+    },
+    {
+      "id": "experience",
+      "labels": { "ru": "Опыт", "en": "Experience" },
+      "hrefs": { "ru": "https://cv.godmodetools.com/", "en": "https://cv.godmodetools.com/en" }
+    },
+    {
+      "id": "projects",
+      "labels": { "ru": "Проекты", "en": "Projects" },
+      "hrefs": { "ru": "https://cv.godmodetools.com/showcase/", "en": "https://cv.godmodetools.com/showcase/en" }
+    },
+    {
+      "id": "training",
+      "labels": { "ru": "Обучение", "en": "Training" },
+      "hrefs": { "ru": "https://ai.godmodetools.com/", "en": "https://ai.godmodetools.com/" }
+    },
+    {
+      "id": "community",
+      "labels": { "ru": "Комьюнити", "en": "Community" },
+      "hrefs": { "ru": "https://allo.godmodetools.com/", "en": "https://allo.godmodetools.com/" }
+    }
+  ]
+}

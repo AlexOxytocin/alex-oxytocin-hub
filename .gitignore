@@ -43,3 +43,8 @@ yarn-error.log*
 **/.wrangler/
 /outputs/
 /work/
+
+# Local visual QA artifacts
+/.codex-*.png
+/.qa-*.png
+**/.codex-dist-lock-backup-*/

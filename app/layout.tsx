@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import "../shared/ecosystem-nav.css";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -14,8 +15,8 @@ export const metadata: Metadata = {
     },
   },
   icons: {
-    icon: "/favicon.svg?v=alex-a-20260818",
-    shortcut: "/favicon.svg?v=alex-a-20260818",
+    icon: "/favicon.png?v=alex-a-solid-20260818",
+    shortcut: "/favicon.png?v=alex-a-solid-20260818",
   },
 };
 

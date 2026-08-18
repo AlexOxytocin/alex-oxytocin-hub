@@ -9,8 +9,12 @@ await rm(release, { recursive: true, force: true });
 await mkdir(release, { recursive: true });
 
 await cp(resolve(root, "sites", "hub"), resolve(release, "hub"), { recursive: true });
-const css = (await readFile(resolve(root, "app", "globals.css"), "utf8"))
-  .replace(/^@import\s+"tailwindcss";\s*/u, "");
+const ecosystemNavCss = await readFile(resolve(root, "shared", "ecosystem-nav.css"), "utf8");
+const css = [
+  ecosystemNavCss,
+  (await readFile(resolve(root, "app", "globals.css"), "utf8"))
+    .replace(/^@import\s+"tailwindcss";\s*/u, ""),
+].join("\n");
 await writeFile(resolve(release, "hub", "styles.css"), css);
 await mkdir(resolve(release, "hub", "assets"), { recursive: true });
 for (const name of ["field.js", "palette.js", "placement.js", "neural.js"]) {
@@ -28,8 +32,16 @@ await cp(
   resolve(release, "hub", "assets", "alex-oxytocin-logo.png")
 );
 await cp(
-  resolve(root, "public", "assets", "alexey-grishchenko-about.jpg"),
-  resolve(release, "hub", "assets", "alexey-grishchenko-about.jpg")
+  resolve(root, "public", "assets", "alexey-grishchenko-about-wide.png"),
+  resolve(release, "hub", "assets", "alexey-grishchenko-about-wide.png")
+);
+await cp(
+  resolve(root, "public", "assets", "alexey-grishchenko-hero-original-v4.png"),
+  resolve(release, "hub", "assets", "alexey-grishchenko-hero-original-v4.png")
+);
+await cp(
+  resolve(root, "sites", "allo", "community-network.png"),
+  resolve(release, "hub", "assets", "community-network.png")
 );
 
 const hubCss = await readFile(resolve(release, "hub", "styles.css"));
@@ -61,3 +73,8 @@ await cp(cvSource, resolve(release, "cv"), {
 });
 
 await cp(resolve(root, "sites", "allo"), resolve(release, "allo"), { recursive: true });
+const alloCssPath = resolve(release, "allo", "styles.css");
+await writeFile(
+  alloCssPath,
+  `${ecosystemNavCss}\n${await readFile(alloCssPath, "utf8")}`
+);
