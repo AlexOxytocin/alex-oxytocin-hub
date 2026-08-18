@@ -68,7 +68,9 @@ const REMOVED_TEXT = [
   "Без привязки к одной модели, сервису или приложению.",
   "Алексей · ИИ по делу",
   "Программист, который смотрит на ИИ как на рабочий инструмент",
-  "Меня зовут Алексей Грищенко."
+  "Меня зовут Алексей Грищенко.",
+  "Профессиональное Telegram-комьюнити",
+  "Я создал живое сообщество для тех, кто разбирается в ИИ не в одиночку."
 ];
 
 const REQUIRED_LINKS = [
@@ -131,8 +133,7 @@ test("quotation marks follow the source: guillemets, never low-nine", () => {
   for (const phrase of [
     "«Отправь Андрею последний инвойс и напиши, что оплата до пятницы»",
     "«найди договор аренды за 2024 год»",
-    "Помнит не «всё на свете», а нужное и разрешённое.",
-    "«Алло, Нейросеточная?»"
+    "Помнит не «всё на свете», а нужное и разрешённое."
   ]) {
     assert.ok(text.includes(phrase), `missing quoted phrase: ${phrase}`);
   }
@@ -503,18 +504,6 @@ test("the footer pairs the copyright with the linked KS Design signature", async
   assert.ok(!html.includes('id="about"'), "the removed about section returned");
 });
 
-test("the community mark is self-hosted and described", () => {
-  assert.ok(
-    html.includes('src="./assets/community-mark.jpg"'),
-    "community mark missing"
-  );
-  assert.ok(
-    /community-mark\.jpg"[^>]*alt="[^"]+"/.test(html) ||
-      /alt="[^"]*Алло, Нейросеточная[^"]*"/.test(html),
-    "community mark needs a meaningful alt text"
-  );
-});
-
 test("keyboard focus styling exists", () => {
   assert.ok(css.includes(":focus-visible"), "css must style :focus-visible");
 });
@@ -542,8 +531,7 @@ test("stage support files are emitted", async () => {
     "robots.txt",
     "sitemap.xml",
     "assets/favicon.png",
-    "assets/og.png",
-    "assets/community-mark.jpg"
+    "assets/og.png"
   ]) {
     await access(join(dist, file));
   }
@@ -556,7 +544,6 @@ test("nothing extra ships: the payload stays within budget", async () => {
     ".css": 60 * 1024,
     ".js": 48 * 1024,
     ".woff2": 160 * 1024,
-    ".jpg": 40 * 1024,
     ".png": 400 * 1024 /* og.png is fetched by crawlers, not by the page */
   };
   const totals = {};
@@ -581,7 +568,7 @@ test("nothing extra ships: the payload stays within budget", async () => {
   );
   assert.deepEqual(
     Object.keys(totals).sort(),
-    [".css", ".html", ".jpg", ".js", ".png", ".txt", ".woff2", ".xml"],
+    [".css", ".html", ".js", ".png", ".txt", ".woff2", ".xml"],
     "an unexpected file type appeared in dist"
   );
 

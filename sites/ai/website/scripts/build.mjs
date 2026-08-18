@@ -62,10 +62,6 @@ async function main() {
   await cp(join(root, "assets/favicon.png"), join(dist, "assets/favicon.png"));
   await cp(join(root, "assets/og.png"), join(dist, "assets/og.png"));
   await cp(
-    join(root, "assets/community-mark.jpg"),
-    join(dist, "assets/community-mark.jpg")
-  );
-  await cp(
     join(root, "assets/ks-design-signature.png"),
     join(dist, "assets/ks-design-signature.png")
   );

@@ -248,19 +248,6 @@
   color: var(--text-2);
 }
 
-/* Community: one framed panel. */
-.community-panel {
-  border: 1px solid var(--line-strong);
-  border-radius: var(--r-lg);
-  padding: clamp(2rem, 1.5rem + 3vw, 4rem);
-  background: radial-gradient(50% 90% at 85% 0%, rgba(139, 92, 246, 0.09), transparent),
-    var(--surface);
-}
-
-.community-panel .section-head {
-  margin-bottom: var(--sp-5);
-}
-
 /* FAQ and contact structure. */
 .faq-grid {
   display: grid;
@@ -510,9 +497,4 @@
     justify-content: center;
   }
 
-  /* The mark-and-name lockup needs every pixel of the panel's inner width on a
-     phone, and a 35 px inset buys nothing there. */
-  .community-panel {
-    padding: var(--sp-5);
-  }
 }
