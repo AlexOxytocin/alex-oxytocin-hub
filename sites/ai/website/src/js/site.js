@@ -1,5 +1,4 @@
-/* Alex Neon — page behavior: header state, mobile navigation disclosure,
-   reveal-on-scroll. Everything here is progressive enhancement: without
+/* Alex Neon — reveal-on-scroll behavior. Everything here is progressive enhancement: without
    JavaScript the page is fully readable and navigable. */
 (() => {
   "use strict";
@@ -8,41 +7,6 @@
   root.classList.add("js");
 
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-
-  /* --- Header scroll state (deep blur once the page moves) --------------- */
-  const header = document.querySelector(".site-header");
-  if (header) {
-    const syncHeader = () => {
-      header.classList.toggle("is-scrolled", window.scrollY > 8);
-    };
-    window.addEventListener("scroll", syncHeader, { passive: true });
-    syncHeader();
-  }
-
-  /* --- Mobile navigation: accessible disclosure --------------------------- */
-  const toggle = document.querySelector(".nav-toggle");
-  const nav = document.getElementById("site-nav");
-  if (header && toggle && nav) {
-    const setOpen = (open) => {
-      header.classList.toggle("nav-open", open);
-      toggle.setAttribute("aria-expanded", String(open));
-    };
-
-    toggle.addEventListener("click", () => {
-      setOpen(!header.classList.contains("nav-open"));
-    });
-
-    nav.addEventListener("click", (event) => {
-      if (event.target.closest("a")) setOpen(false);
-    });
-
-    document.addEventListener("keydown", (event) => {
-      if (event.key === "Escape" && header.classList.contains("nav-open")) {
-        setOpen(false);
-        toggle.focus();
-      }
-    });
-  }
 
   /* --- Reveal on scroll ----------------------------------------------------- */
   const revealed = document.querySelectorAll("[data-reveal]");

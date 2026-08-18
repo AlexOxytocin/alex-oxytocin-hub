@@ -7,6 +7,7 @@ import { execFile } from "node:child_process";
 import { access, readdir, readFile, stat } from "node:fs/promises";
 import { extname, join, resolve } from "node:path";
 import test, { before } from "node:test";
+import { pathToFileURL } from "node:url";
 import { promisify } from "node:util";
 import { gzipSync } from "node:zlib";
 
@@ -70,7 +71,7 @@ const REMOVED_TEXT = [
 ];
 
 const REQUIRED_LINKS = [
-  "https://t.me/AlexOxitocin",
+  "https://t.me/AlexOxytocin",
   "https://t.me/+uzk17Dr2rREyNmRi",
   "https://www.linkedin.com/in/aleksei-grishchenko/",
   "https://ks-design.art/"
@@ -79,11 +80,22 @@ const REQUIRED_LINKS = [
 /* Any URL in built output must start with one of these. */
 const ALLOWED_URL_PREFIXES = [
   ...REQUIRED_LINKS,
-  "https://godmodetools.com/assets/alex-oxytocin-logo.png",
+  "https://godmodetools.com/",
+  "https://cv.godmodetools.com/",
+  "https://ai.godmodetools.com/",
+  "https://allo.godmodetools.com/",
   "https://alex-neon.ks-design.workers.dev",
   "http://www.w3.org/",
   "https://www.w3.org/",
   "http://www.sitemaps.org/"
+];
+
+const ECOSYSTEM_LINKS = [
+  "https://godmodetools.com/",
+  "https://cv.godmodetools.com/",
+  "https://cv.godmodetools.com/showcase/",
+  "https://ai.godmodetools.com/",
+  "https://allo.godmodetools.com/"
 ];
 
 async function distFiles(dir = dist) {
@@ -232,7 +244,7 @@ test("the stacked dome is a half sphere that clears the copy", async () => {
         : null
   };
 
-  const { measureShape } = await import(join(root, "src/js/placement.js"));
+  const { measureShape } = await import(pathToFileURL(join(root, "src/js/placement.js")));
   const cssWidth = 375;
   const cssHeight = 812;
   const shape = measureShape({
@@ -341,14 +353,22 @@ test("the wordmark is the ALEX OXYTOCIN logo with an accessible name", () => {
     "the canonical logo from the main site must be used once, in the header"
   );
   assert.ok(
-    /<a class="brand"[^>]*aria-label="Alex Oxytocin/.test(html),
+    /<a class="ecosystem-nav__brand"[^>]*aria-label="Alex Oxytocin/.test(html),
     "the brand link needs an accessible name once its text became a drawing"
   );
   assert.ok(!html.includes('class="logo-sprite"'), "the obsolete outlined logo must not return");
 });
 
+test("ecosystem navigation is complete and marks training active", () => {
+  for (const link of ECOSYSTEM_LINKS) {
+    assert.ok(html.includes(`href="${link}"`), `missing ecosystem link: ${link}`);
+  }
+  assert.match(html, /class="ecosystem-nav__link"[^>]*href="https:\/\/ai\.godmodetools\.com\/"[^>]*aria-current="page"/u);
+  assert.doesNotMatch(html, /ecosystem-nav__locale/u, "training has no English page yet");
+});
+
 test("the field generator survives a degenerate box", async () => {
-  const { generateField } = await import(join(root, "src/js/field.js"));
+  const { generateField } = await import(pathToFileURL(join(root, "src/js/field.js")));
   for (const box of [
     { rx: 0, ry: 0 },
     { rx: -20, ry: 40 },
@@ -388,7 +408,7 @@ test("the field generator survives a degenerate box", async () => {
 });
 
 test("the field generator gives every anchor its own dendrites", async () => {
-  const { generateField } = await import(join(root, "src/js/field.js"));
+  const { generateField } = await import(pathToFileURL(join(root, "src/js/field.js")));
   const anchors = [-300, -150, 0, 150, 300].map((x) => ({ x, y: 0 }));
   const field = generateField({
     cx: 0,
@@ -430,7 +450,7 @@ test("the field generator gives every anchor its own dendrites", async () => {
 });
 
 test("fork junctions do not become endpoint somas", async () => {
-  const { generateField } = await import(join(root, "src/js/field.js"));
+  const { generateField } = await import(pathToFileURL(join(root, "src/js/field.js")));
   const field = generateField({ cx: 0, cy: 0, rx: 320, ry: 180, nodes: 500 });
   const degree = new Uint16Array(field.count);
   for (let e = 0; e < field.edgeCount; e++) {
@@ -450,7 +470,7 @@ test("the social card carries the current renderer fingerprint", async () => {
     createSocialField,
     fingerprintSocialCard,
     readPngText
-  } = await import(join(root, "scripts/social-field.mjs"));
+  } = await import(pathToFileURL(join(root, "scripts/social-field.mjs")));
   const card = await readFile(join(root, "assets", "og.png"));
   assert.equal(
     readPngText(card, CARD_FINGERPRINT_KEY),
@@ -519,7 +539,7 @@ test("stage support files are emitted", async () => {
     "404.html",
     "robots.txt",
     "sitemap.xml",
-    "assets/favicon.svg",
+    "assets/favicon.png",
     "assets/og.png",
     "assets/community-mark.jpg"
   ]) {
@@ -559,7 +579,7 @@ test("nothing extra ships: the payload stays within budget", async () => {
   );
   assert.deepEqual(
     Object.keys(totals).sort(),
-    [".css", ".html", ".jpg", ".js", ".png", ".svg", ".txt", ".woff2", ".xml"],
+    [".css", ".html", ".jpg", ".js", ".png", ".txt", ".woff2", ".xml"],
     "an unexpected file type appeared in dist"
   );
 

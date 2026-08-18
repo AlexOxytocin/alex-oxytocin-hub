@@ -26,6 +26,7 @@ async function buildStylesheet() {
   for (const name of STYLE_ORDER) {
     parts.push(await readFile(join(root, "src/styles", name), "utf8"));
   }
+  parts.push(await readFile(resolve(root, "../../../shared/ecosystem-nav.css"), "utf8"));
   return parts.join("\n");
 }
 
@@ -58,7 +59,7 @@ async function main() {
   await cp(join(root, "assets/fonts"), join(dist, "assets/fonts"), {
     recursive: true
   });
-  await cp(join(root, "assets/favicon.svg"), join(dist, "assets/favicon.svg"));
+  await cp(join(root, "assets/favicon.png"), join(dist, "assets/favicon.png"));
   await cp(join(root, "assets/og.png"), join(dist, "assets/og.png"));
   await cp(
     join(root, "assets/community-mark.jpg"),

@@ -34,51 +34,6 @@
   max-width: 42rem;
 }
 
-/* ---- Header --------------------------------------------------------- */
-
-.site-header {
-  position: fixed;
-  inset-inline: 0;
-  top: 0;
-  z-index: 50;
-  border-bottom: 1px solid transparent;
-  transition: background-color var(--t-med) var(--ease),
-    border-color var(--t-med) var(--ease);
-}
-
-.site-header.is-scrolled {
-  background: rgba(5, 6, 10, 0.72);
-  -webkit-backdrop-filter: blur(18px) saturate(1.4);
-  backdrop-filter: blur(18px) saturate(1.4);
-  border-bottom-color: var(--line);
-}
-
-.header-inner {
-  display: flex;
-  align-items: center;
-  gap: var(--sp-6);
-  min-height: var(--header-h);
-}
-
-.site-nav {
-  margin-left: auto;
-}
-
-.site-nav ul {
-  display: flex;
-  align-items: center;
-  gap: var(--sp-1);
-}
-
-/* The last nav item is the header's call to action, as on the source page. */
-.nav-cta {
-  margin-left: var(--sp-3);
-}
-
-.nav-toggle {
-  display: none;
-}
-
 /* ---- Hero ----------------------------------------------------------- */
 
 .hero {
@@ -86,7 +41,7 @@
   min-height: 100svh;
   display: flex;
   align-items: center;
-  padding-block: calc(var(--header-h) + var(--sp-7)) var(--sp-8);
+  padding-block: var(--sp-7) var(--sp-8);
   overflow: hidden;
   /* Field composition, inherited by the canvas and read there by neural.js.
      --nr asks for a circle of that fraction of the canvas height; --nx / --ny
@@ -461,46 +416,6 @@
     --section: clamp(4rem, 3rem + 4vw, 6rem);
   }
 
-  /* Navigation collapses to an accessible disclosure when JS is present;
-     without JS the nav stays a visible wrapping row (page must work). */
-  .js .nav-toggle {
-    display: inline-flex;
-  }
-
-  .js .site-nav {
-    position: absolute;
-    top: 100%;
-    inset-inline: 0;
-    margin-left: 0;
-    background: rgba(5, 6, 10, 0.94);
-    -webkit-backdrop-filter: blur(18px);
-    backdrop-filter: blur(18px);
-    border-bottom: 1px solid var(--line);
-    padding: var(--sp-3) var(--gutter) var(--sp-5);
-    visibility: hidden;
-    opacity: 0;
-    transform: translateY(-0.5rem);
-    transition: opacity var(--t-med) var(--ease),
-      transform var(--t-med) var(--ease), visibility var(--t-med);
-  }
-
-  .js .site-header.nav-open .site-nav {
-    visibility: visible;
-    opacity: 1;
-    transform: none;
-  }
-
-  .js .site-nav ul {
-    flex-direction: column;
-    gap: var(--sp-1);
-  }
-
-  .site-nav ul {
-    flex-wrap: wrap;
-    justify-content: flex-end;
-    gap: 0;
-  }
-
   /* The crown moves behind the headline; a scrim keeps the copy at AA. */
   .hero {
     align-items: flex-start;
@@ -627,10 +542,6 @@
 
   .hero-cta .btn {
     justify-content: center;
-  }
-
-  .header-inner {
-    gap: var(--sp-3);
   }
 
   /* The mark-and-name lockup needs every pixel of the panel's inner width on a
