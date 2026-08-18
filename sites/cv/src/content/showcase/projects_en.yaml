@@ -162,13 +162,13 @@ projects:
     media: [{ type: image, src: /media/showcase/allo-community.jpg, alt: "Community mark connected to members and shared projects", featured: true }]
     links: [{ label: Community page, url: "https://allo.godmodetools.com", type: product }]
   - slug: ai-training
-    name: Practical AI training
+    name: Practical AI learning
     order: 120
     role: Program author & mentor
     year: "2026 · launch"
-    description: One-to-one practical AI training around the learner's real task, from process analysis to a controlled personal assistant without mandatory coding.
+    description: One-to-one practical AI learning sessions around the learner's real task, from process analysis to a controlled personal assistant without mandatory coding.
     platforms: [Online, One-to-one]
     stack: [AI Assistants, Automation, Personal Workflows]
     tags: [Education, Applied AI, Mentoring]
-    media: [{ type: image, src: /media/showcase/ai-training.jpg, alt: "Practical training turns a complex task into a controlled AI workflow", featured: true }]
-    links: [{ label: Training page, url: "https://ai.godmodetools.com", type: product }]
+    media: [{ type: image, src: /media/showcase/ai-training.jpg, alt: "Practical learning turns a complex task into a controlled AI workflow", featured: true }]
+    links: [{ label: Learning page, url: "https://ai.godmodetools.com", type: product }]

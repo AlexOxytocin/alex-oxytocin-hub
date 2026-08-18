@@ -102,11 +102,11 @@ const content: Record<Locale, HomeContent> = {
     directionsLabel: "Directions",
     directions: [
       {
-        eyebrow: "Training",
+        eyebrow: "Learning",
         title: "Learn to work with AI",
-        description: "One-to-one AI training built around your real tasks — without locking you into one service.",
+        description: "One-to-one AI learning sessions built around your real tasks — without locking you into one service.",
         href: "https://ai.godmodetools.com",
-        action: "Explore training",
+        action: "Explore learning",
         accent: "cyan",
       },
       {

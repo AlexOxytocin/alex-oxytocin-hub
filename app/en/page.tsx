@@ -4,7 +4,7 @@ import HomePage from "../HomePage";
 export const metadata: Metadata = {
   title: "Alex Oxytocin — AI, architecture, and practical tools",
   description:
-    "Aleksei Grishchenko’s personal site: practical AI solutions, one-to-one training, professional experience, and the Hello, Neural Network? community.",
+    "Aleksei Grishchenko’s personal site: practical AI solutions, one-to-one AI learning sessions, professional experience, and the Hello, Neural Network? community.",
   alternates: {
     canonical: "/en/",
     languages: {

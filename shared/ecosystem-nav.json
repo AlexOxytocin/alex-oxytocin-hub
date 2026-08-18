@@ -17,7 +17,7 @@
     },
     {
       "id": "training",
-      "labels": { "ru": "Обучение", "en": "Training" },
+      "labels": { "ru": "Обучение", "en": "Learning" },
       "hrefs": { "ru": "https://ai.godmodetools.com/", "en": "https://ai.godmodetools.com/" }
     },
     {

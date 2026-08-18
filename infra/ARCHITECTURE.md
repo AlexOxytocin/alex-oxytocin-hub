@@ -5,7 +5,7 @@
 | Host | Purpose | Deployment directory |
 | --- | --- | --- |
 | `godmodetools.com` | Personal brand hub and services | `hub/` |
-| `ai.godmodetools.com` | “ИИ по делу” training landing | `ai/` |
+| `ai.godmodetools.com` | “ИИ по делу” learning landing | `ai/` |
 | `cv.godmodetools.com` | Role-aware professional profile | `cv/` |
 | `allo.godmodetools.com` | “Алло, Нейросеточная?” community | `allo/` |
 | `app.godmodetools.com` | Reserved for the community web app | not deployed |

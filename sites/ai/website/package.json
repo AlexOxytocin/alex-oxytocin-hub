@@ -2,7 +2,7 @@
   "name": "alex-neon-website",
   "version": "1.0.0",
   "private": true,
-  "description": "Alex Neon — premium dark redesign of the «ИИ по делу» AI-training landing",
+  "description": "Alex Neon — premium dark redesign of the «ИИ по делу» AI learning landing",
   "engines": {
     "node": ">=22.18.0"
   },
