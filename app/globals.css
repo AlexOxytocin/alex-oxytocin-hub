@@ -155,7 +155,7 @@ nav a {
 }
 
 .hero-portrait {
-  width: min(88.501%, 407.1px);
+  width: min(85.846%, 394.9px);
   height: auto;
   aspect-ratio: 1122 / 1402;
   position: relative;
@@ -192,7 +192,7 @@ nav a {
 
 .hero-evidence {
   grid-area: evidence;
-  margin-top: calc(clamp(38px, 5vh, 48px) - 10.2px);
+  margin-top: calc(clamp(38px, 5vh, 48px) - 12.5px);
 }
 
 .eyebrow,
@@ -464,12 +464,12 @@ h1 {
   }
 
   .hero-portrait {
-    width: min(88.501%, 362.8px);
+    width: min(85.846%, 351.9px);
     transform: translateY(-18px) scale(1.137);
   }
 
   .hero-evidence {
-    margin-top: calc(clamp(38px, 5vh, 48px) - 8.2px);
+    margin-top: calc(clamp(38px, 5vh, 48px) - 10.1px);
   }
 
   .directions {
