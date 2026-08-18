@@ -1,16 +1,20 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="216" height="30" viewBox="0 0 216 30" role="img" aria-labelledby="logo-title logo-description">
+<svg xmlns="http://www.w3.org/2000/svg" width="216" height="30" viewBox="0 0 216 30" role="img" aria-labelledby="logo-title logo-description" shape-rendering="geometricPrecision">
   <title id="logo-title">Alex Oxytocin</title>
-  <desc id="logo-description">Фирменный геометрический логотип с разомкнутой буквой A</desc>
-  <defs>
-    <linearGradient id="wordmark-colour" x1="2.5" y1="0" x2="213.5" y2="0" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#25e3d3" />
-      <stop offset="0.34" stop-color="#25e3d3" />
-      <stop offset="0.42" stop-color="#8668ff" />
-      <stop offset="1" stop-color="#9f78ff" />
-    </linearGradient>
-    <mask id="custom-letterforms" x="2.5" y="8.5" width="211" height="13" maskUnits="userSpaceOnUse" style="mask-type:luminance">
-      <image x="2.5" y="8.5" width="211" height="13" preserveAspectRatio="none" href="data:image/png;base64,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" />
-    </mask>
-  </defs>
-  <rect x="2.5" y="8.5" width="211" height="13" fill="url(#wordmark-colour)" mask="url(#custom-letterforms)" />
+  <desc id="logo-description">Фирменный геометрический логотип с разомкнутыми буквами</desc>
+  <g fill="none" stroke="#25e3d3" stroke-width="3.2" stroke-linecap="square" stroke-linejoin="miter">
+    <path d="M4.1 19.9 10.6 10.1l6.5 9.8" />
+    <path d="M24.6 10.1v9.8h10.3" />
+    <path d="M52.7 10.1H42.6v9.8h10.1M42.6 15h8.6" />
+    <path d="m60.35 10.1 12.1 9.8m0-9.8-12.1 9.8" />
+  </g>
+  <g fill="none" stroke="#8668ff" stroke-width="3.2" stroke-linecap="square" stroke-linejoin="miter">
+    <rect x="85.35" y="10.1" width="13.8" height="9.8" rx="4.4" />
+    <path d="m106.1 10.1 12.8 9.8m0-9.8-12.8 9.8" />
+    <path d="m122.25 10.1 5.1 4.9 5.1-4.9M127.35 15v4.9" />
+    <path d="M131.35 10.1H145m-6.8 0v9.8" />
+    <rect x="152.6" y="10.1" width="13.05" height="9.8" rx="4.4" />
+    <path d="M185.2 11.3c-1.4-1.1-3-1.5-5-1.5-4 0-6.85 2.1-6.85 5.2s2.85 5.2 6.85 5.2c2 0 3.6-.4 5-1.5" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M192.75 10.1v9.8" />
+    <path d="M200.1 19.9v-9.8l11.55 9.8v-9.8" />
+  </g>
 </svg>

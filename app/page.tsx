@@ -65,7 +65,7 @@ export default function Home() {
         <a className="brand" href="#top" aria-label="Alex Oxytocin — на главную">
           <img
             className="brand-logo"
-            src="/assets/alex-oxytocin-logo.svg?v=custom-wordmark-20260817"
+            src="/assets/alex-oxytocin-logo.svg?v=vector-wordmark-20260817"
             alt=""
             width="216"
             height="30"

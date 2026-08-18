@@ -166,6 +166,8 @@ nav a {
   overflow: hidden;
   background: transparent;
   isolation: isolate;
+  transform: translateY(clamp(-32px, -3vh, -20px)) scale(1.148);
+  transform-origin: top right;
 }
 
 .hero-portrait::after {
@@ -463,6 +465,7 @@ h1 {
 
   .hero-portrait {
     width: min(100%, 410px);
+    transform: translateY(-18px) scale(1.137);
   }
 
   .evidence-item {
@@ -514,6 +517,7 @@ h1 {
     height: auto;
     aspect-ratio: 1122 / 1402;
     justify-self: center;
+    transform: none;
   }
 
   .hero-evidence {

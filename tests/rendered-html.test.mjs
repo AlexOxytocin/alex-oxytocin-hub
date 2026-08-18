@@ -21,7 +21,7 @@ test("renders the personal hub with the portrait hero", async () => {
 
   const html = await response.text();
   assert.match(html, /<title>Alex Oxytocin — ИИ, архитектура и инструменты<\/title>/i);
-  assert.match(html, /class="brand-logo"[^>]*src="\/assets\/alex-oxytocin-logo\.svg\?v=custom-wordmark-20260817"/);
+  assert.match(html, /class="brand-logo"[^>]*src="\/assets\/alex-oxytocin-logo\.svg\?v=vector-wordmark-20260817"/);
   assert.doesNotMatch(html, /class="hero-canvas"/);
   assert.match(html, /class="direction-card-mark"[^>]*src="\/assets\/community-mark\.jpg"/);
   assert.match(html, /class="hero-portrait"/);
@@ -80,6 +80,7 @@ test("static deployment carries the same portrait hero", async () => {
   assert.match(css, /mask-composite:\s*intersect/);
   assert.doesNotMatch(css, /\.hero-portrait\s*\{[^}]*border:\s*1px solid/);
   assert.match(css, /\.hero-portrait\s*\{[^}]*aspect-ratio:\s*1122\s*\/\s*1402/);
+  assert.match(css, /\.hero-portrait\s*\{[^}]*transform:\s*translateY\(clamp\(-32px,\s*-3vh,\s*-20px\)\)\s*scale\(1\.148\)/);
   assert.match(css, /\.hero-portrait img\s*\{[^}]*object-fit:\s*contain/);
   assert.doesNotMatch(css, /\.hero-portrait img\s*\{[^}]*object-fit:\s*cover/);
   assert.match(css, /\.hero-summary\s*\{[\s\S]*list-style:\s*none/);
@@ -95,11 +96,11 @@ test("static deployment carries the same portrait hero", async () => {
   assert.match(html, /class="brand-logo"[^>]*alex-oxytocin-logo\.svg/);
   assert.match(brandLogo, /viewBox="0 0 216 30"/);
   assert.match(brandLogo, /width="216" height="30"/);
-  assert.match(brandLogo, /id="custom-letterforms"/);
-  assert.match(brandLogo, /width="211" height="13"/);
-  assert.match(brandLogo, /mask="url\(#custom-letterforms\)"/);
-  assert.match(brandLogo, /fill="url\(#wordmark-colour\)"/);
-  assert.doesNotMatch(brandLogo, /<text|<tspan|font-family/);
+  assert.match(brandLogo, /shape-rendering="geometricPrecision"/);
+  assert.match(brandLogo, /<g fill="none" stroke="#25e3d3"/);
+  assert.match(brandLogo, /<g fill="none" stroke="#8668ff"[\s\S]*<rect x="85\.35"/);
+  assert.match(brandLogo, /m122\.25 10\.1 5\.1 4\.9 5\.1-4\.9M127\.35 15v4\.9/);
+  assert.doesNotMatch(brandLogo, /<text|<tspan|font-family|<image|data:image|<mask|<linearGradient/);
   assert.doesNotMatch(css, /\.signal(?:-|\s*\{)/);
   assert.match(css, /\.directions\s*\{[^}]*border:\s*0/);
   assert.doesNotMatch(html, /Обучаю этому на|hero-accent-task/);
@@ -114,7 +115,7 @@ test("all site headers use the canonical Alex Oxytocin wordmark", async () => {
     readFile(new URL("../sites/allo/index.html", import.meta.url), "utf8"),
   ]);
 
-  const canonical = /alex-oxytocin-logo\.svg\?v=custom-wordmark-20260817/;
+  const canonical = /alex-oxytocin-logo\.svg\?v=vector-wordmark-20260817/;
   for (const source of [ai, ai404, cv, allo]) {
     assert.match(source, canonical);
     assert.match(source, /width="216" height="30"/);
