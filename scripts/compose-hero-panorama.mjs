@@ -2,8 +2,8 @@ import sharp from "sharp";
 import { resolve } from "node:path";
 
 const root = resolve(import.meta.dirname, "..");
-const source = resolve(root, "public", "assets", "alexey-grishchenko-about-clean-bg.png");
-const output = resolve(root, "public", "assets", "alexey-grishchenko-hero-clean-v1.png");
+const source = resolve(root, "public", "assets", "alexey-original-rgb-cutout.png");
+const output = resolve(root, "public", "assets", "alexey-grishchenko-hero-original-colors-v3.png");
 const width = 1954;
 const height = 805;
 
