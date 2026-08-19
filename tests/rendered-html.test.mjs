@@ -25,7 +25,7 @@ test("renders the personal hub with the portrait hero", async () => {
   assert.doesNotMatch(html, /class="hero-canvas"/);
   assert.match(html, /class="direction-card-mark"[^>]*src="\/assets\/community-mark\.jpg"/);
   assert.match(html, /class="hero-portrait"/);
-  assert.match(html, /src="\/assets\/alexey-grishchenko-about-wide\.png\?v=portrait-outpaint-left-20260818"/);
+  assert.match(html, /src="\/assets\/alexey-grishchenko-about-clean-bg\.png\?v=clean-bg-20260819"/);
   assert.match(html, /<strong>10\+<\/strong>[\s\S]*лет в Java-разработке/);
   assert.match(html, /<strong>20\+<\/strong>[\s\S]*инженеров в командах/);
   assert.match(html, /href="https:\/\/cv\.godmodetools\.com\/showcase"/);
@@ -87,8 +87,8 @@ test("static deployment carries both localized portrait pages", async () => {
     readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
     readFile(new URL("../shared/ecosystem-nav.css", import.meta.url), "utf8"),
     readFile(new URL("../public/assets/community-mark.jpg", import.meta.url)),
-    readFile(new URL("../public/assets/alexey-grishchenko-about-wide.png", import.meta.url)),
-    readFile(new URL("../public/assets/alexey-grishchenko-hero-original-v4.png", import.meta.url)),
+    readFile(new URL("../public/assets/alexey-grishchenko-about-clean-bg.png", import.meta.url)),
+    readFile(new URL("../public/assets/alexey-grishchenko-hero-clean-v1.png", import.meta.url)),
     readFile(new URL("../public/assets/alex-oxytocin-logo.png", import.meta.url)),
   ]);
 
@@ -97,7 +97,7 @@ test("static deployment carries both localized portrait pages", async () => {
   assert.doesNotMatch(css, /\.hero-canvas\s*\{/);
   assert.match(css, /\.hero\s*\{[^}]*row-gap:\s*30px/);
   assert.match(css, /\.hero-primary-card\s*\{[^}]*height:\s*465px/);
-  assert.match(css, /\.hero-primary-card\s*\{[^}]*alexey-grishchenko-hero-original-v4\.png/);
+  assert.match(css, /\.hero-primary-card\s*\{[^}]*alexey-grishchenko-hero-clean-v1\.png/);
   assert.match(css, /\.hero-portrait\s*\{[^}]*display:\s*none/);
   assert.doesNotMatch(css, /mask-composite:\s*intersect/);
   assert.match(css, /\.directions\s*\{[^}]*padding:\s*30px\s*0\s*110px/);
@@ -109,7 +109,7 @@ test("static deployment carries both localized portrait pages", async () => {
   assert.match(html, /class="direction-card-mark"[^>]*community-mark\.jpg/);
   assert.ok(communityMark.byteLength > 8000, "community logo asset is missing or truncated");
   assert.match(html, /class="hero-portrait"/);
-  assert.match(html, /alexey-grishchenko-about-wide\.png\?v=portrait-outpaint-left-20260818/);
+  assert.match(html, /alexey-grishchenko-about-clean-bg\.png\?v=clean-bg-20260819/);
   assert.ok(portrait.byteLength > 100000, "wide portrait asset is missing or truncated");
   assert.ok(heroBackground.byteLength > 100000, "hero background asset is missing or truncated");
   assert.match(html, /<strong>10\+<\/strong><span>лет в Java-разработке/);

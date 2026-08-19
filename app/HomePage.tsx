@@ -174,7 +174,7 @@ export default function HomePage({ locale }: { locale: Locale }) {
           </div>
         </div>
         <figure className="hero-portrait">
-          <img src="/assets/alexey-grishchenko-about-wide.png?v=portrait-outpaint-left-20260818" alt={copy.portraitAlt} width="1166" height="1349" decoding="async" />
+          <img src="/assets/alexey-grishchenko-about-clean-bg.png?v=clean-bg-20260819" alt={copy.portraitAlt} width="1166" height="1349" decoding="async" />
         </figure>
         </div>
         <div className={`hero-evidence${isEnglish ? " locale-stack" : " evidence-grid"}`} aria-label={copy.evidenceLabel}>

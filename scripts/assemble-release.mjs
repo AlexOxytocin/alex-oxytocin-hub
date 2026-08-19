@@ -32,12 +32,12 @@ await cp(
   resolve(release, "hub", "assets", "alex-oxytocin-logo.png")
 );
 await cp(
-  resolve(root, "public", "assets", "alexey-grishchenko-about-wide.png"),
-  resolve(release, "hub", "assets", "alexey-grishchenko-about-wide.png")
+  resolve(root, "public", "assets", "alexey-grishchenko-about-clean-bg.png"),
+  resolve(release, "hub", "assets", "alexey-grishchenko-about-clean-bg.png")
 );
 await cp(
-  resolve(root, "public", "assets", "alexey-grishchenko-hero-original-v4.png"),
-  resolve(release, "hub", "assets", "alexey-grishchenko-hero-original-v4.png")
+  resolve(root, "public", "assets", "alexey-grishchenko-hero-clean-v1.png"),
+  resolve(release, "hub", "assets", "alexey-grishchenko-hero-clean-v1.png")
 );
 await cp(
   resolve(root, "sites", "allo", "community-network.png"),
@@ -54,7 +54,7 @@ const hubAssetVersion = createHash("sha256")
 for (const relativeHtmlPath of ["index.html", "en/index.html"]) {
   const hubHtmlPath = resolve(release, "hub", relativeHtmlPath);
   const hubHtml = (await readFile(hubHtmlPath, "utf8"))
-    .replace('href="/styles.css"', `href="/styles.css?v=${hubAssetVersion}"`)
+    .replace(/href="\/styles\.css(?:\?v=[^"]+)?"/u, `href="/styles.css?v=${hubAssetVersion}"`)
     .replace('src="/assets/neural.js"', `src="/assets/neural.js?v=${hubAssetVersion}"`);
   await writeFile(hubHtmlPath, hubHtml);
 }
