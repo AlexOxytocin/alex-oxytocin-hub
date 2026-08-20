@@ -3,11 +3,35 @@ import { resolve } from "node:path";
 
 const root = resolve(import.meta.dirname, "..");
 const source = resolve(root, "public", "assets", "alexey-original-rgb-cutout.png");
-const output = resolve(root, "public", "assets", "alexey-grishchenko-hero-original-colors-v3.png");
+const output = resolve(root, "public", "assets", "alexey-grishchenko-hero-original-colors-v6.png");
 const width = 1954;
 const height = 805;
 
-const foreground = await sharp(source).resize({ height }).png().toBuffer();
+const { data: sourceData, info: sourceInfo } = await sharp(source)
+  .ensureAlpha()
+  .raw()
+  .toBuffer({ resolveWithObject: true });
+
+for (let pixel = 0, offset = 3; offset < sourceData.length; pixel += 1, offset += 4) {
+  const y = Math.floor(pixel / sourceInfo.width);
+  const originalAlpha = sourceData[offset];
+  const opaqueAlpha = originalAlpha >= 7 ? 255 : originalAlpha > 0 ? 96 : 0;
+  const opacityMix = Math.max(0, Math.min(1, (y - 1200) / 200));
+  sourceData[offset] = Math.round(
+    originalAlpha + (opaqueAlpha - originalAlpha) * opacityMix
+  );
+}
+
+const foreground = await sharp(sourceData, {
+  raw: {
+    width: sourceInfo.width,
+    height: sourceInfo.height,
+    channels: 4,
+  },
+})
+  .resize({ height })
+  .png()
+  .toBuffer();
 const foregroundMetadata = await sharp(foreground).metadata();
 const foregroundWidth = foregroundMetadata.width;
 
