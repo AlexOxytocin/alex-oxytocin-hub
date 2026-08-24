@@ -15,6 +15,11 @@ The root host continues to proxy `/api/` to the existing backend and
 `/openclaw-voice/` to the existing voice service. `/voidplayer/` remains served
 from the legacy frontend directory.
 
+The `/api/` implementation is source-controlled in `backend/`. Its public root
+and health responses are fixed status contracts and must never echo environment
+configuration. The current backend has no database behavior, so its production
+container must not receive `DATABASE_URL`.
+
 ## Future domain migration
 
 Each product uses root-relative assets and its own host, so it can later move to
