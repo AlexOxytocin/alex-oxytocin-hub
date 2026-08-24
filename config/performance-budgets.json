@@ -1,0 +1,20 @@
+{
+  "images": {
+    "mobileBytes": 102400,
+    "desktopBytes": 204800
+  },
+  "assets": {
+    "htmlGzipBytes": 25600,
+    "cssGzipBytes": 51200,
+    "simpleJsGzipBytes": 61440
+  },
+  "routes": {
+    "home": { "path": "/ru/", "maxBytes": 1000000, "maxRequests": 15 },
+    "projects": { "path": "/ru/projects/", "maxBytes": 1500000, "maxRequests": 25 }
+  },
+  "mobileVitals": {
+    "lcpMs": 2500,
+    "cls": 0.1,
+    "inpMs": 200
+  }
+}

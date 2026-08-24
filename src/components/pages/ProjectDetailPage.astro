@@ -2,6 +2,8 @@
 import type { PageContent } from '../../content/pages';
 import type { ProjectContent } from '../../content/site-content';
 import { projectPath, routePath, type Locale } from '../../config/routes';
+import { showcaseImage } from '../../assets/showcase';
+import { Picture } from 'astro:assets';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Container from '../ui/Container.astro';
 import Section from '../ui/Section.astro';
@@ -24,6 +26,7 @@ const localizedLink = (url: string) => {
   } catch {}
   return url;
 };
+const media = project.media.filter((item) => item.src).map((item) => ({ ...item, image: showcaseImage(item.src) }));
 ---
 
 <BaseLayout locale={locale} route="projects" title={project.name} description={project.description} path={path} alternatePaths={alternatePaths}>
@@ -39,7 +42,7 @@ const localizedLink = (url: string) => {
   </Section>
   <Section class="section-compact">
     <Container>
-      {project.media.length > 0 && <div class="project-media">{project.media.map((media) => media.src && <img src={media.src} alt={media.alt} width="1200" height="675" />)}</div>}
+      {media.length > 0 && <div class="project-media">{media.map((item) => <Picture src={item.image} formats={['avif', 'webp']} widths={[480, 800, 1200]} sizes="(max-width: 72rem) calc(100vw - 2rem), 72rem" alt={item.alt} loading="eager" decoding="async" quality={72} />)}</div>}
       <div class="project-facts">
         <div><h2>{locale === 'en' ? 'Platforms' : 'Платформы'}</h2><p>{project.platforms.join(' · ')}</p></div>
         <div><h2>{locale === 'en' ? 'Stack' : 'Стек'}</h2><p>{project.stack.join(' · ')}</p></div>

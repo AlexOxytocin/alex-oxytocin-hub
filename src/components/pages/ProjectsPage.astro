@@ -2,6 +2,8 @@
 import type { PageContent } from '../../content/pages';
 import type { ProjectCollection } from '../../content/site-content';
 import { projectPath, type Locale } from '../../config/routes';
+import { showcaseImage } from '../../assets/showcase';
+import { Picture } from 'astro:assets';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Container from '../ui/Container.astro';
 import Section from '../ui/Section.astro';
@@ -13,7 +15,12 @@ interface Props {
 }
 
 const { locale, content, collection } = Astro.props;
-const projects = [...collection.projects].sort((a, b) => (a.order ?? 999) - (b.order ?? 999));
+const projects = [...collection.projects]
+  .sort((a, b) => (a.order ?? 999) - (b.order ?? 999))
+  .map((project) => {
+    const media = project.media.find((item) => item.featured) ?? project.media[0];
+    return { project, media, image: media?.src ? showcaseImage(media.src) : undefined };
+  });
 ---
 
 <BaseLayout locale={locale} route="projects" title={content.title} description={content.description}>
@@ -30,9 +37,9 @@ const projects = [...collection.projects].sort((a, b) => (a.order ?? 999) - (b.o
     <Container>
       <h2>{content.selectedLabel}</h2>
       <div class="project-grid">
-        {projects.map((project) => (
+        {projects.map(({ project, media, image }) => (
           <article class="project-card">
-            {project.media.find((item) => item.featured)?.src && <img src={project.media.find((item) => item.featured)!.src} alt={project.media.find((item) => item.featured)!.alt} width="800" height="450" loading="lazy" />}
+            {image && <Picture src={image} formats={['avif', 'webp']} widths={[320, 480, 720]} sizes="(max-width: 40rem) calc(100vw - 2rem), (max-width: 72rem) calc(50vw - 3rem), 34rem" alt={media?.alt ?? ''} loading="lazy" decoding="async" quality={68} />}
             <div class="project-card__body">
               <p class="eyebrow">{project.category || project.role} · {project.year}</p>
               <h3>{project.name}</h3>
