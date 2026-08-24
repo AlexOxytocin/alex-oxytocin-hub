@@ -31,6 +31,7 @@ const pages = defineCollection({
     z.object({
       ...pageBase,
       route: z.literal('home'),
+      headingAccent: z.string().min(1),
       heroPoints: z.array(z.string()).min(1),
       portrait: z.object({ src: z.string().min(1), alt: z.string().min(1), width: z.number(), height: z.number() }),
       evidence: z.array(z.object({ value: z.string().min(1), label: z.string().min(1) })).min(1),
@@ -39,6 +40,7 @@ const pages = defineCollection({
         label: z.string().min(1),
         title: z.string().min(1),
         description: z.string().min(1),
+        action: z.string().min(1),
       })).length(4),
     }),
     z.object({

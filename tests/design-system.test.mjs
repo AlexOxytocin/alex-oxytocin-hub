@@ -13,12 +13,15 @@ async function exists(relativePath) {
   }
 }
 
-test('design tokens are centralized and component styles use semantic variables', async () => {
-  const [tokens, machineTokens, entrypoint, layout] = await Promise.all([
+test('design tokens are centralized and Home styles stay route-local', async () => {
+  const [tokens, machineTokens, entrypoint, layout, homePage, homeTheme, homeStyles] = await Promise.all([
     readFile(new URL('src/styles/tokens.css', root), 'utf8'),
     readFile(new URL('docs/design-tokens.json', root), 'utf8'),
     readFile(new URL('src/styles/index.css', root), 'utf8'),
     readFile(new URL('src/layouts/BaseLayout.astro', root), 'utf8'),
+    readFile(new URL('src/components/pages/HomePage.astro', root), 'utf8'),
+    readFile(new URL('src/styles/themes/legacy-home.css', root), 'utf8'),
+    readFile(new URL('src/styles/home.css', root), 'utf8'),
   ]);
 
   for (const token of ['--surface-page', '--text-primary', '--space-4', '--radius-lg', '--motion-normal', '--touch-target']) {
@@ -31,7 +34,24 @@ test('design tokens are centralized and component styles use semantic variables'
     assert.match(entrypoint, new RegExp(`@import './${stylesheet.replace('.', '\\.')}';`));
   }
 
-  for (const stylesheet of ['src/styles/base.css', 'src/styles/components.css', 'src/styles/motion.css']) {
+  assert.doesNotMatch(entrypoint, /legacy-home|home\.css/);
+  assert.match(homePage, /import '\.\.\/\.\.\/styles\/themes\/legacy-home\.css';/);
+  assert.match(homePage, /import '\.\.\/\.\.\/styles\/home\.css';/);
+
+  for (const token of [
+    '--font-sans',
+    '--home-page-background',
+    '--home-hero-radius',
+    '--home-hero-shadow',
+    '--home-page-gutter',
+    '--home-heading-font-size',
+  ]) {
+    assert.match(homeTheme, new RegExp(token), `${token} missing from the Home semantic theme`);
+  }
+  assert.match(homeStyles, /var\(--home-hero-radius\)/);
+  assert.match(homeStyles, /var\(--home-heading-font-size\)/);
+
+  for (const stylesheet of ['src/styles/base.css', 'src/styles/components.css', 'src/styles/motion.css', 'src/styles/home.css']) {
     const source = await readFile(new URL(stylesheet, root), 'utf8');
     assert.doesNotMatch(source, /#[0-9a-f]{3,8}\b/i, `${stylesheet} contains a raw color`);
   }
@@ -70,16 +90,36 @@ test('motion policy enforces reduced-motion, device, visibility, and viewport ga
   assert.match(boundary, /data-motion-state="static"/);
 });
 
-test('motion JavaScript is opt-in and static pages keep a zero-JS shell', async () => {
+test('Home and static content pages keep a zero-JS shell', async () => {
   const [home, projects] = await Promise.all([
     readFile(new URL('dist/ru/index.html', root), 'utf8'),
     readFile(new URL('dist/ru/projects/index.html', root), 'utf8'),
   ]);
 
-  assert.match(home, /data-ambient-canvas/);
-  assert.match(home, /<script type="module"/);
+  assert.doesNotMatch(home, /data-ambient-canvas/);
+  assert.doesNotMatch(home, /<script\b/);
+  assert.match(home, /data-theme="legacy-home"/);
   assert.doesNotMatch(projects, /data-ambient-canvas/);
   assert.doesNotMatch(projects, /<script\b/);
+  assert.doesNotMatch(projects, /data-theme="legacy-home"/);
+});
+
+test('built non-Home pages do not receive Home theme CSS', async () => {
+  async function renderedStyles(pagePath) {
+    const html = await readFile(new URL(pagePath, root), 'utf8');
+    const linked = [...html.matchAll(/<link[^>]+href="([^"]+\.css)"[^>]*>/g)].map((match) => match[1]);
+    const files = await Promise.all(linked.map((href) => readFile(new URL(`dist/${href.replace(/^\//, '')}`, root), 'utf8')));
+    return `${[...html.matchAll(/<style[^>]*>([\s\S]*?)<\/style>/g)].map((match) => match[1]).join('\n')}\n${files.join('\n')}`;
+  }
+
+  const [homeStyles, projectStyles] = await Promise.all([
+    renderedStyles('dist/ru/index.html'),
+    renderedStyles('dist/ru/projects/index.html'),
+  ]);
+  assert.match(homeStyles, /--home-color-page/);
+  assert.match(homeStyles, /\.home-hero__primary/);
+  assert.doesNotMatch(projectStyles, /--home-color-page/);
+  assert.doesNotMatch(projectStyles, /\.home-hero__primary/);
 });
 
 test('self-contained design preview and rationale are versioned with the system', async () => {

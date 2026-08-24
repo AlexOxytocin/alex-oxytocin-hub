@@ -1,17 +1,28 @@
 ---
 import type { GetStaticPaths } from 'astro';
-import PageShell from '../../components/PageShell.astro';
+import HomePage from '../../components/pages/HomePage.astro';
 import { getPublishedPage, type PageContent } from '../../content/pages';
 import { publishedLocales, type Locale } from '../../config/routes';
 
 export const getStaticPaths = (async () => Promise.all(
-  publishedLocales.map(async ({ id }) => ({
-    params: { locale: id },
-    props: { locale: id, content: await getPublishedPage(id, 'home') },
-  })),
+  publishedLocales.map(async ({ id }) => {
+    const [content, geometryReference] = await Promise.all([
+      getPublishedPage(id, 'home'),
+      getPublishedPage('ru', 'home'),
+    ]);
+    return {
+      params: { locale: id },
+      props: { locale: id, content, geometryReference },
+    };
+  }),
 )) satisfies GetStaticPaths;
 
-const { locale, content } = Astro.props as { locale: Locale; content: PageContent };
+type HomeContent = Extract<PageContent, { route: 'home' }>;
+const { locale, content, geometryReference } = Astro.props as {
+  locale: Locale;
+  content: HomeContent;
+  geometryReference: HomeContent;
+};
 ---
 
-<PageShell locale={locale} route="home" content={content} />
+<HomePage locale={locale} content={content} geometryReference={geometryReference} />

@@ -1,0 +1,242 @@
+html[data-theme='legacy-home'] {
+  --home-color-page: #05060a;
+  --home-color-hero: #030715;
+  --home-color-surface: rgb(8 11 22 / 0.92);
+  --home-color-surface-hover: rgb(18 23 38 / 0.96);
+  --home-color-line: rgb(172 187 224 / 0.16);
+  --home-color-glass-line: rgb(172 187 224 / 0.22);
+  --home-color-text: #f3f5fb;
+  --home-color-muted: #a9b0c2;
+  --home-color-cyan: #25e3d3;
+  --home-color-blue: #5aa7ff;
+  --home-color-violet: #8668ff;
+  --home-color-magenta: #d15cff;
+  --home-color-header: rgb(5 6 10 / 0.92);
+  --home-color-header-line: rgb(255 255 255 / 0.14);
+  --home-color-control-hover: rgb(255 255 255 / 0.06);
+  --home-color-control-current: rgb(255 255 255 / 0.08);
+  --home-color-card-hover-line: rgb(184 197 236 / 0.32);
+  --home-color-community-line: rgb(209 92 255 / 0.32);
+  --home-color-transparent: transparent;
+
+  --surface-page: var(--home-color-page);
+  --surface-primary: var(--home-color-surface);
+  --surface-secondary: var(--home-color-surface);
+  --surface-elevated: var(--home-color-surface-hover);
+  --surface-interactive: var(--home-color-control-current);
+  --text-primary: var(--home-color-text);
+  --text-secondary: var(--home-color-muted);
+  --text-muted: var(--home-color-muted);
+  --text-accent: var(--home-color-cyan);
+  --border-subtle: var(--home-color-line);
+  --border-strong: var(--home-color-glass-line);
+  --color-focus: var(--home-color-cyan);
+  --font-sans: Inter, Manrope, "Segoe UI", sans-serif;
+
+  --home-page-background:
+    radial-gradient(circle at 78% 16%, rgb(83 80 255 / 0.12), transparent 26rem),
+    radial-gradient(circle at 14% 72%, rgb(37 227 211 / 0.08), transparent 31rem),
+    var(--home-color-page);
+  --home-hero-overlay: linear-gradient(rgb(3 7 21 / 0.84), rgb(3 7 21 / 0.84));
+  --home-heading-gradient: linear-gradient(105deg, var(--home-color-cyan), var(--home-color-blue));
+  --home-backdrop-mask: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgb(0 0 0 / 0.82) 14%,
+    #000 25%,
+    #000 75%,
+    rgb(0 0 0 / 0.82) 86%,
+    transparent 100%
+  );
+
+  --home-border-width: 0.0625rem;
+  --home-container-max: 73.75rem;
+  --home-page-gutter: 1.25rem;
+  --home-header-height: 4.5rem;
+  --home-header-gap: clamp(0.875rem, 2.2vw, 1.75rem);
+  --home-header-blur: blur(1.125rem) saturate(1.35);
+  --home-logo-width: 12.25rem;
+  --home-logo-max-height: 1.875rem;
+  --home-brand-radius: 0.5rem;
+  --home-nav-gap: 0.125rem;
+  --home-nav-control-height: 2.75rem;
+  --home-nav-control-padding: 0.6875rem;
+  --home-nav-locale-width: 2.75rem;
+  --home-nav-locale-padding: 0.5rem;
+  --home-nav-radius: 0.625rem;
+  --home-nav-font-size: 0.875rem;
+  --home-nav-font-weight: 600;
+  --home-nav-transition: 160ms ease;
+  --home-nav-focus-width: 0.125rem;
+  --home-nav-focus-offset: 0.125rem;
+  --home-scroll-offset: 1rem;
+
+  --home-backdrop-width: 112.5rem;
+  --home-backdrop-opacity: 0.68;
+  --home-backdrop-top: 50%;
+  --home-backdrop-left: 50%;
+  --home-backdrop-translate: translate(-50%, -50%);
+
+  --home-hero-row-gap: 1.875rem;
+  --home-hero-padding-top: 0.75rem;
+  --home-hero-height: 29.0625rem;
+  --home-hero-radius: 1.625rem;
+  --home-hero-shadow: 0 1.125rem 3.25rem rgb(0 0 0 / 0.3);
+  --home-hero-copy-width: 78%;
+  --home-hero-copy-gap: 0.375rem;
+  --home-hero-copy-padding-block: 1.5625rem;
+  --home-hero-copy-padding-inline: 1.5rem;
+  --home-hero-intro-offset: 6.25rem;
+  --home-hero-body-translate: translateY(-3rem);
+  --home-summary-width: 38.75rem;
+  --home-summary-gap: 0.875rem;
+  --home-summary-padding-left: 1.375rem;
+  --home-summary-font-size: clamp(1.0625rem, 1.35vw, 1.1875rem);
+  --home-summary-line-height: 1.5;
+  --home-bullet-size: 0.375rem;
+  --home-bullet-top: 0.62em;
+  --home-bullet-left: 0.0625rem;
+  --home-bullet-glow-cyan: 0 0 0.875rem rgb(37 227 211 / 0.72);
+  --home-bullet-glow-blue: 0 0 0.875rem rgb(90 167 255 / 0.72);
+  --home-bullet-glow-violet: 0 0 0.875rem rgb(134 104 255 / 0.72);
+  --home-eyebrow-font-size: 0.75rem;
+  --home-eyebrow-font-weight: 700;
+  --home-eyebrow-tracking: 0.13em;
+  --home-eyebrow-dot-size: 0.4375rem;
+  --home-eyebrow-dot-gap: 0.625rem;
+  --home-eyebrow-dot-glow: 0 0 1rem var(--home-color-cyan);
+  --home-heading-width: 56.25rem;
+  --home-heading-font-size: clamp(2.875rem, 4.4vw, 3.4375rem);
+  --home-heading-font-weight: 700;
+  --home-heading-line-height: 1.06;
+  --home-heading-tracking: -0.045em;
+
+  --home-evidence-columns: 4;
+  --home-evidence-gap: 0.0625rem;
+  --home-evidence-radius: 1.5rem;
+  --home-evidence-min-height: clamp(7.25rem, 14vh, 8.5rem);
+  --home-evidence-item-gap: 0.75rem;
+  --home-evidence-padding-block: 1.125rem;
+  --home-evidence-padding-inline: 1.25rem;
+  --home-evidence-value-size: clamp(2rem, 4vw, 2.875rem);
+  --home-evidence-value-line: 1;
+  --home-evidence-value-tracking: -0.05em;
+  --home-evidence-label-size: 0.875rem;
+  --home-evidence-label-line: 1.45;
+  --home-glass-filter: blur(0.625rem) saturate(112%);
+
+  --home-directions-padding-top: 1.875rem;
+  --home-directions-padding-bottom: 6.875rem;
+  --home-direction-columns: 2;
+  --home-direction-gap: 1.125rem;
+  --home-card-min-height: 18.75rem;
+  --home-card-padding: 2rem;
+  --home-card-radius: 1.5rem;
+  --home-card-shadow: 0 1rem 2.75rem rgb(0 0 0 / 0.28);
+  --home-card-transition: 180ms ease;
+  --home-card-hover-translate: translateY(-0.3125rem);
+  --home-card-orb-size: 13.75rem;
+  --home-card-orb-right: -6.25rem;
+  --home-card-orb-bottom: -7.5rem;
+  --home-card-orb-opacity: 0.1;
+  --home-card-orb-filter: blur(1.25rem);
+  --home-card-mark-size: 6rem;
+  --home-card-mark-offset: 1.75rem;
+  --home-card-mark-radius: 1.5rem;
+  --home-card-mark-shadow: 0 0.875rem 2.375rem rgb(93 50 255 / 0.24);
+  --home-card-mark-hover-shadow: 0 1.125rem 2.875rem rgb(93 50 255 / 0.32);
+  --home-card-mark-hover-transform: translateY(-0.1875rem) scale(1.025);
+  --home-card-mark-copy-reserve: 7.75rem;
+  --home-card-heading-margin-top: 1.75rem;
+  --home-card-heading-margin-bottom: 0.875rem;
+  --home-card-heading-size: clamp(1.6875rem, 3vw, 2.375rem);
+  --home-card-heading-weight: 700;
+  --home-card-heading-tracking: -0.035em;
+  --home-card-copy-width: 32.5rem;
+  --home-card-copy-size: 1rem;
+  --home-card-copy-line: 1.65;
+  --home-card-action-size: 0.875rem;
+  --home-card-action-weight: 800;
+
+  --home-footer-min-height: 9.375rem;
+  --home-footer-gap: 1.875rem;
+  --home-footer-padding-block: 2.25rem;
+  --home-footer-copy-width: 40.625rem;
+  --home-footer-copy-line: 1.6;
+  --home-footer-link-gap: 1.375rem;
+  --home-footer-link-size: 0.875rem;
+
+  --home-focus-width: 0.125rem;
+  --home-focus-offset: 0.25rem;
+}
+
+@media (min-width: 821px) and (max-height: 850px) {
+  html[data-theme='legacy-home'] {
+    --home-summary-gap: 0.625rem;
+    --home-summary-font-size: 1.03125rem;
+    --home-summary-line-height: 1.45;
+    --home-evidence-min-height: 7rem;
+    --home-evidence-item-gap: 0.5625rem;
+    --home-evidence-padding-block: 0.9375rem;
+    --home-evidence-padding-inline: 1.125rem;
+    --home-evidence-value-size: 2.125rem;
+    --home-evidence-label-size: 0.8125rem;
+  }
+}
+
+@media (max-width: 900px) {
+  html[data-theme='legacy-home'] {
+    --home-header-height: 7.25rem;
+    --home-container-max: 42.5rem;
+    --home-page-gutter: 0.875rem;
+    --home-header-row-brand: 3.875rem;
+    --home-header-row-nav: 3.375rem;
+    --home-header-mobile-gap: 0.625rem;
+    --home-logo-width: 11rem;
+    --home-nav-mobile-bleed: 1.75rem;
+    --home-nav-mobile-offset: -0.875rem;
+    --home-nav-mobile-padding: 0.875rem;
+    --home-nav-control-padding: 0.75rem;
+  }
+}
+
+@media (max-width: 820px) {
+  html[data-theme='legacy-home'] {
+    --home-backdrop-width: 61.25rem;
+    --home-backdrop-opacity: 0.5;
+    --home-backdrop-left: auto;
+    --home-backdrop-right: -37.5rem;
+    --home-backdrop-translate: translateY(-50%);
+    --home-hero-row-gap: 1.125rem;
+    --home-hero-padding-top: 4rem;
+    --home-hero-height: auto;
+    --home-hero-copy-width: 100%;
+    --home-hero-body-translate: none;
+    --home-evidence-columns: 2;
+    --home-directions-padding-top: 1.125rem;
+    --home-direction-columns: 1;
+  }
+}
+
+@media (max-width: 520px) {
+  html[data-theme='legacy-home'] {
+    --home-hero-padding-top: 3.25rem;
+    --home-heading-font-size: clamp(2.625rem, 11.5vw, 3rem);
+    --home-card-min-height: 17.1875rem;
+    --home-card-padding: 1.625rem;
+    --home-card-mark-size: 4.5rem;
+    --home-card-mark-offset: 1.375rem;
+    --home-card-mark-radius: 1.1875rem;
+    --home-card-mark-copy-reserve: 5.75rem;
+    --home-evidence-min-height: 8.625rem;
+    --home-evidence-item-gap: 1.125rem;
+    --home-evidence-padding-block: 1.125rem;
+    --home-evidence-padding-inline: 1.125rem;
+  }
+}
+
+@media (max-width: 390px) {
+  html[data-theme='legacy-home'] {
+    --home-logo-width: 9.625rem;
+  }
+}

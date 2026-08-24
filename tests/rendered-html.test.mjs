@@ -29,12 +29,12 @@ test('English and Russian pages carry localized copy and canonical metadata', as
   const [ru, en] = await Promise.all([readBuiltPage('ru'), readBuiltPage('en')]);
 
   assert.match(ru, /<title>Алексей Грищенко — архитектура, разработка и ИИ — God Mode Tools<\/title>/);
-  assert.match(ru, /Разрабатываю ИИ-инструменты и автоматизирую процессы/);
+  assert.match(ru, /Разрабатываю <span class="home-hero__accent">ИИ-инструменты<\/span> и автоматизирую процессы/);
   assert.match(ru, /rel="canonical" href="https:\/\/godmodetools\.com\/ru\/"/);
   assert.match(ru, /hreflang="en" href="https:\/\/godmodetools\.com\/en\/"/);
 
   assert.match(en, /<title>Aleksei Grishchenko — architecture, engineering, and AI — God Mode Tools<\/title>/);
-  assert.match(en, /I build AI tools and automate processes/);
+  assert.match(en, /I build <span class="home-hero__accent">AI tools<\/span> and automate processes/);
   assert.match(en, /rel="canonical" href="https:\/\/godmodetools\.com\/en\/"/);
   assert.match(en, /hreflang="ru" href="https:\/\/godmodetools\.com\/ru\/"/);
 });

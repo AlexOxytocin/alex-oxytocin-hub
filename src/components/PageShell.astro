@@ -1,16 +1,15 @@
 ---
 import type { PageContent } from '../content/pages';
-import type { Locale, RouteId } from '../config/routes';
+import type { Locale, SectionRouteId } from '../config/routes';
 import { getCv, getProfiles, getProjects } from '../content/site-content';
 import CommunityPage from './pages/CommunityPage.astro';
 import ExperiencePage from './pages/ExperiencePage.astro';
-import HomePage from './pages/HomePage.astro';
 import LearningPage from './pages/LearningPage.astro';
 import ProjectsPage from './pages/ProjectsPage.astro';
 
 interface Props {
   locale: Locale;
-  route: RouteId;
+  route: SectionRouteId;
   content: PageContent;
 }
 
@@ -20,7 +19,6 @@ const profiles = route === 'experience' ? await getProfiles() : undefined;
 const projects = route === 'projects' ? await getProjects(locale) : undefined;
 ---
 
-{content.route === 'home' && <HomePage locale={locale} content={content} />}
 {content.route === 'experience' && cv && profiles && <ExperiencePage locale={locale} content={content} cv={cv} profiles={profiles} />}
 {content.route === 'projects' && projects && <ProjectsPage locale={locale} content={content} collection={projects} />}
 {content.route === 'learning' && <LearningPage locale={locale} content={content} />}

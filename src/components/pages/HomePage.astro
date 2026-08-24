@@ -1,72 +1,72 @@
 ---
 import type { PageContent } from '../../content/pages';
-import { routePath, type Locale } from '../../config/routes';
-import heroPortrait from '../../assets/alexey-grishchenko-hero-original-colors-v6.webp';
-import { Picture } from 'astro:assets';
+import type { Locale } from '../../config/routes';
+import { interfaceCopy } from '../../i18n/ui';
+import { legacyHomeTheme } from '../../theme/legacy-home';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import AmbientField from '../motion/AmbientField.astro';
-import Container from '../ui/Container.astro';
-import Section from '../ui/Section.astro';
+import HomeBackdrop from './home/HomeBackdrop.astro';
+import HomeDirectionCard from './home/HomeDirectionCard.astro';
+import HomeEvidence from './home/HomeEvidence.astro';
+import HomeHeroIntro from './home/HomeHeroIntro.astro';
+import HomeHeroSummary from './home/HomeHeroSummary.astro';
+import '../../styles/themes/legacy-home.css';
+import '../../styles/home.css';
+
+type HomeContent = Extract<PageContent, { route: 'home' }>;
 
 interface Props {
   locale: Locale;
-  content: Extract<PageContent, { route: 'home' }>;
+  content: HomeContent;
+  geometryReference: HomeContent;
 }
 
-const { locale, content } = Astro.props;
+const { locale, content, geometryReference } = Astro.props;
+const copy = interfaceCopy(locale);
+const { heroImage } = legacyHomeTheme.assets;
+const referenceDirections = new Map(geometryReference.directions.map((direction) => [direction.route, direction]));
 ---
 
-<BaseLayout locale={locale} route="home" title={content.title} description={content.description}>
-  <Section class="page-hero home-hero">
-    <Container>
-      <div class="page-hero__grid">
-        <div class="page-hero__content">
-          <p class="eyebrow">{content.eyebrow}</p>
-          <h1>{content.heading}</h1>
-          <p class="intro">{content.intro}</p>
-          <ul class="feature-list">
-            {content.heroPoints.map((point) => <li>{point}</li>)}
-          </ul>
+<BaseLayout
+  locale={locale}
+  route="home"
+  title={content.title}
+  description={content.description}
+  theme="legacy-home"
+>
+  <HomeBackdrop slot="backdrop" />
+
+  <section class="home-hero" id="top">
+    <div class="home-hero__primary">
+      <div class="home-hero__media" aria-hidden="true">
+        <img src={heroImage.src} width={heroImage.width} height={heroImage.height} alt="" decoding="async" fetchpriority="high" />
+      </div>
+      <div class="home-hero__copy">
+        <div class="home-hero__intro home-locale-stack">
+          <HomeHeroIntro content={content} />
+          <HomeHeroIntro content={geometryReference} hidden />
         </div>
-        <div class="portrait-stage">
-          <AmbientField />
-          <Picture
-            src={heroPortrait}
-            formats={['avif']}
-            fallbackFormat="webp"
-            widths={[480, 720, 960]}
-            sizes="(max-width: 56rem) calc(100vw - 2rem), 32rem"
-            alt={content.portrait.alt}
-            loading="eager"
-            decoding="async"
-            fetchpriority="high"
-            quality={72}
-          />
+        <div class="home-hero__body home-locale-stack">
+          <HomeHeroSummary content={content} />
+          <HomeHeroSummary content={geometryReference} hidden />
         </div>
       </div>
-    </Container>
-  </Section>
+    </div>
 
-  <Section class="section-compact" aria-label={locale === 'en' ? 'Experience in numbers' : 'Опыт в цифрах'}>
-    <Container>
-      <dl class="evidence-grid">
-        {content.evidence.map((item) => <div><dt>{item.value}</dt><dd>{item.label}</dd></div>)}
-      </dl>
-    </Container>
-  </Section>
+    <div class="home-hero__evidence home-locale-stack" aria-label={copy.homeEvidence}>
+      <HomeEvidence content={content} />
+      <HomeEvidence content={geometryReference} hidden />
+    </div>
+  </section>
 
-  <Section>
-    <Container>
-      <div class="direction-grid">
-        {content.directions.map((direction) => (
-          <a class="content-card direction-card" href={routePath(locale, direction.route)}>
-            <span class="eyebrow">{direction.label}</span>
-            <h2>{direction.title}</h2>
-            <p>{direction.description}</p>
-            <span class="card-link" aria-hidden="true">↗</span>
-          </a>
-        ))}
-      </div>
-    </Container>
-  </Section>
+  <section class="home-directions" id="directions" aria-label={copy.homeDirections}>
+    <div class="home-direction-grid">
+      {content.directions.map((direction) => (
+        <HomeDirectionCard
+          locale={locale}
+          direction={direction}
+          geometryReference={referenceDirections.get(direction.route) ?? direction}
+        />
+      ))}
+    </div>
+  </section>
 </BaseLayout>

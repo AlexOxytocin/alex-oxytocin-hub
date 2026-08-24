@@ -62,13 +62,25 @@ const preview = spawn(process.execPath, [astro, 'preview', '--host', host, '--po
 try {
   await waitForPreview(baseUrl, preview);
   const env = { ...process.env, SITE_PREVIEW_URL: baseUrl };
-  for (const script of [
+  const homeVisualOnly = process.env.HOME_VISUAL_ONLY === '1';
+  const skipHomeVisual = process.env.HOME_VISUAL_SKIP === '1';
+  if (homeVisualOnly && skipHomeVisual) {
+    throw new Error('HOME_VISUAL_ONLY and HOME_VISUAL_SKIP cannot be enabled together');
+  }
+  const browserScripts = [
+    'tests/home-visual-regression.mjs',
     'tests/design-browser.mjs',
     'tests/content-browser.mjs',
     'tests/critical-css-browser.mjs',
     'tests/performance-browser.mjs',
     'tests/god7-browser-contract.mjs',
-  ]) {
+  ];
+  const selectedScripts = homeVisualOnly
+    ? browserScripts.slice(0, 1)
+    : skipHomeVisual
+      ? browserScripts.slice(1)
+      : browserScripts;
+  for (const script of selectedScripts) {
     await runScript(script, env);
   }
 } finally {
