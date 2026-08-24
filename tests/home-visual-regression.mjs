@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { createHash } from 'node:crypto';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import AxeBuilder from '@axe-core/playwright';
@@ -10,7 +11,14 @@ const root = resolve(import.meta.dirname, '..');
 const baseUrl = process.env.SITE_PREVIEW_URL ?? 'http://127.0.0.1:4321';
 const ignoreHTTPSErrors = process.env.SITE_PREVIEW_INSECURE === '1';
 const artifactRoot = resolve(root, process.env.HOME_VISUAL_ARTIFACT_DIR ?? 'artifacts/home-visual');
-const maxMismatchRatio = Number(process.env.HOME_VISUAL_MAX_MISMATCH ?? '0.015');
+const releaseLimits = Object.freeze({
+  desktop: 0.007,
+  tablet: 0.0008,
+  mobile: 0.004,
+});
+const manifestPath = resolve(root, 'docs/baseline-screenshots/home-release-baselines.json');
+const baselineManifest = JSON.parse(await readFile(manifestPath, 'utf8'));
+assert.equal(baselineManifest.contract, 'home-release-baseline-v1', 'unexpected Home baseline contract');
 
 const viewports = {
   desktop: { width: 1440, height: 900 },
@@ -51,6 +59,20 @@ try {
         throw new Error(`Required ${locale}/${viewportName} visual baseline is missing: ${baselinePath}`, { cause: error });
       });
       const baseline = PNG.sync.read(baselineBuffer);
+      const fixtureKey = `${locale}/${viewportName}`;
+      const fixture = baselineManifest.fixtures[fixtureKey];
+      assert.ok(fixture, `${fixtureKey} is missing from ${manifestPath}`);
+      assert.equal(fixture.file, localeConfig.baselines[viewportName], `${fixtureKey} baseline path drifted`);
+      assert.deepEqual(
+        { width: fixture.width, height: fixture.height },
+        viewport,
+        `${fixtureKey} manifest dimensions drifted`,
+      );
+      assert.equal(
+        createHash('sha256').update(baselineBuffer).digest('hex'),
+        fixture.sha256,
+        `${fixtureKey} baseline hash changed; baseline updates require owner review and a manifest update`,
+      );
       assert.deepEqual(
         { width: baseline.width, height: baseline.height },
         viewport,
@@ -160,8 +182,8 @@ try {
         assert.deepEqual(failedRequests, [], `${locale}/${viewportName} failed requests`);
         assert.deepEqual(badResponses, [], `${locale}/${viewportName} 4xx/5xx responses`);
         assert.ok(
-          mismatchRatio <= maxMismatchRatio,
-          `${locale}/${viewportName} visual mismatch ${(mismatchRatio * 100).toFixed(3)}% exceeds ${(maxMismatchRatio * 100).toFixed(3)}%; diff: ${diffPath}`,
+          mismatchRatio <= releaseLimits[viewportName],
+          `${locale}/${viewportName} visual mismatch ${(mismatchRatio * 100).toFixed(3)}% exceeds ${(releaseLimits[viewportName] * 100).toFixed(3)}%; diff: ${diffPath}`,
         );
 
         report.push({

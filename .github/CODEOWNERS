@@ -1,0 +1,4 @@
+# Visual release baselines can change only with Alex's explicit review.
+/docs/baseline-screenshots/home-release-baselines.json @AlexOxytocin
+/docs/baseline-screenshots/home-ru-*.png @AlexOxytocin
+/docs/baseline-screenshots/home-en-*.png @AlexOxytocin

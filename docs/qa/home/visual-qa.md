@@ -19,7 +19,7 @@ Command: `npm run test:home:visual`
 
 Rendering contract: Chromium, device scale factor 1, reduced motion, dark color scheme, hidden scrollbars, viewport-only screenshot, Pixelmatch threshold 0.1 with antialias-only pixels excluded.
 
-Release limit: 1.500% per locale/viewport. A missing or dimensionally incorrect baseline fails before comparison.
+Release limits are fixed in code and cannot be overridden from the environment: desktop 0.700%, tablet 0.080%, mobile 0.400%. A missing, hash-modified, or dimensionally incorrect baseline fails before comparison. The PNGs and their manifest are owner-reviewed release assets.
 
 | Locale | Viewport | Mismatched pixels | Ratio | After |
 | --- | --- | ---: | ---: | --- |
@@ -44,6 +44,7 @@ Result: **PASS** for all six required comparisons.
 ## Scope and regression checks
 
 - The legacy visual theme is activated only by `data-theme="legacy-home"`; palette, font stack, backgrounds/assets, radii, shadows, spacing, and type scale live in the centralized Home theme/asset registry.
+- Home theme and composition CSS are imported only by the dedicated Home route. Non-Home routes do not receive the Home stylesheet in their critical CSS.
 - Generic page markup and generic theme tokens were not changed. Shared header/footer changes are explicit `legacy-home` variants.
 - Existing localized content-browser coverage passed for Home, Experience, Projects, Learning, Community, project detail pages, media, downloads, locale switching, and responsive overflow.
 - Existing performance, critical-CSS, HTTP, SEO, and browser contracts passed. Home remained zero-JS; measured `/ru/` transfer was 139.6 KB over five requests with CLS 0.000 in the local browser gate.

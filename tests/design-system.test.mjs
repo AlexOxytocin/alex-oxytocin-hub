@@ -13,12 +13,13 @@ async function exists(relativePath) {
   }
 }
 
-test('design tokens are centralized and component styles use semantic variables', async () => {
-  const [tokens, machineTokens, entrypoint, layout, homeTheme, homeStyles] = await Promise.all([
+test('design tokens are centralized and Home styles stay route-local', async () => {
+  const [tokens, machineTokens, entrypoint, layout, homePage, homeTheme, homeStyles] = await Promise.all([
     readFile(new URL('src/styles/tokens.css', root), 'utf8'),
     readFile(new URL('docs/design-tokens.json', root), 'utf8'),
     readFile(new URL('src/styles/index.css', root), 'utf8'),
     readFile(new URL('src/layouts/BaseLayout.astro', root), 'utf8'),
+    readFile(new URL('src/components/pages/HomePage.astro', root), 'utf8'),
     readFile(new URL('src/styles/themes/legacy-home.css', root), 'utf8'),
     readFile(new URL('src/styles/home.css', root), 'utf8'),
   ]);
@@ -33,8 +34,9 @@ test('design tokens are centralized and component styles use semantic variables'
     assert.match(entrypoint, new RegExp(`@import './${stylesheet.replace('.', '\\.')}';`));
   }
 
-  assert.match(entrypoint, /@import '.\/themes\/legacy-home\.css';/);
-  assert.match(entrypoint, /@import '.\/home\.css';/);
+  assert.doesNotMatch(entrypoint, /legacy-home|home\.css/);
+  assert.match(homePage, /import '\.\.\/\.\.\/styles\/themes\/legacy-home\.css';/);
+  assert.match(homePage, /import '\.\.\/\.\.\/styles\/home\.css';/);
 
   for (const token of [
     '--font-sans',
@@ -100,6 +102,24 @@ test('Home and static content pages keep a zero-JS shell', async () => {
   assert.doesNotMatch(projects, /data-ambient-canvas/);
   assert.doesNotMatch(projects, /<script\b/);
   assert.doesNotMatch(projects, /data-theme="legacy-home"/);
+});
+
+test('built non-Home pages do not receive Home theme CSS', async () => {
+  async function renderedStyles(pagePath) {
+    const html = await readFile(new URL(pagePath, root), 'utf8');
+    const linked = [...html.matchAll(/<link[^>]+href="([^"]+\.css)"[^>]*>/g)].map((match) => match[1]);
+    const files = await Promise.all(linked.map((href) => readFile(new URL(`dist/${href.replace(/^\//, '')}`, root), 'utf8')));
+    return `${[...html.matchAll(/<style[^>]*>([\s\S]*?)<\/style>/g)].map((match) => match[1]).join('\n')}\n${files.join('\n')}`;
+  }
+
+  const [homeStyles, projectStyles] = await Promise.all([
+    renderedStyles('dist/ru/index.html'),
+    renderedStyles('dist/ru/projects/index.html'),
+  ]);
+  assert.match(homeStyles, /--home-color-page/);
+  assert.match(homeStyles, /\.home-hero__primary/);
+  assert.doesNotMatch(projectStyles, /--home-color-page/);
+  assert.doesNotMatch(projectStyles, /\.home-hero__primary/);
 });
 
 test('self-contained design preview and rationale are versioned with the system', async () => {

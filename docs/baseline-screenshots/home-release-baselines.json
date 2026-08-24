@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "contract": "home-release-baseline-v1",
+  "capturedAt": "2026-08-24",
+  "source": {
+    "releaseId": "20260819-211500-hub-coat-original-v6",
+    "legacyImplementationCommit": "96fc66c",
+    "ruUrl": "https://godmodetools.com/",
+    "enUrl": "https://godmodetools.com/en/"
+  },
+  "capture": {
+    "operatingSystem": "Windows",
+    "browser": "Chromium 145.0.7632.6",
+    "deviceScaleFactor": 1,
+    "colorScheme": "dark",
+    "reducedMotion": true,
+    "scrollbars": "hidden",
+    "screenshot": "viewport-only"
+  },
+  "fixtures": {
+    "ru/desktop": { "file": "docs/baseline-screenshots/home-ru-desktop.png", "width": 1440, "height": 900, "sha256": "cb0eed7434095f274a183584f308fa599ff008c7a944eb0ff3aba6425c096492" },
+    "ru/tablet": { "file": "docs/baseline-screenshots/home-ru-tablet.png", "width": 768, "height": 1024, "sha256": "d6647c807c718ef4342e8ef0c12b74bcb5791835431291ad234d22f8cd06d07c" },
+    "ru/mobile": { "file": "docs/baseline-screenshots/home-ru-mobile.png", "width": 375, "height": 812, "sha256": "f8dc9939a0e68aa61ee91176fb47d7ab717a9b2e8fb41ca32a4922da5586dfb2" },
+    "en/desktop": { "file": "docs/baseline-screenshots/home-en-desktop.png", "width": 1440, "height": 900, "sha256": "47213a4a2df02dc3c0b552f45a114303cd7396823600cbc2927608b00821c191" },
+    "en/tablet": { "file": "docs/baseline-screenshots/home-en-tablet.png", "width": 768, "height": 1024, "sha256": "fae077b50eb9bf1077510618765af89c5ca15c5112fddd69fa2cf0bdca8a356e" },
+    "en/mobile": { "file": "docs/baseline-screenshots/home-en-mobile.png", "width": 375, "height": 812, "sha256": "9c4a9fc6862f939c01cc8dd4c55ea9dd1c5b2743e65fcab42d981fb7730bc474" }
+  }
+}
