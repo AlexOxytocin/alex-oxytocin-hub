@@ -1,6 +1,8 @@
 ---
 import type { PageContent } from '../../content/pages';
 import { routePath, type Locale } from '../../config/routes';
+import heroPortrait from '../../assets/alexey-grishchenko-hero-original-colors-v6.webp';
+import { Picture } from 'astro:assets';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import AmbientField from '../motion/AmbientField.astro';
 import Container from '../ui/Container.astro';
@@ -28,7 +30,18 @@ const { locale, content } = Astro.props;
         </div>
         <div class="portrait-stage">
           <AmbientField />
-          <img src={content.portrait.src} alt={content.portrait.alt} width={content.portrait.width} height={content.portrait.height} fetchpriority="high" />
+          <Picture
+            src={heroPortrait}
+            formats={['avif']}
+            fallbackFormat="webp"
+            widths={[480, 720, 960]}
+            sizes="(max-width: 56rem) calc(100vw - 2rem), 32rem"
+            alt={content.portrait.alt}
+            loading="eager"
+            decoding="async"
+            fetchpriority="high"
+            quality={72}
+          />
         </div>
       </div>
     </Container>

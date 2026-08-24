@@ -141,7 +141,7 @@ test("key page, CV, download, and SEO mappings are present", () => {
 });
 
 test("every generated CV download has an explicit final redirect", async () => {
-  const downloads = (await readdir(new URL("../sites/cv/public/downloads/", import.meta.url)))
+  const downloads = (await readdir(new URL("../public/downloads/", import.meta.url)))
     .filter((name) => /\.(?:pdf|docx|txt)$/u.test(name))
     .sort();
   const inventoried = records

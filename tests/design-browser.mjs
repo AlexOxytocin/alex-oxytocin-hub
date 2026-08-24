@@ -5,7 +5,16 @@ const baseUrl = process.env.SITE_PREVIEW_URL ?? 'http://127.0.0.1:4321';
 const browser = await chromium.launch();
 
 try {
-  const desktop = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+  const desktop = await browser.newContext({
+    viewport: { width: 1440, height: 900 },
+    reducedMotion: 'no-preference',
+  });
+  await desktop.addInitScript(() => {
+    Object.defineProperty(navigator, 'hardwareConcurrency', {
+      configurable: true,
+      get: () => 8,
+    });
+  });
   const desktopPage = await desktop.newPage();
   const homeResponse = await desktopPage.goto(`${baseUrl}/ru/`, { waitUntil: 'networkidle' });
   assert.equal(homeResponse?.status(), 200);
