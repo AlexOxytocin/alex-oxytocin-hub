@@ -65,6 +65,8 @@
       "unit_active": "active",
       "unit_enabled": "enabled",
       "plugin_enabled": "false",
+      "telegram_enabled": "true",
+      "minimax_enabled": "true",
       "ufw_rule_count": "0",
       "nginx_exact_410": "1",
       "nginx_prefix_410": "1",

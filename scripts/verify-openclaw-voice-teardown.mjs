@@ -77,17 +77,21 @@ export async function verifyHttpContract({
   return results;
 }
 
-const remoteProbe = String.raw`set +e
+export const remoteProbe = String.raw`set +e
 listener_count=$(ss -H -ltn '( sport = :3334 )' 2>/dev/null | wc -l | tr -d '[:space:]')
 unit_active=$(systemctl is-active openclaw-gateway.service 2>/dev/null || true)
 unit_enabled=$(systemctl is-enabled openclaw-gateway.service 2>/dev/null || true)
 plugin_enabled=$(openclaw config get plugins.entries.voice-call.enabled 2>/dev/null | tail -n1 | tr '[:upper:]' '[:lower:]' | tr -d '[:space:]')
+telegram_enabled=$(openclaw config get channels.telegram.enabled 2>/dev/null | tail -n1 | tr '[:upper:]' '[:lower:]' | tr -d '[:space:]')
+minimax_enabled=$(openclaw config get plugins.entries.minimax.enabled 2>/dev/null | tail -n1 | tr '[:upper:]' '[:lower:]' | tr -d '[:space:]')
 ufw_rule_count=$(ufw status 2>/dev/null | grep -Ec '3334/tcp' || true)
 
 printf 'listener_count=%s\n' "$listener_count"
 printf 'unit_active=%s\n' "$unit_active"
 printf 'unit_enabled=%s\n' "$unit_enabled"
 printf 'plugin_enabled=%s\n' "$plugin_enabled"
+printf 'telegram_enabled=%s\n' "$telegram_enabled"
+printf 'minimax_enabled=%s\n' "$minimax_enabled"
 printf 'ufw_rule_count=%s\n' "$ufw_rule_count"
 
 python3 - <<'PY'

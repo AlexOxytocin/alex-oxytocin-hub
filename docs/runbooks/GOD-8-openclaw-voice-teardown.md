@@ -72,6 +72,8 @@ test "$(sha256sum /usr/lib/node_modules/openclaw/openclaw.mjs | cut -d' ' -f1)" 
 test "$(systemctl is-active openclaw-gateway.service)" = "active"
 test "$(systemctl is-enabled openclaw-gateway.service)" = "enabled"
 test "$(openclaw config get plugins.entries.voice-call.enabled | tail -n1 | tr '[:upper:]' '[:lower:]')" = "true"
+test "$(openclaw config get channels.telegram.enabled | tail -n1 | tr '[:upper:]' '[:lower:]')" = "true"
+test "$(openclaw config get plugins.entries.minimax.enabled | tail -n1 | tr '[:upper:]' '[:lower:]')" = "true"
 docker exec nginx nginx -t
 ss -H -ltn '( sport = :3334 )'
 ufw status numbered | grep '3334/tcp'
@@ -212,11 +214,14 @@ if ! systemctl restart openclaw-gateway.service; then
   rollback_voice_plugin
   exit 1
 fi
-test "$(systemctl is-active openclaw-gateway.service)" = "active"
-test "$(systemctl is-enabled openclaw-gateway.service)" = "enabled"
-test "$(openclaw config get plugins.entries.voice-call.enabled | tail -n1 | tr '[:upper:]' '[:lower:]')" = "false"
-if ss -H -ltn '( sport = :3334 )' | grep -q .; then
-  printf 'Port 3334 is still listening\n' >&2
+if ! test "$(systemctl is-active openclaw-gateway.service)" = "active" \
+  || ! test "$(systemctl is-enabled openclaw-gateway.service)" = "enabled" \
+  || ! test "$(openclaw config get plugins.entries.voice-call.enabled | tail -n1 | tr '[:upper:]' '[:lower:]')" = "false" \
+  || ! test "$(openclaw config get channels.telegram.enabled | tail -n1 | tr '[:upper:]' '[:lower:]')" = "true" \
+  || ! test "$(openclaw config get plugins.entries.minimax.enabled | tail -n1 | tr '[:upper:]' '[:lower:]')" = "true" \
+  || ss -H -ltn '( sport = :3334 )' | grep -q .; then
+  printf 'Shared-runtime or voice postcondition failed; restoring voice config\n' >&2
+  rollback_voice_plugin
   exit 1
 fi
 ```
@@ -236,7 +241,7 @@ Verifier делает GET без follow redirects и требует:
 - отсутствие `Location` у tombstone;
 - прежние `200` и тела для `/`, `/api/`, `/api/health`, `/voidplayer/`;
 - отсутствие listener/UFW rule/proxy на `3334`;
-- disabled `voice-call`, но active+enabled shared gateway;
+- disabled `voice-call`, но active+enabled shared gateway и по-прежнему enabled Telegram/Minimax;
 - валидный effective Nginx config.
 
 ## 7. Rollback reversible stage

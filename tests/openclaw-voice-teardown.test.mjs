@@ -5,6 +5,7 @@ import test from "node:test";
 
 import {
   loadContract,
+  remoteProbe,
   verifyHostFacts,
   verifyHttpContract,
 } from "../scripts/verify-openclaw-voice-teardown.mjs";
@@ -30,6 +31,8 @@ test("GOD-8 contract tombstones the complete namespace and preserves protected r
     ["/api/health", 200],
     ["/voidplayer/", 200],
   ]);
+  assert.equal(contract.host_checks.expected.telegram_enabled, "true");
+  assert.equal(contract.host_checks.expected.minimax_enabled, "true");
 });
 
 test("target Nginx config returns 410 without retaining the voice upstream", () => {
@@ -83,7 +86,10 @@ test("HTTP verifier accepts the target contract without following redirects", as
   assert.ok(results.every(({ ok }) => ok), results.map(({ message }) => message).join("\n"));
 });
 
-test("host verifier requires a disabled voice plugin while preserving the shared gateway", () => {
+test("host verifier disables only voice while preserving the shared gateway, Telegram, and Minimax", () => {
+  assert.match(remoteProbe, /config get channels\.telegram\.enabled/u);
+  assert.match(remoteProbe, /config get plugins\.entries\.minimax\.enabled/u);
+
   const output = Object.entries(contract.host_checks.expected)
     .map(([key, value]) => `${key}=${value}`)
     .join("\n");
@@ -92,4 +98,12 @@ test("host verifier requires a disabled voice plugin while preserving the shared
 
   const unsafe = verifyHostFacts(output.replace("unit_active=active", "unit_active=inactive"), contract.host_checks.expected);
   assert.ok(unsafe.some(({ ok, message }) => !ok && message.startsWith("unit_active:")));
+
+  for (const invariant of ["telegram_enabled", "minimax_enabled"]) {
+    const changed = verifyHostFacts(
+      output.replace(`${invariant}=true`, `${invariant}=false`),
+      contract.host_checks.expected,
+    );
+    assert.ok(changed.some(({ ok, message }) => !ok && message.startsWith(`${invariant}:`)));
+  }
 });
