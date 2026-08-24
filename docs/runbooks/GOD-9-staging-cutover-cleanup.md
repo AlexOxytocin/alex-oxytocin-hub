@@ -244,9 +244,11 @@ node ops/god9-host.mjs test-rollback \
 
 Rollback packet под `/opt/app/frontend/god9-state/<release-id>` сохраняет exact
 previous config hash/content, previous `site-current`, legacy target, previous
-`_includes` и accepted staging evidence. `test-rollback` запускает прежний
-config в transient read-only Nginx container на общей backend network и создаёт
-marker только после успешного `nginx -t`. Cutover без marker невозможен.
+`_includes` и accepted staging evidence. `test-rollback` сначала создаёт
+transient read-only Nginx container, подключает его ко всем Docker networks
+production Nginx и только затем запускает прежний config. Это сохраняет DNS
+доступность всех legacy upstreams, а marker создаётся лишь после успешных
+`nginx -t` и HTTP probes. Cutover без marker невозможен.
 
 ## 6. Atomic production cutover и immediate rollback
 

@@ -8,6 +8,7 @@ import test from 'node:test';
 import { inspectSite, isContained, main as prepareRelease, validateReleaseId } from '../scripts/prepare-god9-release.mjs';
 import { expectedHttpContract, parseArgs as parseVerificationArgs, startSignedReleasePreview } from '../scripts/verify-god9-release.mjs';
 import {
+  attachedNetworkNames,
   assertNginxWorkerAccess,
   assertRollbackOpen,
   assertUnprivilegedNginxModes,
@@ -256,6 +257,24 @@ test('host mutations require explicit apply before touching server state', async
   assert.ok(normalize < secondIntegrityCheck && secondIntegrityCheck < workerProbe, 'checksums must be revalidated before the worker probe');
   assert.ok(workerProbe < finalRename, 'worker access must pass before atomic finalization');
   assert.equal(finalize.indexOf('chmod(', finalRename), -1, 'finalized releases must never be chmodded');
+});
+
+test('rollback harness mirrors every production Nginx network before startup', async () => {
+  assert.deepEqual(attachedNetworkNames({ NetworkSettings: { Networks: { z_service: {}, app_app_network: {}, 'community-bot_default': {} } } }), [
+    'app_app_network', 'community-bot_default', 'z_service',
+  ]);
+  assert.throws(() => attachedNetworkNames({ NetworkSettings: { Networks: {} } }, 'Nginx'), /not attached/u);
+  assert.throws(() => attachedNetworkNames({ NetworkSettings: { Networks: { 'unsafe/network': {} } } }, 'Nginx'), /unsafe Docker network name/u);
+
+  const source = await readFile(resolve(root, 'infra/release/god9-host.mjs'), 'utf8');
+  const rollback = source.slice(source.indexOf('async function testRollback('), source.indexOf('async function atomicSymlink('));
+  const create = rollback.indexOf("'create', '--name', name");
+  const connect = rollback.indexOf("['network', 'connect', network, name]");
+  const start = rollback.indexOf("['start', name]");
+  const testConfig = rollback.indexOf("['exec', name, 'nginx', '-t']");
+  assert.ok(create > 0 && create < connect, 'rollback container must be created before secondary networks attach');
+  assert.ok(connect < start && start < testConfig, 'all production networks must attach before Nginx starts and is tested');
+  assert.doesNotMatch(rollback, /'run', '-d'/u);
 });
 
 test('staging and verification keep TLS and plain HTTP ports separate', () => {
