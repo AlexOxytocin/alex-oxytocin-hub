@@ -1,8 +1,8 @@
 # GOD-8: безопасный демонтаж OpenClaw Voice
 
-- Версия: 2.0
+- Версия: 2.1
 - Инвентаризация: 2026-08-24 04:32–04:39 UTC
-- Состояние: **GATE-3 AUTHORIZED CHECKPOINT — exact cleanup разрешён, ещё не выполнен**
+- Состояние: **GATE-3 COMPLETE — exact service-specific cleanup выполнен и проверен; Voice rollback закрыт**
 
 Этот runbook выводит из эксплуатации только voice-call surface. Он не удаляет shared OpenClaw gateway, Telegram channel, Minimax plugin, `/api/`, `/voidplayer/` или другие сервисы на хосте.
 
@@ -427,13 +427,18 @@ npm run verify:openclaw-teardown -- --ssh root@89.167.49.137
 npm test
 ```
 
-## 9. Текущий checkpoint для hand-off
+## 9. Финальный Gate 3 checkpoint
 
 - Gate 0: PASS `2026-08-24T05:12:40Z`; все четыре discovery hash совпали, shared unit active+enabled, voice/Telegram/Minimax были enabled.
-- Execution contract head: `bf8d0c080896363e7fb32414fcdb68521e4bd6a4`.
+- Gate 3 execution contract head: `430379c0964105d78ea095bad952bf628b9bc97e`.
 - Gate 1: PASS `2026-08-24T05:13:47Z`; rollback packet `/root/god-8-backups/20260824T051347Z`, manifest PASS, directory mode `0700`, sensitive files mode `0600`. Содержимое packet не покидало production host.
 - Gate 2: PASS `2026-08-24T05:16:36Z`; listener/UFW/proxy counts `0/0/0`, voice disabled, shared unit active+enabled, Telegram/Minimax enabled.
-- Post-change hashes: config `9f6da7d134846c0f67682908e6662f8a332157304b62719bf3d3558abf92e22b`; Nginx `91b71576850ee1f1e60d558a7777137a37f5e44cb9a7c7685a5a3f8545dfc004`; unit и global OpenClaw hashes не изменились.
-- Full verifier: PASS `2026-08-24T05:19:26Z`–`05:19:36Z`; public tombstones `410` без redirects, protected routes `200`, все host-инварианты совпали, Nginx syntax valid.
+- Gate 3 preflight: PASS `2026-08-24T05:59:12Z`; повторный `--phase gate2`, exact packet pointer/mode, six-entry manifest, четыре sensitive payload и approved hashes совпали без drift.
+- Config cleanup: PASS `2026-08-24T06:00:36Z`; `plugins.entries.voice-call` отсутствует, `plugins.allow` равен `["telegram","minimax"]`, automatic backup voice-clean, config hash `cc6a5c105d735d7544c36c4b977f2626d618c808bb518aaedf7fa36e983ed0f5`.
+- Artifact cleanup: PASS `2026-08-24T06:01:41Z`; удалены exact call-data file и пустой directory, `7/7` exact local-copy files и пустой directory, `4/4` boolean-confirmed legacy voice backups. Protected backup остался неизменным.
+- Cleanup verifier: PASS до и после observation; public exact/prefix tombstones `410` без redirects, protected routes `200`, listener/UFW/proxy counts `0/0/0`, shared unit active+enabled, Telegram/Minimax enabled, voice subtree/allow entry/artifacts отсутствуют.
+- Observation: PASS `2026-08-24T06:03:05Z`–`06:13:35Z`, `628s`, `11/11` samples; `NRestarts 0→0`, error-like journal count `0`, listener `0`, Telegram/Minimax `true`.
+- Irreversible boundary: closed `2026-08-24T06:14:57Z`; из exact packet удалены четыре sensitive payload и `SHA256SUMS`, pre-close manifest hash `6a92554e0d7c9dd5f198df05c4e6ccea3b6610a5466dc23f6ef6d3f7ff2eed6b`, marker `GATE3-CLOSED`, sensitive payload count `0`, Voice rollback unavailable.
+- Final verifier: PASS к `2026-08-24T06:15:56Z`; config/Nginx/unit/global/bundled hashes ожидаемые, bundled extension остаётся `bundled/disabled`, shared gateway `NRestarts=0`.
 - Gate 3 отдельно разрешён после root observation: `NRestarts=0`, error-like journal count `0`, voice HTTP `9/9 → 410`, три credential references `shared_outside_voice=false`.
-- Следующий шаг — зелёный `--phase gate2` и exact manifest check. Provider API, shared unit/package/bundled extension, Telegram, Minimax, общий log/cron, Docker/Nginx container и любые неуказанные paths остаются вне scope.
+- Provider API не вызывался; credential values и call data не выводились и не копировались в Git. Shared unit/package/bundled extension, Telegram, Minimax, общий log/cron, Docker/Nginx container и любые неуказанные paths не изменялись.
