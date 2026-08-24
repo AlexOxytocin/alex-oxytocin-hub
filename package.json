@@ -21,6 +21,7 @@
     "test:content-browser": "node tests/content-browser.mjs",
     "test:performance": "node --test tests/performance-budget.test.mjs",
     "test:performance-browser": "node tests/performance-browser.mjs",
+    "test:critical-css-browser": "node tests/critical-css-browser.mjs",
     "test:browser-contract": "node tests/god7-browser-contract.mjs",
     "test:browser:all": "node scripts/run-preview-tests.mjs",
     "test:plan": "node --test tests/url-migration-inventory.test.mjs",

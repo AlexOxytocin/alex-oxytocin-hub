@@ -65,6 +65,7 @@ try {
   for (const script of [
     'tests/design-browser.mjs',
     'tests/content-browser.mjs',
+    'tests/critical-css-browser.mjs',
     'tests/performance-browser.mjs',
     'tests/god7-browser-contract.mjs',
   ]) {

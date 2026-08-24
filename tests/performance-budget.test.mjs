@@ -28,15 +28,28 @@ test('every route stays inside the HTML gzip budget', async () => {
   }
 });
 
-test('route CSS and simple-page JavaScript stay inside their budgets', async () => {
-  const assetFiles = await filesBelow(path.join(dist, '_astro'));
-  const cssFiles = assetFiles.filter((file) => file.endsWith('.css'));
-  assert.ok(cssFiles.length > 0);
-  for (const file of cssFiles) {
-    const compressed = gzipSync(await readFile(file)).length;
-    assert.ok(compressed <= budgets.assets.cssGzipBytes, `${path.basename(file)} is ${(compressed / 1024).toFixed(1)} KB gzip`);
+test('critical CSS is inline without a render-blocking local stylesheet request', async () => {
+  const htmlFiles = (await filesBelow(dist)).filter((file) => file.endsWith('.html'));
+  for (const file of htmlFiles) {
+    const html = await readFile(file, 'utf8');
+    const inlineCss = [...html.matchAll(/<style\b[^>]*>([\s\S]*?)<\/style>/gi)].map((match) => match[1]).join('\n');
+    const stylesheetLinks = [...html.matchAll(/<link\b[^>]*>/gi)]
+      .map((match) => match[0])
+      .filter((link) => /\brel=["'][^"']*\bstylesheet\b[^"']*["']/i.test(link));
+    const localStylesheets = stylesheetLinks.filter((link) => /\bhref=["'](?:\/|\.\/|\.\.\/)[^"']+["']/i.test(link));
+
+    assert.ok(inlineCss.length > 0, `${path.relative(dist, file)} has no inline critical CSS`);
+    assert.match(inlineCss, /--surface-page:/, `${path.relative(dist, file)} is missing shared design tokens`);
+    assert.equal(localStylesheets.length, 0, `${path.relative(dist, file)} has a render-blocking local stylesheet`);
+    const compressed = gzipSync(inlineCss).length;
+    assert.ok(compressed <= budgets.assets.cssGzipBytes, `${path.relative(dist, file)} inline CSS is ${(compressed / 1024).toFixed(1)} KB gzip`);
   }
 
+  const cssFiles = (await filesBelow(path.join(dist, '_astro'))).filter((file) => file.endsWith('.css'));
+  assert.equal(cssFiles.length, 0, 'inlined project CSS must not leave an unused CSS asset');
+});
+
+test('simple-page JavaScript stays inside its budget', async () => {
   for (const route of ['ru/experience', 'ru/projects', 'ru/learning', 'ru/community']) {
     const html = await readFile(path.join(dist, route, 'index.html'), 'utf8');
     const inlineJs = [...html.matchAll(/<script[^>]*>([\s\S]*?)<\/script>/gi)].map((match) => match[1]).join('\n');
