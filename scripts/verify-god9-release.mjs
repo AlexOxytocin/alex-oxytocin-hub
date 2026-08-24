@@ -1,9 +1,9 @@
 import { createHash } from 'node:crypto';
 import { spawn } from 'node:child_process';
-import { request as httpRequest } from 'node:http';
+import { createServer, request as httpRequest } from 'node:http';
 import { request as httpsRequest } from 'node:https';
 import { lstat, readFile, writeFile } from 'node:fs/promises';
-import { resolve } from 'node:path';
+import { dirname, isAbsolute, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = resolve(import.meta.dirname, '..');
@@ -21,11 +21,12 @@ function validatePort(value, flag) {
 }
 
 export function parseArgs(argv) {
-  const options = { phase: 'staging', browser: false, insecure: false };
+  const options = { phase: 'staging', browser: false, insecure: false, signedlocalperformance: false };
   for (let index = 0; index < argv.length; index += 1) {
     const arg = argv[index];
     if (arg === '--browser') options.browser = true;
     else if (arg === '--insecure') options.insecure = true;
+    else if (arg === '--signed-local-performance') options.signedlocalperformance = true;
     else if (['--phase', '--release-id', '--connect-address', '--connect-port', '--connect-http-port', '--browser-origin', '--release-manifest', '--output'].includes(arg)) options[arg.slice(2).replaceAll('-', '')] = argv[++index];
     else throw new Error(`Unknown argument: ${arg}`);
   }
@@ -37,7 +38,115 @@ export function parseArgs(argv) {
   if (options.connectaddress && /[/:\\]/u.test(options.connectaddress) && !/^\d{1,3}(?:\.\d{1,3}){3}$/u.test(options.connectaddress)) throw new Error('--connect-address must be a hostname or IPv4 address without a scheme');
   if (options.phase === 'staging' && !options.connectaddress) throw new Error('Staging verification requires an explicit loopback --connect-address');
   if (options.phase === 'staging' && options.connecthttpport === undefined) throw new Error('Staging verification requires an explicit plain HTTP --connect-http-port');
+  if (options.signedlocalperformance && options.phase !== 'staging') throw new Error('--signed-local-performance is only valid during staging verification');
+  if (options.signedlocalperformance && !options.browser) throw new Error('--signed-local-performance requires --browser');
+  if (options.signedlocalperformance && !options.releasemanifest) throw new Error('--signed-local-performance requires --release-manifest');
   return options;
+}
+
+const contentTypes = new Map([
+  ['.avif', 'image/avif'], ['.css', 'text/css; charset=utf-8'], ['.docx', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'],
+  ['.html', 'text/html; charset=utf-8'], ['.ico', 'image/x-icon'], ['.jpeg', 'image/jpeg'], ['.jpg', 'image/jpeg'],
+  ['.js', 'text/javascript; charset=utf-8'], ['.json', 'application/json; charset=utf-8'], ['.pdf', 'application/pdf'],
+  ['.png', 'image/png'], ['.svg', 'image/svg+xml'], ['.txt', 'text/plain; charset=utf-8'], ['.webmanifest', 'application/manifest+json'],
+  ['.webp', 'image/webp'], ['.woff2', 'font/woff2'],
+]);
+
+function extension(pathname) {
+  const basename = pathname.slice(pathname.lastIndexOf('/') + 1);
+  const index = basename.lastIndexOf('.');
+  return index < 0 ? '' : basename.slice(index).toLowerCase();
+}
+
+function releaseRequestPath(rawUrl) {
+  let pathname;
+  try {
+    pathname = decodeURIComponent(new URL(rawUrl ?? '/', 'http://127.0.0.1').pathname);
+  } catch {
+    return null;
+  }
+  if (pathname.includes('\\') || pathname.includes('\0')) return null;
+  const segments = pathname.split('/').filter(Boolean);
+  if (segments.some((segment) => segment === '..' || segment === '.')) return null;
+  if (pathname.endsWith('/')) segments.push('index.html');
+  if (segments.length === 0) segments.push('index.html');
+  return segments.join('/');
+}
+
+export async function startSignedReleasePreview(options) {
+  const manifestPath = resolve(options.releasemanifest);
+  const manifestStat = await lstat(manifestPath);
+  if (!manifestStat.isFile() || manifestStat.isSymbolicLink()) throw new Error('Release manifest must be a regular file');
+  const manifestBody = await readFile(manifestPath);
+  const manifest = JSON.parse(manifestBody.toString('utf8'));
+  if (manifest.schema !== 'god9.release.v1' || manifest.releaseId !== options.releaseid || !Array.isArray(manifest.payload)) throw new Error('Release manifest identity mismatch');
+
+  const siteRoot = resolve(dirname(manifestPath), 'site');
+  const siteStat = await lstat(siteRoot);
+  if (!siteStat.isDirectory() || siteStat.isSymbolicLink()) throw new Error('Signed release site must be a real directory');
+  const signedFiles = new Map();
+  for (const entry of manifest.payload) {
+    if (typeof entry.path !== 'string' || !entry.path.startsWith('site/') || typeof entry.sha256 !== 'string') continue;
+    signedFiles.set(entry.path.slice('site/'.length), entry.sha256);
+  }
+  if (signedFiles.size === 0) throw new Error('Release manifest has no signed site payload');
+
+  const server = createServer(async (request, response) => {
+    try {
+      if (!['GET', 'HEAD'].includes(request.method ?? '')) {
+        response.writeHead(405, { Allow: 'GET, HEAD' }).end();
+        return;
+      }
+      const requestPathname = releaseRequestPath(request.url);
+      const expectedSha = requestPathname ? signedFiles.get(requestPathname) : undefined;
+      if (!requestPathname || !expectedSha) {
+        response.writeHead(404).end();
+        return;
+      }
+      const pathname = resolve(siteRoot, ...requestPathname.split('/'));
+      const contained = relative(siteRoot, pathname);
+      if (contained.startsWith('..') || isAbsolute(contained)) {
+        response.writeHead(404).end();
+        return;
+      }
+      const fileStat = await lstat(pathname);
+      if (!fileStat.isFile() || fileStat.isSymbolicLink()) {
+        response.writeHead(404).end();
+        return;
+      }
+      const body = await readFile(pathname);
+      const actualSha = createHash('sha256').update(body).digest('hex');
+      if (actualSha !== expectedSha) {
+        response.writeHead(500, { 'Content-Type': 'text/plain; charset=utf-8' }).end('Signed release payload mismatch');
+        return;
+      }
+      response.writeHead(200, {
+        'Content-Length': body.length,
+        'Content-Type': contentTypes.get(extension(requestPathname)) ?? 'application/octet-stream',
+        'X-God9-Release-Id': options.releaseid,
+      });
+      response.end(request.method === 'HEAD' ? undefined : body);
+    } catch {
+      response.writeHead(404).end();
+    }
+  });
+
+  await new Promise((resolveListen, reject) => {
+    const onError = (error) => reject(error);
+    server.once('error', onError);
+    server.listen(0, '127.0.0.1', () => {
+      server.off('error', onError);
+      resolveListen();
+    });
+  });
+  const address = server.address();
+  if (!address || typeof address === 'string') throw new Error('Signed release preview did not bind to loopback TCP');
+  return {
+    origin: `http://127.0.0.1:${address.port}`,
+    manifestSha256: createHash('sha256').update(manifestBody).digest('hex'),
+    signedFiles: signedFiles.size,
+    close: () => new Promise((resolveClose, reject) => server.close((error) => error ? reject(error) : resolveClose())),
+  };
 }
 
 function requestPath(url) {
@@ -198,15 +307,34 @@ async function verifyBrowser(options) {
   const browserOrigin = options.browserorigin ?? (options.connectaddress
     ? `https://${options.connectaddress}:${options.connectport ?? 443}`
     : inventory.production_origin);
-  const env = {
-    ...process.env,
-    SITE_PREVIEW_URL: browserOrigin.replace(/\/$/u, ''),
-    HTTP_CONTRACT_URL: browserOrigin.replace(/\/$/u, ''),
-    SITE_PREVIEW_INSECURE: options.insecure ? '1' : '0',
-    HTTP_CONTRACT_INSECURE: options.insecure ? '1' : '0',
-  };
-  for (const script of browserScripts) await runBrowserScript(script, env);
-  return { result: 'pass', origin: browserOrigin, scripts: browserScripts };
+  const signedPreview = options.signedlocalperformance ? await startSignedReleasePreview(options) : null;
+  const performanceOrigin = signedPreview?.origin ?? browserOrigin;
+  try {
+    for (const script of browserScripts) {
+      const scriptOrigin = script === 'tests/performance-browser.mjs' ? performanceOrigin : browserOrigin;
+      const env = {
+        ...process.env,
+        SITE_PREVIEW_URL: scriptOrigin.replace(/\/$/u, ''),
+        HTTP_CONTRACT_URL: browserOrigin.replace(/\/$/u, ''),
+        SITE_PREVIEW_INSECURE: scriptOrigin.startsWith('https:') && options.insecure ? '1' : '0',
+        HTTP_CONTRACT_INSECURE: options.insecure ? '1' : '0',
+      };
+      await runBrowserScript(script, env);
+    }
+    return {
+      result: 'pass',
+      origin: browserOrigin,
+      performance: signedPreview ? {
+        mode: 'signed-release-loopback',
+        origin: performanceOrigin,
+        manifestSha256: signedPreview.manifestSha256,
+        signedFiles: signedPreview.signedFiles,
+      } : { mode: 'browser-origin', origin: performanceOrigin },
+      scripts: browserScripts,
+    };
+  } finally {
+    if (signedPreview) await signedPreview.close();
+  }
 }
 
 async function manifestSha(options) {

@@ -6,7 +6,7 @@ import { dirname, resolve } from 'node:path';
 import test from 'node:test';
 
 import { inspectSite, isContained, main as prepareRelease, validateReleaseId } from '../scripts/prepare-god9-release.mjs';
-import { expectedHttpContract, parseArgs as parseVerificationArgs } from '../scripts/verify-god9-release.mjs';
+import { expectedHttpContract, parseArgs as parseVerificationArgs, startSignedReleasePreview } from '../scripts/verify-god9-release.mjs';
 import {
   assertNginxWorkerAccess,
   assertRollbackOpen,
@@ -279,6 +279,51 @@ test('staging and verification keep TLS and plain HTTP ports separate', () => {
   const verifierOptions = parseVerificationArgs(['--phase', 'staging', '--release-id', releaseId, '--connect-address', '127.0.0.1', '--connect-port', '18443', '--connect-http-port', '18080']);
   assert.equal(verifierOptions.connectport, '18443');
   assert.equal(verifierOptions.connecthttpport, '18080');
+});
+
+test('staging can isolate signed bundle performance from SSH tunnel latency', async () => {
+  const releaseId = '20990101-000004-signed-performance';
+  const release = await mkdtemp(resolve(tmpdir(), 'god9-signed-performance-'));
+  const html = '<!doctype html><html><body><h1>Signed candidate</h1></body></html>';
+  const site = resolve(release, 'site');
+  const manifestPath = resolve(release, 'release-manifest.json');
+  await mkdir(resolve(site, 'ru'), { recursive: true });
+  await writeFile(resolve(site, 'ru', 'index.html'), html);
+  await writeFile(manifestPath, `${JSON.stringify({
+    schema: 'god9.release.v1',
+    releaseId,
+    payload: [{ path: 'site/ru/index.html', bytes: Buffer.byteLength(html), sha256: hash(html) }],
+  })}\n`);
+
+  const options = parseVerificationArgs([
+    '--phase', 'staging', '--release-id', releaseId,
+    '--connect-address', '127.0.0.1', '--connect-port', '18443', '--connect-http-port', '18080',
+    '--browser', '--signed-local-performance', '--release-manifest', manifestPath,
+  ]);
+  assert.equal(options.signedlocalperformance, true);
+  const preview = await startSignedReleasePreview(options);
+  try {
+    const response = await fetch(`${preview.origin}/ru/`);
+    assert.equal(response.status, 200);
+    assert.equal(response.headers.get('x-god9-release-id'), releaseId);
+    assert.equal(await response.text(), html);
+
+    await writeFile(resolve(site, 'ru', 'index.html'), `${html}\nchanged`);
+    assert.equal((await fetch(`${preview.origin}/ru/`)).status, 500);
+    assert.equal((await fetch(`${preview.origin}/unsigned/`)).status, 404);
+  } finally {
+    await preview.close();
+    await rm(release, { recursive: true, force: true });
+  }
+
+  assert.throws(
+    () => parseVerificationArgs(['--phase', 'production', '--release-id', releaseId, '--browser', '--signed-local-performance', '--release-manifest', manifestPath]),
+    /only valid during staging/u,
+  );
+  assert.throws(
+    () => parseVerificationArgs(['--phase', 'staging', '--release-id', releaseId, '--connect-address', '127.0.0.1', '--connect-http-port', '18080', '--signed-local-performance', '--release-manifest', manifestPath]),
+    /requires --browser/u,
+  );
 });
 
 test('HTTP policy maps serve and redirect directly to HTTPS, and terminal actions never redirect', () => {

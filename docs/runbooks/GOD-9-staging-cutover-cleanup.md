@@ -199,6 +199,7 @@ npm run verify:god9 -- \
   --browser-origin https://127.0.0.1:18443 \
   --release-manifest "release/$GOD9_RELEASE_ID/release-manifest.json" \
   --browser \
+  --signed-local-performance \
   --insecure \
   --output "god9-$GOD9_RELEASE_ID-staging.json"
 ```
@@ -210,7 +211,12 @@ HTTP-записи `redirect`/`serve` обязаны одним `301` вести 
 `http.httpPolicy.checks`, one-hop/terminal counts и разные connect ports.
 Дополнительно проверяются RU/EN, downloads, API/VoidPlayer,
 canonical/hreflang, responsive/browser contracts и performance budgets. Любой
-failure блокирует дальнейшие шаги.
+failure блокирует дальнейшие шаги. Design/content/HTTP проверки идут через
+реальный staging Nginx. Performance verifier запускается на ephemeral loopback
+server, который отдаёт только файлы из подписанного release manifest и перед
+каждым ответом повторно сверяет SHA-256. Так SSH channel setup не попадает в LCP,
+но измеряется ровно candidate bundle; после cutover тот же performance suite
+обязательно повторяется через public DNS/CDN и при failure требует rollback.
 
 После evidence стенд удаляется отдельной exact-командой:
 
