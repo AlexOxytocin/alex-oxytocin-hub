@@ -21,6 +21,7 @@ const LEGACY_LINK = '/opt/app/frontend/sites/current';
 const ACTIVE_LINK = '/opt/app/frontend/site-current';
 const VOIDPLAYER_ROOT = '/opt/app/frontend/voidplayer';
 const STATE_ROOT = '/opt/app/frontend/god9-state';
+const CUTOVER_LOCK = resolve(STATE_ROOT, '.cutover.lock');
 const releaseIdPattern = /^\d{8}-\d{6}-[a-z0-9][a-z0-9._-]{2,63}$/u;
 const releaseDirectoryPattern = /^[A-Za-z0-9][A-Za-z0-9._-]{2,63}$/u;
 
@@ -38,6 +39,10 @@ async function exists(pathname) {
     if (error?.code === 'ENOENT') return false;
     throw error;
   }
+}
+
+async function assertNoCutoverLock() {
+  if (await exists(CUTOVER_LOCK)) throw new Error('Cleanup is blocked by an unresolved cutover lock; run reconcile-cutover first');
 }
 
 function validateReleaseId(value, label = 'release id') {
@@ -126,6 +131,7 @@ function parseArgs(argv) {
 }
 
 async function inventory(options) {
+  await assertNoCutoverLock();
   const cutoverReleaseId = validateReleaseId(options.releaseid, 'cutover release id');
   if (options.keep.length === 0) throw new Error('Inventory requires at least one explicit --keep-release-id rollback release');
   const keep = new Set(options.keep.map((id) => exactReleasePath(id)));
@@ -211,6 +217,7 @@ async function readObservationEvidence(pathname, releaseId, publicEvidence, dire
 }
 
 async function applyCleanup(options) {
+  await assertNoCutoverLock();
   const packet = await plan(options);
   if (options.confirm !== packet.sha256) throw new Error('Cleanup apply requires --confirm equal to the exact manifest SHA-256');
   await readObservationEvidence(options.observationevidence, packet.manifest.cutoverReleaseId, options.publicevidence, options.directoriginevidence);
@@ -226,6 +233,7 @@ async function applyCleanup(options) {
 }
 
 async function retireLegacyLink(options) {
+  await assertNoCutoverLock();
   const releaseId = validateReleaseId(options.releaseid, 'cutover release id');
   if (options.confirm !== `RETIRE-${releaseId}`) throw new Error('Legacy retirement requires --confirm RETIRE-<release-id>');
   await readObservationEvidence(options.observationevidence, releaseId, options.publicevidence, options.directoriginevidence);

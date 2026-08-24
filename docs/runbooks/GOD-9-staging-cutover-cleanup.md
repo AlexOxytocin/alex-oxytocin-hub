@@ -269,7 +269,27 @@ node ops/god9-host.mjs cutover \
    `/usr/share/nginx/html/site-current`.
 5. Выполняются `nginx -t` и reload. При любой ошибке script восстанавливает
    packet и повторно валидирует/reloads прежний config.
-6. `sites/current` остаётся без изменений на весь observation window.
+6. До первой mutation создаются global atomic lock и durable
+   `cutover.pending.json`. После reload обязательные direct HTTPS probes должны
+   пройти до создания `cutover.json`; committed marker публикуется через
+   fsync файла и родительского каталога + no-clobber hard-link; lock creation,
+   commit и lock removal также синхронизируют parent directory. Поэтому partial
+   JSON или потерянный directory entry никогда не считается успешным evidence.
+7. `sites/current` остаётся без изменений на весь observation window.
+
+Если процесс или host падает между pending journal и снятием lock, новые
+cutover и cleanup блокируются. После проверки exact previous/candidate state
+выполняется только явная reconciliation:
+
+```bash
+node ops/god9-host.mjs reconcile-cutover \
+  --apply --release-id "$GOD9_RELEASE_ID" --confirm "$GOD9_RELEASE_ID"
+```
+
+Reconciliation завершает marker только для точного candidate snapshot либо
+фиксирует exact previous state и снимает lock. Mixed state сохраняет lock и
+требует отдельного incident review; угадывание или автоматическое продолжение
+запрещено.
 
 Отдельный Flatscanner config, `/api/`, `/voidplayer/`, backend containers,
 networks и всё вне allowlist не изменяются.

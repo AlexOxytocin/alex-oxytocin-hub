@@ -6,8 +6,10 @@ import {
   chmod,
   copyFile,
   cp,
+  link,
   lstat,
   mkdir,
+  open,
   readFile,
   readdir,
   readlink,
@@ -19,7 +21,7 @@ import {
   unlink,
   writeFile,
 } from 'node:fs/promises';
-import { basename, relative, resolve, sep } from 'node:path';
+import { basename, dirname, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const FRONTEND_ROOT = '/opt/app/frontend';
@@ -28,6 +30,7 @@ const LEGACY_LINK = '/opt/app/frontend/sites/current';
 const ACTIVE_LINK = '/opt/app/frontend/site-current';
 const VOIDPLAYER_ROOT = '/opt/app/frontend/voidplayer';
 const STATE_ROOT = '/opt/app/frontend/god9-state';
+const CUTOVER_LOCK = resolve(STATE_ROOT, '.cutover.lock');
 const NGINX_CONF_ROOT = '/opt/app/nginx/conf.d';
 const NGINX_DEFAULT = '/opt/app/nginx/conf.d/default.conf';
 const NGINX_INCLUDES = '/opt/app/nginx/conf.d/_includes';
@@ -37,7 +40,7 @@ const NGINX_CONTAINER = 'nginx';
 const BACKEND_CONTAINER = 'backend';
 const FLATSCANNER_CONFIG = '/opt/app/nginx/conf.d/flatscanner.godmodetools.com.conf';
 const releaseIdPattern = /^\d{8}-\d{6}-[a-z0-9][a-z0-9._-]{2,63}$/u;
-const mutatingActions = new Set(['finalize-upload', 'staging-up', 'staging-down', 'prepare-cutover', 'test-rollback', 'cutover', 'rollback']);
+const mutatingActions = new Set(['finalize-upload', 'staging-up', 'staging-down', 'prepare-cutover', 'test-rollback', 'cutover', 'rollback', 'reconcile-cutover']);
 
 function command(program, args, { quiet = false, input } = {}) {
   const piped = quiet || input !== undefined;
@@ -627,6 +630,82 @@ async function includeNames(directory) {
   return entries.map(({ name }) => name).sort();
 }
 
+async function includesSnapshot(directory) {
+  if (!directory || !(await entryExists(directory))) return null;
+  await assertDirectory(directory, 'Nginx includes snapshot');
+  const hashes = {};
+  for (const name of await includeNames(directory)) hashes[name] = await sha256(resolve(directory, name));
+  return hashes;
+}
+
+async function activeLinkValue() {
+  if (!(await entryExists(ACTIVE_LINK))) return null;
+  const stat = await lstat(ACTIVE_LINK);
+  if (!stat.isSymbolicLink()) throw new Error('site-current exists but is not a symlink');
+  return readlink(ACTIVE_LINK);
+}
+
+async function liveDeploymentSnapshot() {
+  return {
+    defaultSha256: await sha256(NGINX_DEFAULT),
+    activeLink: await activeLinkValue(),
+    includes: await includesSnapshot(NGINX_INCLUDES),
+  };
+}
+
+async function expectedDeploymentSnapshots(release, state) {
+  return {
+    previous: {
+      defaultSha256: state.metadata.previousDefaultSha256,
+      activeLink: state.metadata.previousActiveLink,
+      includes: await includesSnapshot(state.metadata.hadIncludes ? resolve(state.directory, 'previous-includes') : null),
+    },
+    candidate: {
+      defaultSha256: await sha256(resolve(release.directory, 'nginx/default.conf')),
+      activeLink: `sites/releases/${release.releaseId}/site`,
+      includes: await includesSnapshot(resolve(release.directory, 'nginx/_includes')),
+    },
+  };
+}
+
+function sameSnapshot(left, right) {
+  return JSON.stringify(left) === JSON.stringify(right);
+}
+
+async function acquireCutoverLock(releaseId) {
+  await mkdir(STATE_ROOT, { recursive: true, mode: 0o700 });
+  try {
+    await symlink(releaseId, CUTOVER_LOCK);
+    await syncDirectory(STATE_ROOT);
+  } catch (error) {
+    if (error?.code === 'EEXIST') {
+      const owner = await readlink(CUTOVER_LOCK).catch(() => 'unreadable');
+      throw new Error(`Another cutover is unresolved (lock owner: ${owner})`);
+    }
+    throw error;
+  }
+}
+
+async function assertCutoverLockOwner(releaseId) {
+  const stat = await lstat(CUTOVER_LOCK);
+  if (!stat.isSymbolicLink() || await readlink(CUTOVER_LOCK) !== releaseId) throw new Error('Cutover lock owner mismatch');
+}
+
+async function releaseCutoverLock(releaseId) {
+  await assertCutoverLockOwner(releaseId);
+  await unlink(CUTOVER_LOCK);
+  await syncDirectory(STATE_ROOT);
+}
+
+async function runProductionProbes(expectedRootStatus) {
+  const checks = [['/', expectedRootStatus], ['/api/health', 200], ['/voidplayer/', 200], ['/openclaw-voice/cutover-probe', 410]];
+  for (const [pathname, expected] of checks) {
+    const status = await httpsStatus(443, pathname);
+    if (status !== expected) throw new Error(`Production probe ${pathname} expected ${expected}, received ${status}`);
+  }
+  return Object.fromEntries(checks);
+}
+
 async function replaceIncludes(sourceDirectory) {
   const sourceNames = sourceDirectory ? await includeNames(sourceDirectory) : [];
   for (const name of sourceNames) {
@@ -687,24 +766,155 @@ async function cutover(options) {
   if (await realpath(LEGACY_LINK) !== state.metadata.previousLegacyTarget) throw new Error('Legacy rollback symlink changed after rollback packet creation');
   if (release.manifestSha256 !== state.metadata.releaseManifestSha256) throw new Error('Release changed after staging acceptance');
 
+  const cutoverMarkerPath = resolve(state.directory, 'cutover.json');
+  const pendingPath = resolve(state.directory, 'cutover.pending.json');
+  const commitTemporary = resolve(state.directory, 'cutover.commit.tmp');
+  if (await entryExists(cutoverMarkerPath)) throw new Error('Cutover marker already exists; use a new release ID for another cutover');
+  if (await entryExists(pendingPath) || await entryExists(commitTemporary)) throw new Error('Incomplete cutover evidence exists; run reconcile-cutover');
+  const snapshots = await expectedDeploymentSnapshots(release, state);
+  const pending = {
+    schema: 'god9.cutover-pending.v1',
+    releaseId,
+    result: 'pending',
+    startedAtUtc: new Date().toISOString(),
+    releaseManifestSha256: release.manifestSha256,
+    previousLegacyTarget: state.metadata.previousLegacyTarget,
+    snapshots,
+  };
+  await acquireCutoverLock(releaseId);
+  try {
+    await writeDurableJsonExclusive(pendingPath, pending);
+  } catch (error) {
+    try {
+      if (await entryExists(pendingPath)) {
+        await unlink(pendingPath);
+        await syncDirectory(state.directory);
+      }
+      await releaseCutoverLock(releaseId);
+    } catch (cleanupError) {
+      throw new Error(`Cutover journal initialization failed before mutation and lock was retained: ${error.message}; cleanup failed: ${cleanupError.message}`);
+    }
+    throw new Error(`Cutover journal initialization failed before mutation: ${error.message}`);
+  }
   const relativeSiteTarget = `sites/releases/${releaseId}/site`;
+  let marker;
   try {
     await atomicSymlink(relativeSiteTarget);
     await replaceIncludes(resolve(release.directory, 'nginx/_includes'));
     await atomicConfig(resolve(release.directory, 'nginx/default.conf'));
     command('docker', ['exec', NGINX_CONTAINER, 'nginx', '-t'], { quiet: true });
     command('docker', ['exec', NGINX_CONTAINER, 'nginx', '-s', 'reload'], { quiet: true });
+    const probes = await runProductionProbes(301);
+    marker = { schema: 'god9.cutover.v1', releaseId, result: 'pass', cutoverAtUtc: new Date().toISOString(), pendingSha256: await sha256(pendingPath), activeTarget: await realpath(ACTIVE_LINK), legacyRollbackTarget: await realpath(LEGACY_LINK), probes };
+    await commitDurableJson(cutoverMarkerPath, commitTemporary, marker);
   } catch (error) {
     try {
       await restoreState(state);
+      const aborted = { schema: 'god9.cutover-aborted.v1', releaseId, result: 'rolled-back', abortedAtUtc: new Date().toISOString(), reason: error.message, restoredSnapshot: await liveDeploymentSnapshot() };
+      await writeDurableJsonExclusive(resolve(state.directory, `cutover-aborted-${Date.now()}.json`), aborted);
     } catch (rollbackError) {
       throw new Error(`Cutover failed (${error.message}); automatic rollback also failed (${rollbackError.message})`);
     }
-    throw new Error(`Cutover failed and was rolled back: ${error.message}`);
+    throw new Error(`Cutover failed and was rolled back; lock retained for reconcile-cutover: ${error.message}`);
   }
-  const marker = { schema: 'god9.cutover.v1', releaseId, result: 'pass', cutoverAtUtc: new Date().toISOString(), activeTarget: await realpath(ACTIVE_LINK), legacyRollbackTarget: await realpath(LEGACY_LINK) };
-  await writeFile(resolve(state.directory, 'cutover.json'), `${JSON.stringify(marker, null, 2)}\n`, { encoding: 'utf8', flag: 'wx', mode: 0o600 });
+  try {
+    await releaseCutoverLock(releaseId);
+  } catch (error) {
+    throw new Error(`Cutover committed but lock release failed; run reconcile-cutover: ${error.message}`);
+  }
   console.log(JSON.stringify(marker, null, 2));
+}
+
+async function reconcileCutover(options) {
+  const releaseId = requireConfirmation(options);
+  const { candidate: release } = await preflight(options);
+  if (!release) throw new Error('Candidate release validation did not run before cutover reconciliation');
+  const state = await loadState(releaseId);
+  await assertRollbackOpen(state.directory);
+  await assertCutoverLockOwner(releaseId);
+  if (await realpath(LEGACY_LINK) !== state.metadata.previousLegacyTarget) throw new Error('Legacy rollback symlink changed during cutover reconciliation');
+
+  const pendingPath = resolve(state.directory, 'cutover.pending.json');
+  const markerPath = resolve(state.directory, 'cutover.json');
+  const commitTemporary = resolve(state.directory, 'cutover.commit.tmp');
+  const markerExists = await entryExists(markerPath);
+  const expected = await expectedDeploymentSnapshots(release, state);
+  let pending = null;
+  let pendingError = null;
+  if (await entryExists(pendingPath)) {
+    try {
+      pending = await readJsonRegular(pendingPath, 'Cutover pending marker');
+      if (pending.schema !== 'god9.cutover-pending.v1' || pending.releaseId !== releaseId || pending.releaseManifestSha256 !== release.manifestSha256 || !sameSnapshot(pending.snapshots, expected)) throw new Error('Cutover pending marker does not match the reviewed release and rollback packet');
+    } catch (error) {
+      pendingError = error.message;
+    }
+  }
+
+  const live = await liveDeploymentSnapshot();
+  if (sameSnapshot(live, expected.candidate)) {
+    if (!pending) throw new Error('Candidate state is active without a valid pending journal; manual incident review required');
+    command('docker', ['exec', NGINX_CONTAINER, 'nginx', '-t'], { quiet: true });
+    const probes = await runProductionProbes(301);
+    let marker;
+    if (markerExists) {
+      marker = await readJsonRegular(markerPath, 'Cutover marker');
+      const activeTarget = await realpath(ACTIVE_LINK);
+      const legacyTarget = await realpath(LEGACY_LINK);
+      if (marker.schema !== 'god9.cutover.v1' || marker.releaseId !== releaseId || marker.result !== 'pass' || marker.pendingSha256 !== await sha256(pendingPath) || marker.activeTarget !== activeTarget || marker.legacyRollbackTarget !== legacyTarget || !sameSnapshot(marker.probes, probes)) throw new Error('Committed cutover marker does not match the pending journal and live deployment');
+    } else {
+      if (await entryExists(commitTemporary)) throw new Error('Incomplete committed marker temp exists; preserve it for manual incident review');
+      marker = { schema: 'god9.cutover.v1', releaseId, result: 'pass', cutoverAtUtc: new Date().toISOString(), reconciled: true, pendingSha256: await sha256(pendingPath), activeTarget: await realpath(ACTIVE_LINK), legacyRollbackTarget: await realpath(LEGACY_LINK), probes };
+      await commitDurableJson(markerPath, commitTemporary, marker);
+    }
+    await releaseCutoverLock(releaseId);
+    console.log(JSON.stringify({ result: 'pass', resolution: 'candidate-committed', releaseId, marker }, null, 2));
+    return;
+  }
+
+  if (sameSnapshot(live, expected.previous)) {
+    if (markerExists) throw new Error('Committed cutover marker exists while the previous deployment is active; lock retained for manual incident review');
+    const aborted = { schema: 'god9.cutover-aborted.v1', releaseId, result: 'previous-state-confirmed', reconciledAtUtc: new Date().toISOString(), pendingPresent: Boolean(pending), pendingError, live };
+    await writeDurableJsonExclusive(resolve(state.directory, `cutover-aborted-${Date.now()}.json`), aborted);
+    await runProductionProbes(200);
+    await releaseCutoverLock(releaseId);
+    console.log(JSON.stringify({ result: 'pass', resolution: 'previous-state-confirmed', releaseId }, null, 2));
+    return;
+  }
+
+  throw new Error('Live deployment is neither the exact previous nor candidate snapshot; lock retained for manual incident review');
+}
+
+export async function writeDurableJsonExclusive(pathname, value) {
+  const handle = await open(pathname, 'wx', 0o600);
+  try {
+    await handle.writeFile(`${JSON.stringify(value, null, 2)}\n`, 'utf8');
+    await handle.sync();
+  } finally {
+    await handle.close();
+  }
+  await syncDirectory(dirname(pathname));
+}
+
+export async function commitDurableJson(pathname, temporary, value) {
+  await writeDurableJsonExclusive(temporary, value);
+  await link(temporary, pathname);
+  await syncDirectory(dirname(pathname));
+  try {
+    await unlink(temporary);
+    await syncDirectory(dirname(temporary));
+  } catch {
+    // The committed no-clobber hard link is authoritative; a stale temp is evidence only.
+  }
+}
+
+async function syncDirectory(directory) {
+  if (process.platform === 'win32') return;
+  const handle = await open(directory, 'r');
+  try {
+    await handle.sync();
+  } finally {
+    await handle.close();
+  }
 }
 
 async function rollback(options) {
@@ -727,6 +937,7 @@ export async function main(argv = process.argv.slice(2)) {
     'test-rollback': testRollback,
     cutover,
     rollback,
+    'reconcile-cutover': reconcileCutover,
   };
   return actions[options.action](options);
 }
