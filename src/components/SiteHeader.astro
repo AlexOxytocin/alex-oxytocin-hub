@@ -1,0 +1,44 @@
+---
+import { localeDefinition, publishedLocales, routeEntries, routePath, type Locale, type RouteId } from '../config/routes';
+import { interfaceCopy, navigationLabel } from '../i18n/ui';
+
+interface Props {
+  locale: Locale;
+  route: RouteId;
+}
+
+const { locale, route } = Astro.props;
+const copy = interfaceCopy(locale);
+const currentLocale = localeDefinition(locale);
+---
+
+<header class="site-header">
+  <a class="site-brand" href={routePath(locale, 'home')} aria-label="God Mode Tools">
+    <span aria-hidden="true">GM</span>
+    <strong>God Mode Tools</strong>
+  </a>
+
+  <nav aria-label={copy.navigation}>
+    <ul class="site-navigation">
+      {routeEntries(locale).map((entry) => (
+        <li>
+          <a href={entry.href} aria-current={entry.route === route ? 'page' : undefined}>
+            {navigationLabel(locale, entry.route)}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </nav>
+
+  <div class="locale-switcher" aria-label={copy.languages}>
+    {publishedLocales.map((alternate) => (
+      <a
+        href={routePath(alternate.id, route)}
+        lang={alternate.htmlLang}
+        aria-current={alternate.id === currentLocale.id ? 'page' : undefined}
+      >
+        {alternate.label}
+      </a>
+    ))}
+  </div>
+</header>

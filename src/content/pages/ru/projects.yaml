@@ -1,0 +1,8 @@
+locale: ru
+route: projects
+status: published
+title: Проекты
+description: Проекты, продукты и инженерные системы Алексея Грищенко.
+eyebrow: Проекты
+heading: Системы, продукты и практические инструменты
+intro: Существующий showcase уже проходит schema validation; его полноценное представление переедет сюда в GOD-5.

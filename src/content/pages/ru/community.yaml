@@ -1,0 +1,8 @@
+locale: ru
+route: community
+status: published
+title: Комьюнити
+description: Сообщество «Алло, Нейросеточная?» и его проекты.
+eyebrow: Комьюнити
+heading: Люди, практика и взаимопомощь
+intro: Раздел получил постоянный locale-first URL. Контент и связи с платформой сообщества будут перенесены в GOD-5.

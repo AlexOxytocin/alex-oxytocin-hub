@@ -51,5 +51,8 @@ test("container runs the minimal API as an unprivileged user", () => {
   assert.match(dockerfile, /CMD \["uvicorn", "main:app"/u);
   assert.match(dockerfile, /"--no-proxy-headers"/u);
   assert.match(dockerfile, /"--no-server-header"/u);
-  assert.equal(requirements, "fastapi==0.141.1\nuvicorn[standard]==0.52.4\n");
+  assert.equal(
+    requirements.replaceAll("\r\n", "\n"),
+    "fastapi==0.141.1\nuvicorn[standard]==0.52.4\n",
+  );
 });

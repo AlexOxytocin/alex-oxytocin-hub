@@ -1,0 +1,37 @@
+---
+import SEO from '../components/SEO.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import { localeDefinition, type Locale, type RouteId } from '../config/routes';
+import { interfaceCopy } from '../i18n/ui';
+import '../styles/foundation.css';
+
+interface Props {
+  locale: Locale;
+  route?: RouteId | undefined;
+  title: string;
+  description: string;
+  noIndex?: boolean;
+}
+
+const { locale, route, title, description, noIndex = false } = Astro.props;
+const definition = localeDefinition(locale);
+const copy = interfaceCopy(locale);
+---
+
+<!doctype html>
+<html lang={definition.htmlLang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <SEO locale={locale} route={route} title={title} description={description} noIndex={noIndex} />
+  </head>
+  <body>
+    <a class="skip-link" href="#content">{copy.skip}</a>
+    {route && <SiteHeader locale={locale} route={route} />}
+    <main id="content">
+      <slot />
+    </main>
+  </body>
+</html>
