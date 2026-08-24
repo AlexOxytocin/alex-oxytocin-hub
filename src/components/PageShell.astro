@@ -3,6 +3,10 @@ import type { PageContent } from '../content/pages';
 import type { Locale, RouteId } from '../config/routes';
 import { interfaceCopy } from '../i18n/ui';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import AmbientField from './motion/AmbientField.astro';
+import Container from './ui/Container.astro';
+import Section from './ui/Section.astro';
+import Stack from './ui/Stack.astro';
 
 interface Props {
   locale: Locale;
@@ -15,10 +19,19 @@ const copy = interfaceCopy(locale);
 ---
 
 <BaseLayout locale={locale} route={route} title={content.title} description={content.description}>
-  <article class="foundation-page" data-route={route}>
-    <p class="eyebrow">{content.eyebrow}</p>
-    <h1>{content.heading}</h1>
-    <p class="intro">{content.intro}</p>
-    <p class="foundation-note">{copy.foundation}</p>
-  </article>
+  <Section class="page-hero">
+    <Container>
+      <div class="page-hero__grid">
+        <article class="page-hero__content" data-route={route}>
+          <Stack gap="lg">
+            <p class="eyebrow">{content.eyebrow}</p>
+            <h1>{content.heading}</h1>
+            <p class="intro">{content.intro}</p>
+            <p class="foundation-note">{copy.foundation}</p>
+          </Stack>
+        </article>
+        {route === 'home' && <AmbientField />}
+      </div>
+    </Container>
+  </Section>
 </BaseLayout>

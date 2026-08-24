@@ -1,0 +1,22 @@
+---
+import Button from './ui/Button.astro';
+import Card from './ui/Card.astro';
+import Stack from './ui/Stack.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  href: string;
+  label: string;
+}
+
+const { title, description, href, label } = Astro.props;
+---
+
+<Card class="cta">
+  <Stack gap="md">
+    <h2>{title}</h2>
+    <p>{description}</p>
+    <Button href={href}>{label}</Button>
+  </Stack>
+</Card>

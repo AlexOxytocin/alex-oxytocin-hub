@@ -22,6 +22,8 @@ npm test
 - `src/layouts/BaseLayout.astro` — общий документ и layout;
 - `src/components/SEO.astro` — canonical, hreflang и social metadata;
 - `src/components/SiteHeader.astro` — общая навигация и language switcher;
+- `src/styles/tokens.css` и `src/components/ui/` — централизованная дизайн-система;
+- `src/components/motion/` — opt-in motion boundaries со static fallback;
 - `scripts/cv/` — прежний YAML/DOCX/TXT/PDF pipeline, теперь управляемый из корня;
 - `backend/` — отдельный минимальный FastAPI-контракт для `/api/`.
 
@@ -34,6 +36,8 @@ npm test
 - `npm test` — build и регрессия foundation;
 - `npm run test:plan` — URL migration contracts;
 - `npm run test:backend-security` — security regression API;
+- `npm run test:design` — tokens, primitives и motion contracts;
+- `npm run test:browser` — Chromium QA для desktop/reduced-motion/mobile;
 - `npm run resume:pdf` — PDF-экспорт CV через Playwright;
 - `npm run legacy:ai:build` — временная сборка legacy AI-страницы до GOD-5/GOD-9.
 

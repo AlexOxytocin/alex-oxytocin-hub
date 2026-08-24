@@ -1,0 +1,27 @@
+---
+import type { Locale } from '../config/routes';
+import { siteConfig } from '../config/site';
+import { interfaceCopy } from '../i18n/ui';
+import Container from './ui/Container.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const copy = interfaceCopy(locale);
+---
+
+<footer class="site-footer">
+  <Container class="site-footer__inner">
+    <div>
+      <p>{copy.footer}</p>
+      <p>{copy.rights}</p>
+    </div>
+    <nav class="site-footer__links" aria-label={locale === 'en' ? 'Social links' : 'Ссылки на социальные сети'}>
+      <a href={siteConfig.social.github} rel="me noopener">GitHub</a>
+      <a href={siteConfig.social.telegram} rel="me noopener">Telegram</a>
+      <a href={siteConfig.social.linkedin} rel="me noopener">LinkedIn</a>
+    </nav>
+  </Container>
+</footer>

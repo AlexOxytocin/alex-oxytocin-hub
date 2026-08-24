@@ -31,11 +31,15 @@ export function interfaceCopy(locale: Locale) {
         navigation: 'Main navigation',
         languages: 'Choose language',
         foundation: 'Unified Astro foundation',
+        footer: 'Architecture, AI tools, learning, and community.',
+        rights: 'Built as one fast, accessible system.',
       }
     : {
         skip: 'Перейти к содержанию',
         navigation: 'Основная навигация',
         languages: 'Выбор языка',
         foundation: 'Единый Astro-фундамент',
+        footer: 'Архитектура, ИИ-инструменты, обучение и сообщество.',
+        rights: 'Собрано как одна быстрая и доступная система.',
       };
 }

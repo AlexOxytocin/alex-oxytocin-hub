@@ -17,9 +17,10 @@ Astro 5 был первоначальной целевой версией пла
 | Общий HTML-каркас | `src/layouts/BaseLayout.astro` |
 | Общий SEO head | `src/components/SEO.astro` |
 | Общая навигация и language switcher | `src/components/SiteHeader.astro` |
-| Временный foundation CSS | `src/styles/foundation.css` |
+| Design tokens и визуальные primitives | `src/styles/tokens.css`, `src/styles/components.css` |
+| Opt-in motion policy и компоненты | `src/config/motion.ts`, `src/components/motion/` |
 
-GOD-4 заменит временный CSS полноценными design tokens, primitives и motion API. Страницы уже используют общий layout и components, поэтому смена визуального языка не потребует обхода каждого маршрута.
+GOD-4 добавил полноценные design tokens, primitives и motion API. Страницы используют общий layout и components, поэтому смена визуального языка не требует обхода каждого маршрута.
 
 ## Маршруты и языки
 
