@@ -14,15 +14,22 @@ async function exists(relativePath) {
 }
 
 test('design tokens are centralized and component styles use semantic variables', async () => {
-  const [tokens, machineTokens] = await Promise.all([
+  const [tokens, machineTokens, entrypoint, layout] = await Promise.all([
     readFile(new URL('src/styles/tokens.css', root), 'utf8'),
     readFile(new URL('docs/design-tokens.json', root), 'utf8'),
+    readFile(new URL('src/styles/index.css', root), 'utf8'),
+    readFile(new URL('src/layouts/BaseLayout.astro', root), 'utf8'),
   ]);
 
   for (const token of ['--surface-page', '--text-primary', '--space-4', '--radius-lg', '--motion-normal', '--touch-target']) {
     assert.match(tokens, new RegExp(token));
   }
   assert.doesNotThrow(() => JSON.parse(machineTokens));
+  assert.match(layout, /import '\.\.\/styles\/index\.css';/);
+
+  for (const stylesheet of ['tokens.css', 'base.css', 'components.css', 'motion.css']) {
+    assert.match(entrypoint, new RegExp(`@import './${stylesheet.replace('.', '\\.')}';`));
+  }
 
   for (const stylesheet of ['src/styles/base.css', 'src/styles/components.css', 'src/styles/motion.css']) {
     const source = await readFile(new URL(stylesheet, root), 'utf8');
