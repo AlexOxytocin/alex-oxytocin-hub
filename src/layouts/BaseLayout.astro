@@ -2,7 +2,7 @@
 import SEO from '../components/SEO.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import SiteHeader from '../components/SiteHeader.astro';
-import { localeDefinition, type Locale, type RouteId } from '../config/routes';
+import { localeDefinition, type CrawlDirective, type Locale, type RouteId } from '../config/routes';
 import { interfaceCopy } from '../i18n/ui';
 import '../styles/index.css';
 
@@ -11,13 +11,13 @@ interface Props {
   route?: RouteId | undefined;
   title: string;
   description: string;
-  noIndex?: boolean;
+  robots?: CrawlDirective | undefined;
   path?: string;
   alternatePaths?: Partial<Record<Locale, string>>;
-  theme?: 'legacy-home';
+  theme?: 'legacy-home' | 'site-shell';
 }
 
-const { locale, route, title, description, noIndex = false, path, alternatePaths, theme } = Astro.props;
+const { locale, route, title, description, robots, path, alternatePaths, theme = 'site-shell' } = Astro.props;
 const definition = localeDefinition(locale);
 const copy = interfaceCopy(locale);
 ---
@@ -29,7 +29,7 @@ const copy = interfaceCopy(locale);
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <SEO locale={locale} route={route} title={title} description={description} noIndex={noIndex} path={path} alternatePaths={alternatePaths} />
+    <SEO locale={locale} route={route} title={title} description={description} robots={robots} path={path} alternatePaths={alternatePaths} />
   </head>
   <body data-theme={theme}>
     <a class="skip-link" href="#content">{copy.skip}</a>

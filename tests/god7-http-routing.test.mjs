@@ -145,6 +145,7 @@ test('Nginx reserves service prefixes before static fallback and retires opencla
   for (const server of [apexHttp, apex]) {
     assert.match(server, /location\s+=\s+\/openclaw-voice\s*\{[\s\S]*?return\s+410\s*;/u);
     assert.match(server, /location\s+\^~\s+\/openclaw-voice\/\s*\{[\s\S]*?return\s+410\s*;/u);
+    assert.match(server, /location\s+~\s+\^\/\(\?:ru\|en\)\/\(\?:experience\|projects\)\/\[\^\/\.\]\+\/\?\$\s*\{[\s\S]*?return\s+404\s*;/u);
   }
   assert.match(apex, /include\s+\/etc\/nginx\/conf\.d\/_includes\/site-cache\.inc\s*;/u);
   assert.match(nginxCache, /location\s+\/\s*\{[\s\S]*?try_files\s+\$uri\s+\$uri\/\s+\$uri\/index\.html\s+=404\s*;/u);

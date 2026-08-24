@@ -75,9 +75,9 @@ async function createReleaseFixture(releaseId) {
 
 test('fresh Astro dist is a self-contained release site', async () => {
   const site = await inspectSite(resolve(root, 'dist'));
-  assert.ok(site.fileCount >= 300);
-  assert.ok(site.htmlCount >= 40);
-  assert.ok(site.bytes > 20 * 1024 * 1024);
+  assert.ok(site.fileCount >= 50);
+  assert.equal(site.htmlCount, 11);
+  assert.ok(site.bytes > 15 * 1024 * 1024);
   assert.equal(await exists('dist/index.html'), false);
   assert.equal(await exists('dist/ru/index.html'), true);
   assert.equal(await exists('dist/en/index.html'), true);

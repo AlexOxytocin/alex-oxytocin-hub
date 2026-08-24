@@ -1,0 +1,32 @@
+---
+import { routeRobots, type Locale, type SectionRouteId } from '../../config/routes';
+import { placeholderCopy } from '../../i18n/placeholders';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Container from '../ui/Container.astro';
+import '../../styles/placeholder.css';
+
+interface Props {
+  locale: Locale;
+  route: SectionRouteId;
+}
+
+const { locale, route } = Astro.props;
+const copy = placeholderCopy(locale, route);
+---
+
+<BaseLayout
+  locale={locale}
+  route={route}
+  title={copy.title}
+  description={copy.description}
+  robots={routeRobots(route)}
+>
+  <section class="placeholder-page" aria-labelledby="placeholder-heading">
+    <Container>
+      <div class="placeholder-page__panel">
+        <h1 id="placeholder-heading">{copy.heading}</h1>
+        <p>{copy.status}</p>
+      </div>
+    </Container>
+  </section>
+</BaseLayout>

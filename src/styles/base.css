@@ -15,7 +15,7 @@ html {
 body {
   min-height: 100vh;
   margin: 0;
-  background: var(--surface-page);
+  background: var(--theme-background-page, var(--surface-page));
   color: var(--text-primary);
 }
 
@@ -23,12 +23,10 @@ body::before {
   position: fixed;
   z-index: -1;
   inset: 0;
-  background-image:
-    linear-gradient(var(--border-subtle) 1px, transparent 1px),
-    linear-gradient(90deg, var(--border-subtle) 1px, transparent 1px);
-  background-size: 4rem 4rem;
+  background-image: var(--theme-background-grid);
+  background-size: var(--theme-background-grid-size);
   content: '';
-  mask-image: linear-gradient(to bottom, rgb(0 0 0 / 0.28), transparent 38rem);
+  mask-image: var(--theme-background-grid-mask);
   opacity: 0.22;
   pointer-events: none;
 }

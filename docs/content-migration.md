@@ -1,54 +1,32 @@
-# GOD-5 — content migration
+# Locale-first content boundary
 
-## Outcome
+## Current public surface
 
-The public material now has one source and one static Astro build. Russian and English are published independently under locale-first URLs; Spanish remains registered but unpublished until real translations exist.
+Home is the only completed content route. Russian and English remain available at `/{locale}/` with the protected legacy visual theme.
 
-Published routes:
+The four top-level sections are intentionally minimal migration placeholders:
 
-- `/{locale}/`
 - `/{locale}/experience/`
-- `/{locale}/experience/java/`
 - `/{locale}/projects/`
-- `/{locale}/projects/{slug}/`
 - `/{locale}/learning/`
 - `/{locale}/community/`
 
-With two published locales and fourteen projects, the build emits 40 public content pages plus the custom 404 page.
+Each placeholder renders the shared header and footer, one meaningful `h1`, and one short localized migration status. It is zero-JS and publishes `noindex, follow` until reviewed content is migrated.
 
-## Content ownership
+## Routing boundary
 
-- Page copy lives in `src/content/pages/{locale}/` and is validated by route-specific schemas.
-- CV data lives in `src/content/cv/`; the website and downloadable résumés use the same source.
-- Project records live in `src/content/showcase/projects_{locale}.yaml`.
-- Shared page composition lives in `src/components/pages/`.
-- Nested URLs are generated only by `profilePath()` and `projectPath()` from the central route registry.
+`src/config/routes.ts` is the source of truth for route segments, lifecycle state, robots policy, navigation, locale switching, and the nested-route contract.
 
-This separation keeps design replaceable: a future visual redesign changes shared components, tokens, and styles without duplicating or rewriting the content model.
+Project details, résumé profile pages, and the former changelog are not generated. Direct nested page requests return a real 404 through the static HTTP fallback. Legacy Java-profile and changelog entry points redirect to the corresponding top-level Experience placeholder, so an inbound redirect never lands on a missing page.
 
-## Locale rules
+Existing PDF, DOCX, and TXT résumé files remain exact download artifacts. They are not linked from the placeholder and do not create an HTML detail page.
 
-- RU and EN contain complete authored copy. English Learning is not a Russian fallback.
-- Detail-page locale switching preserves the current profile or project slug.
-- No ES URL is generated while Spanish content is unpublished.
-- Links that previously pointed at `cv.`, `ai.`, or `allo.godmodetools.com` are resolved to locale-first paths in the unified site.
+## Style boundary
 
-## Preserved artifacts
-
-- Four CV variants are available as PDF, DOCX, and TXT: RU/EN base and RU/EN Java.
-- Fourteen showcase images are served from `/media/showcase/`.
-- Legacy production sites remain unchanged until the GOD-9 cutover. Their
-  retired source/build stacks were removed from the repository only after a
-  clean root Astro build and release-manifest verifier proved the artifact is
-  self-contained; the server rollback release remains intact.
+The new shell maps font families, background, palette, spacing, radii, and type scale in `src/styles/themes/site-shell.css`. Placeholder styles live in `src/styles/placeholder.css`. Home keeps its own `legacy-home` theme and route-local CSS; placeholder output must contain no `--home-*` tokens or `.home-*` selectors.
 
 ## Verification
 
-- `npm test`
-- `npm run test:browser`
-- `npm run test:content-browser`
-- `npm run audit`
-- `npm run test:plan`
-- `npm run test:backend-security`
-
-The content suite verifies route completeness, real RU/EN copy, project parity, nested canonical/hreflang URLs, downloads, and absence of retired content-subdomain links. Browser QA covers desktop and mobile layouts, media responses, downloads, detail locale switching, motion policy, zero-JS content routes, overflow, and the custom 404.
+- Static tests check the eight placeholder pages, robots metadata, localized headings/statuses, registry links, sitemap exclusion, zero-JS, and absent detail HTML.
+- Browser QA checks four sections across RU/EN and desktop/tablet/mobile: 24 route renders, axe serious/critical violations, keyboard entry, horizontal overflow, console/network errors, locale switching, and representative detail 404s.
+- The protected Home visual suite compares RU/EN at the same three viewports against versioned pixel baselines.

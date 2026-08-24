@@ -1,15 +1,11 @@
 import type { APIRoute } from 'astro';
 import {
-  changelogPath,
-  profilePath,
-  projectPath,
+  indexableRouteIds,
   publishedLocales,
-  routeIds,
   routePath,
   type Locale,
 } from '../config/routes';
 import { siteConfig } from '../config/site';
-import { getProfiles, getProjects } from '../content/site-content';
 
 export const prerender = true;
 
@@ -31,24 +27,8 @@ function localizedPaths(pathFor: (locale: Locale) => string): Record<string, str
 }
 
 export const GET: APIRoute = async () => {
-  const profiles = await getProfiles();
-  const projectsByLocale = new Map(await Promise.all(publishedLocales.map(async ({ id }) => (
-    [id, await getProjects(id)] as const
-  ))));
-  const referenceSlugs = projectsByLocale.get(siteConfig.defaultLocale)!.projects.map(({ slug }) => slug).sort();
-
-  for (const { id } of publishedLocales) {
-    const slugs = projectsByLocale.get(id)!.projects.map(({ slug }) => slug).sort();
-    if (slugs.join('\n') !== referenceSlugs.join('\n')) {
-      throw new Error(`Project sitemap parity mismatch for ${id}`);
-    }
-  }
-
   const groups = [
-    ...routeIds.map((route) => localizedPaths((locale) => routePath(locale, route))),
-    ...profiles.filter(({ slug }) => slug).map(({ slug }) => localizedPaths((locale) => profilePath(locale, slug))),
-    localizedPaths((locale) => changelogPath(locale)),
-    ...referenceSlugs.map((slug) => localizedPaths((locale) => projectPath(locale, slug))),
+    ...indexableRouteIds.map((route) => localizedPaths((locale) => routePath(locale, route))),
   ];
 
   const urls = groups.flatMap((paths) => publishedLocales.map(({ id }) => {

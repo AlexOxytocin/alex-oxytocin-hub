@@ -1,0 +1,101 @@
+{
+  "contract": "locale-first-placeholder-qa-v1",
+  "report": [
+    {
+      "locale": "ru",
+      "viewport": "desktop",
+      "dimensions": {
+        "width": 1440,
+        "height": 900
+      },
+      "checkedRoutes": [
+        "/ru/experience/",
+        "/ru/projects/",
+        "/ru/learning/",
+        "/ru/community/"
+      ],
+      "screenshot": "docs/qa/locale-first-shell/screenshots/ru-desktop.png",
+      "axeViolations": []
+    },
+    {
+      "locale": "ru",
+      "viewport": "tablet",
+      "dimensions": {
+        "width": 768,
+        "height": 1024
+      },
+      "checkedRoutes": [
+        "/ru/experience/",
+        "/ru/projects/",
+        "/ru/learning/",
+        "/ru/community/"
+      ],
+      "screenshot": "docs/qa/locale-first-shell/screenshots/ru-tablet.png",
+      "axeViolations": []
+    },
+    {
+      "locale": "ru",
+      "viewport": "mobile",
+      "dimensions": {
+        "width": 375,
+        "height": 812
+      },
+      "checkedRoutes": [
+        "/ru/experience/",
+        "/ru/projects/",
+        "/ru/learning/",
+        "/ru/community/"
+      ],
+      "screenshot": "docs/qa/locale-first-shell/screenshots/ru-mobile.png",
+      "axeViolations": []
+    },
+    {
+      "locale": "en",
+      "viewport": "desktop",
+      "dimensions": {
+        "width": 1440,
+        "height": 900
+      },
+      "checkedRoutes": [
+        "/en/experience/",
+        "/en/projects/",
+        "/en/learning/",
+        "/en/community/"
+      ],
+      "screenshot": "docs/qa/locale-first-shell/screenshots/en-desktop.png",
+      "axeViolations": []
+    },
+    {
+      "locale": "en",
+      "viewport": "tablet",
+      "dimensions": {
+        "width": 768,
+        "height": 1024
+      },
+      "checkedRoutes": [
+        "/en/experience/",
+        "/en/projects/",
+        "/en/learning/",
+        "/en/community/"
+      ],
+      "screenshot": "docs/qa/locale-first-shell/screenshots/en-tablet.png",
+      "axeViolations": []
+    },
+    {
+      "locale": "en",
+      "viewport": "mobile",
+      "dimensions": {
+        "width": 375,
+        "height": 812
+      },
+      "checkedRoutes": [
+        "/en/experience/",
+        "/en/projects/",
+        "/en/learning/",
+        "/en/community/"
+      ],
+      "screenshot": "docs/qa/locale-first-shell/screenshots/en-mobile.png",
+      "axeViolations": []
+    }
+  ]
+}

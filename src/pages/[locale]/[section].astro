@@ -1,7 +1,6 @@
 ---
 import type { GetStaticPaths } from 'astro';
 import PageShell from '../../components/PageShell.astro';
-import { getPublishedPage, type PageContent } from '../../content/pages';
 import {
   publishedLocales,
   routeSegments,
@@ -11,20 +10,18 @@ import {
 } from '../../config/routes';
 
 export const getStaticPaths = (async () => {
-  const pages = await Promise.all(publishedLocales.flatMap(({ id }) => (
-    sectionRouteIds.map(async (route) => ({
+  return publishedLocales.flatMap(({ id }) => (
+    sectionRouteIds.map((route) => ({
       params: { locale: id, section: routeSegments[route] },
-      props: { locale: id, route, content: await getPublishedPage(id, route) },
+      props: { locale: id, route },
     }))
-  )));
-  return pages;
+  ));
 }) satisfies GetStaticPaths;
 
-const { locale, route, content } = Astro.props as {
+const { locale, route } = Astro.props as {
   locale: Locale;
   route: SectionRouteId;
-  content: PageContent;
 };
 ---
 
-<PageShell locale={locale} route={route} content={content} />
+<PageShell locale={locale} route={route} />

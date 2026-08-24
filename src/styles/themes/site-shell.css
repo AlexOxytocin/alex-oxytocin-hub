@@ -1,0 +1,64 @@
+html[data-theme='site-shell'] {
+  color-scheme: dark;
+
+  --theme-font-body: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --theme-font-display: var(--theme-font-body);
+  --theme-font-label: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+
+  --theme-color-page: var(--color-ink-1000);
+  --theme-color-surface: var(--color-ink-950);
+  --theme-color-panel: var(--color-ink-900);
+  --theme-color-control: var(--color-ink-800);
+  --theme-color-text: var(--color-cloud-100);
+  --theme-color-copy: var(--color-cloud-300);
+  --theme-color-muted: var(--color-cloud-500);
+  --theme-color-accent: var(--color-signal-300);
+  --theme-color-line: color-mix(in srgb, var(--color-ink-700) 72%, transparent);
+  --theme-color-line-strong: var(--color-ink-700);
+
+  --theme-background-page:
+    radial-gradient(circle at 82% 12%, color-mix(in srgb, var(--color-signal-500) 12%, transparent), transparent 28rem),
+    radial-gradient(circle at 12% 88%, color-mix(in srgb, var(--color-warm-500) 7%, transparent), transparent 30rem),
+    var(--theme-color-page);
+  --theme-background-grid:
+    linear-gradient(var(--theme-color-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--theme-color-line) 1px, transparent 1px);
+  --theme-background-grid-size: var(--space-16) var(--space-16);
+  --theme-background-grid-mask: linear-gradient(to bottom, rgb(0 0 0 / 0.3), transparent 38rem);
+
+  --theme-space-page-inline: clamp(var(--space-4), 4vw, var(--space-8));
+  --theme-space-header-gap: var(--space-6);
+  --theme-space-control-inline: var(--space-3);
+  --theme-space-placeholder-block: clamp(var(--space-20), 14vw, var(--space-32));
+  --theme-space-placeholder-panel: clamp(var(--space-8), 6vw, var(--space-16));
+  --theme-space-placeholder-gap: var(--space-6);
+
+  --theme-radius-control: var(--radius-sm);
+  --theme-radius-panel: var(--radius-lg);
+
+  --theme-type-label-size: var(--font-size-sm);
+  --theme-type-title-size: clamp(2.5rem, 7vw, 5.75rem);
+  --theme-type-title-line: 0.98;
+  --theme-type-title-tracking: -0.055em;
+  --theme-type-status-size: clamp(1.0625rem, 1.7vw, 1.25rem);
+  --theme-type-status-line: 1.65;
+
+  --surface-page: var(--theme-color-page);
+  --surface-primary: var(--theme-color-surface);
+  --surface-secondary: var(--theme-color-panel);
+  --surface-elevated: var(--theme-color-panel);
+  --surface-interactive: var(--theme-color-control);
+  --text-primary: var(--theme-color-text);
+  --text-secondary: var(--theme-color-copy);
+  --text-muted: var(--theme-color-muted);
+  --text-accent: var(--theme-color-accent);
+  --border-subtle: var(--theme-color-line);
+  --border-strong: var(--theme-color-line-strong);
+  --font-sans: var(--theme-font-body);
+  --font-mono: var(--theme-font-label);
+  --container-wide: 72rem;
+  --container-reading: 46rem;
+  --gutter: var(--theme-space-page-inline);
+  --header-height: 5rem;
+  --touch-target: 2.75rem;
+}
