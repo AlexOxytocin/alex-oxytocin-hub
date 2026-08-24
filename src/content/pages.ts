@@ -3,7 +3,10 @@ import type { Locale, RouteId } from '../config/routes';
 
 export type PageContent = CollectionEntry<'pages'>['data'];
 
-export async function getPublishedPage(locale: Locale, route: RouteId): Promise<PageContent> {
+export async function getPublishedPage<R extends RouteId>(
+  locale: Locale,
+  route: R,
+): Promise<Extract<PageContent, { route: R }>> {
   const entries = await getCollection('pages', ({ data }) => (
     data.locale === locale && data.route === route && data.status === 'published'
   ));
@@ -12,5 +15,5 @@ export async function getPublishedPage(locale: Locale, route: RouteId): Promise<
     throw new Error(`Expected one published page for ${locale}/${route}, found ${entries.length}`);
   }
 
-  return entries[0]!.data;
+  return entries[0]!.data as Extract<PageContent, { route: R }>;
 }

@@ -6,22 +6,33 @@ import Container from './ui/Container.astro';
 
 interface Props {
   locale: Locale;
+  variant?: 'legacy-home' | undefined;
 }
 
-const { locale } = Astro.props;
+const { locale, variant } = Astro.props;
 const copy = interfaceCopy(locale);
+const isLegacyHome = variant === 'legacy-home';
+const links = isLegacyHome
+  ? [
+      ['GitHub', siteConfig.social.github],
+      ['LinkedIn', siteConfig.social.linkedin],
+      ['Telegram', siteConfig.social.telegram],
+    ]
+  : [
+      ['GitHub', siteConfig.social.github],
+      ['Telegram', siteConfig.social.telegram],
+      ['LinkedIn', siteConfig.social.linkedin],
+    ];
 ---
 
-<footer class="site-footer">
+<footer class="site-footer" data-variant={variant}>
   <Container class="site-footer__inner">
     <div>
-      <p>{copy.footer}</p>
-      <p>{copy.rights}</p>
+      <p>{isLegacyHome ? copy.homeFooter : copy.footer}</p>
+      {!isLegacyHome && <p>{copy.rights}</p>}
     </div>
-    <nav class="site-footer__links" aria-label={locale === 'en' ? 'Social links' : 'Ссылки на социальные сети'}>
-      <a href={siteConfig.social.github} rel="me noopener">GitHub</a>
-      <a href={siteConfig.social.telegram} rel="me noopener">Telegram</a>
-      <a href={siteConfig.social.linkedin} rel="me noopener">LinkedIn</a>
+    <nav class="site-footer__links" aria-label={copy.social}>
+      {links.map(([label, href]) => <a href={href} rel="me noopener">{label}</a>)}
     </nav>
   </Container>
 </footer>

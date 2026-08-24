@@ -4,6 +4,8 @@ Captured from production on 2026-08-23 with headless Chrome. These images record
 
 Browser settings: reduced motion, hidden scrollbars, fixed viewport, viewport-only capture after a 2.5-second virtual-time budget. No authenticated or mutating interaction was performed.
 
+The restored-production Home fixtures are `home-ru-{desktop,tablet,mobile}.png` and `home-en-{desktop,tablet,mobile}.png`. They were captured from `/` and `/en/` on 2026-08-24 with the same viewport dimensions and are release-blocking inputs for `npm run test:home:visual`. The original lossy `home-{desktop,tablet,mobile}.jpg` set remains historical evidence; its mobile image contains a wider layout cropped to 375px and is not used as a silent-pass exception.
+
 | Name | Public URL | Viewports |
 | --- | --- | --- |
 | `home-*` | `https://godmodetools.com/` | mobile 375×812, tablet 768×1024, desktop 1440×900 |

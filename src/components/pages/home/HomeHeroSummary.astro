@@ -1,0 +1,17 @@
+---
+import type { PageContent } from '../../../content/pages';
+
+type HomeContent = Extract<PageContent, { route: 'home' }>;
+
+interface Props {
+  content: HomeContent;
+  hidden?: boolean;
+}
+
+const { content, hidden = false } = Astro.props;
+const summary = [content.intro, ...content.heroPoints];
+---
+
+<ul class:list={['home-hero__summary', 'home-locale-panel', hidden && 'home-layout-reference']} aria-hidden={hidden ? 'true' : undefined}>
+  {summary.map((point) => <li>{point}</li>)}
+</ul>

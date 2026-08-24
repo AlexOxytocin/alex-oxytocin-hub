@@ -1,0 +1,50 @@
+---
+import type { PageContent } from '../../../content/pages';
+import { routePath, type Locale } from '../../../config/routes';
+import { legacyHomeTheme } from '../../../theme/legacy-home';
+
+type HomeContent = Extract<PageContent, { route: 'home' }>;
+type Direction = HomeContent['directions'][number];
+
+interface Props {
+  locale: Locale;
+  direction: Direction;
+  geometryReference: Direction;
+}
+
+const { locale, direction, geometryReference } = Astro.props;
+const isCommunity = direction.route === 'community';
+const { communityMark } = legacyHomeTheme.assets;
+---
+
+<a
+  class:list={['home-direction-card', isCommunity && 'home-direction-card--with-mark']}
+  data-tone={direction.route}
+  href={routePath(locale, direction.route)}
+>
+  {isCommunity && (
+    <img
+      class="home-direction-card__mark"
+      src={communityMark.src}
+      width={communityMark.width}
+      height={communityMark.height}
+      alt=""
+      loading="lazy"
+      decoding="async"
+    />
+  )}
+  <div class="home-direction-card__copy home-locale-stack">
+    <div class="home-direction-card__panel home-locale-panel">
+      <span class="home-card-eyebrow">{direction.label}</span>
+      <h2>{direction.title}</h2>
+      <p>{direction.description}</p>
+      <span class="home-card-action">{direction.action}</span>
+    </div>
+    <div class="home-direction-card__panel home-locale-panel home-layout-reference" aria-hidden="true">
+      <span class="home-card-eyebrow">{geometryReference.label}</span>
+      <h2>{geometryReference.title}</h2>
+      <p>{geometryReference.description}</p>
+      <span class="home-card-action">{geometryReference.action}</span>
+    </div>
+  </div>
+</a>

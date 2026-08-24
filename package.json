@@ -18,6 +18,7 @@
     "test:http": "node --test tests/url-migration-inventory.test.mjs tests/backend-security.test.mjs tests/god7-http-routing.test.mjs",
     "test:http:nginx": "node scripts/run-nginx-contract-tests.mjs",
     "test:browser": "node tests/design-browser.mjs",
+    "test:home:visual": "node tests/home-visual-regression.mjs",
     "test:content-browser": "node tests/content-browser.mjs",
     "test:performance": "node --test tests/performance-budget.test.mjs",
     "test:performance-browser": "node tests/performance-browser.mjs",
@@ -51,8 +52,11 @@
   },
   "devDependencies": {
     "@astrojs/check": "0.9.10",
+    "@axe-core/playwright": "4.10.2",
     "@types/node": "22.19.19",
+    "pixelmatch": "7.1.0",
     "playwright": "1.58.2",
+    "pngjs": "7.0.0",
     "typescript": "5.9.3"
   },
   "type": "module"

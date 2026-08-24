@@ -1,0 +1,22 @@
+---
+import type { PageContent } from '../../../content/pages';
+
+type HomeContent = Extract<PageContent, { route: 'home' }>;
+
+interface Props {
+  content: HomeContent;
+  hidden?: boolean;
+}
+
+const { content, hidden = false } = Astro.props;
+const accentIndex = content.heading.indexOf(content.headingAccent);
+if (accentIndex < 0) throw new Error(`Home heading accent is missing from ${content.locale} heading`);
+const headingBefore = content.heading.slice(0, accentIndex);
+const headingAfter = content.heading.slice(accentIndex + content.headingAccent.length);
+const HeadingTag = hidden ? 'div' : 'h1';
+---
+
+<div class:list={['home-locale-panel', hidden && 'home-layout-reference']} aria-hidden={hidden ? 'true' : undefined}>
+  <p class="home-eyebrow">{content.eyebrow}</p>
+  <HeadingTag class="home-hero__heading">{headingBefore}<span class="home-hero__accent">{content.headingAccent}</span>{headingAfter}</HeadingTag>
+</div>

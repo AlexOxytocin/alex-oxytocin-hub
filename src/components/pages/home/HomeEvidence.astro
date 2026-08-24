@@ -1,0 +1,21 @@
+---
+import type { PageContent } from '../../../content/pages';
+
+type HomeContent = Extract<PageContent, { route: 'home' }>;
+
+interface Props {
+  content: HomeContent;
+  hidden?: boolean;
+}
+
+const { content, hidden = false } = Astro.props;
+---
+
+<div class:list={['home-evidence-grid', 'home-locale-panel', hidden && 'home-layout-reference']} aria-hidden={hidden ? 'true' : undefined}>
+  {content.evidence.map((item) => (
+    <div class="home-evidence__item">
+      <strong>{item.value}</strong>
+      <span>{item.label}</span>
+    </div>
+  ))}
+</div>

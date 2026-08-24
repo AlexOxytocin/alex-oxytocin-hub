@@ -1,0 +1,15 @@
+---
+import { legacyHomeTheme } from '../../../theme/legacy-home';
+
+const { networkImage } = legacyHomeTheme.assets;
+---
+
+<img
+  class="home-backdrop"
+  src={networkImage.src}
+  width={networkImage.width}
+  height={networkImage.height}
+  alt=""
+  decoding="async"
+  aria-hidden="true"
+/>

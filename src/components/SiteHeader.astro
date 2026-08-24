@@ -1,22 +1,44 @@
 ---
 import { localeDefinition, publishedLocales, routeEntries, routePath, type Locale, type RouteId } from '../config/routes';
 import { interfaceCopy, navigationLabel } from '../i18n/ui';
+import { legacyHomeTheme } from '../theme/legacy-home';
+import { Image } from 'astro:assets';
 
 interface Props {
   locale: Locale;
   route: RouteId;
   localePaths?: Partial<Record<Locale, string>> | undefined;
+  variant?: 'legacy-home' | undefined;
 }
 
-const { locale, route, localePaths } = Astro.props;
+const { locale, route, localePaths, variant } = Astro.props;
 const copy = interfaceCopy(locale);
 const currentLocale = localeDefinition(locale);
+const isLegacyHome = variant === 'legacy-home';
+const { brandLogo } = legacyHomeTheme.assets;
+const switcherLocales = isLegacyHome
+  ? [...publishedLocales].sort((left, right) => left.id === 'en' ? -1 : left.id === 'ru' ? 1 : left.label.localeCompare(right.label))
+  : publishedLocales;
 ---
 
-<header class="site-header">
-  <a class="site-brand" href={routePath(locale, 'home')} aria-label="God Mode Tools">
-    <span aria-hidden="true">GM</span>
-    <strong>God Mode Tools</strong>
+<header class="site-header" data-variant={variant}>
+  <a class="site-brand" href={routePath(locale, 'home')} aria-label={isLegacyHome ? copy.homeBrand : 'God Mode Tools'}>
+    {isLegacyHome ? (
+      <Image
+        src={brandLogo}
+        format="webp"
+        widths={[154, 176, 196]}
+        sizes="(max-width: 390px) 154px, (max-width: 900px) 176px, 196px"
+        alt=""
+        loading="eager"
+        decoding="async"
+      />
+    ) : (
+      <>
+        <span aria-hidden="true">GM</span>
+        <strong>God Mode Tools</strong>
+      </>
+    )}
   </a>
 
   <nav aria-label={copy.navigation}>
@@ -32,7 +54,7 @@ const currentLocale = localeDefinition(locale);
   </nav>
 
   <div class="locale-switcher" aria-label={copy.languages}>
-    {publishedLocales.map((alternate) => (
+    {switcherLocales.map((alternate) => (
       <a
         href={localePaths?.[alternate.id] ?? routePath(alternate.id, route)}
         lang={alternate.htmlLang}
