@@ -90,14 +90,69 @@ release/<release-id>/
 └── SHA256SUMS
 ```
 
-На server artifact загружается ровно в
-`/opt/app/frontend/sites/releases/<release-id>`. Не загружать отдельные файлы
-поверх существующего release и не использовать `sites/current` как upload
-destination. `god9-host.mjs` откажется от symlink release directory,
-unmanifested files, checksum mismatch или path traversal. Gate жёстко проверяет
-структуру и уникальность safe manifest records, равенство `SHA256SUMS[path]` и
-`manifest.payload[path].sha256`, затем фактические SHA-256 и размер каждого
-файла. Изменение payload вместе с `SHA256SUMS` при неизменном manifest не пройдёт.
+Transport permissions считаются недоверенными: Windows `scp -r`, OpenSSH/SFTP
+и POSIX clients могут создать разные mode bits. Upload всегда идёт в новый
+temporary direct child releases root, никогда в final release, `sites/current`
+или `site-current`. Пример ниже одинаково применим к `scp` и Windows `scp.exe`;
+на Windows меняется только синтаксис локальных переменных, remote paths и
+последовательность остаются exact:
+
+```bash
+GOD9_HOST="root@89.167.49.137"
+GOD9_RELEASES_ROOT="/opt/app/frontend/sites/releases"
+GOD9_UPLOAD_NAME=".upload-$GOD9_RELEASE_ID-transfer-01"
+GOD9_UPLOAD_PATH="$GOD9_RELEASES_ROOT/$GOD9_UPLOAD_NAME"
+GOD9_FINAL_PATH="$GOD9_RELEASES_ROOT/$GOD9_RELEASE_ID"
+
+# Оба пути обязаны отсутствовать. Broken symlink тоже считается занятым path.
+ssh "$GOD9_HOST" bash -s -- "$GOD9_UPLOAD_PATH" "$GOD9_FINAL_PATH" <<'REMOTE'
+set -eu
+upload=$1
+final=$2
+test ! -e "$upload" && test ! -L "$upload"
+test ! -e "$final" && test ! -L "$final"
+REMOTE
+
+# Destination отсутствует: scp создаёт ровно temporary directory.
+scp -r "release/$GOD9_RELEASE_ID" "$GOD9_HOST:$GOD9_UPLOAD_PATH"
+
+ssh "$GOD9_HOST" bash -s -- \
+  "$GOD9_UPLOAD_PATH" "$GOD9_FINAL_PATH" "$GOD9_UPLOAD_NAME" "$GOD9_RELEASE_ID" <<'REMOTE'
+set -eu
+upload=$1
+final=$2
+upload_name=$3
+release_id=$4
+test -f "$upload/release-manifest.json"
+test ! -e "$final" && test ! -L "$final"
+
+cd "$upload"
+node ops/god9-host.mjs finalize-upload \
+  --apply \
+  --release-id "$release_id" \
+  --confirm "$release_id" \
+  --upload-name "$upload_name"
+
+# Только finalized path проходит повторный host/candidate preflight.
+cd "$final"
+node ops/god9-host.mjs preflight --release-id "$release_id"
+REMOTE
+```
+
+`finalize-upload` сначала проверяет manifest/SHA256SUMS и весь payload во
+временном path, затем выставляет exact `0755` всем directories и `0644` всем
+regular files. После этого он повторяет checksum/size validation, проверяет
+каждый directory (`x`) и file (`r`) через `docker exec --user nginx` на том же
+read-only frontend mount и только затем атомарно переименовывает temp в final.
+Final path повторно проверяется `preflight --release-id` и теми же gates внутри
+`staging-up`, `prepare-cutover` и `cutover`.
+
+Не запускать `chmod` после finalization, не повторять upload в существующий
+temp/final path и не исправлять failed release на месте. Любой failure оставляет
+неактивный exact path как evidence; дальнейшая очистка или новый upload требуют
+отдельного имени и отдельного решения. `god9-host.mjs` по-прежнему откажется от
+symlink directory, unmanifested files, checksum mismatch или path traversal.
+Изменение payload вместе с `SHA256SUMS` при неизменном manifest не пройдёт.
 
 ## 4. Isolated staging gate
 
