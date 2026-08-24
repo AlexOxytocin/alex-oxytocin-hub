@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "story": "GOD-8",
+  "production_origin": "https://godmodetools.com",
+  "tombstones": [
+    {
+      "name": "namespace root without trailing slash",
+      "path": "/openclaw-voice",
+      "status": 410,
+      "redirect": "forbidden"
+    },
+    {
+      "name": "namespace root",
+      "path": "/openclaw-voice/",
+      "status": 410,
+      "redirect": "forbidden"
+    },
+    {
+      "name": "namespace deep path",
+      "path": "/openclaw-voice/__god8_probe__/deep?probe=1",
+      "status": 410,
+      "redirect": "forbidden"
+    }
+  ],
+  "preserved": [
+    {
+      "name": "homepage",
+      "path": "/",
+      "status": 200,
+      "content_type_prefix": "text/html"
+    },
+    {
+      "name": "api root",
+      "path": "/api/",
+      "status": 200,
+      "content_type_prefix": "application/json",
+      "json": {
+        "message": "API is running"
+      }
+    },
+    {
+      "name": "api health",
+      "path": "/api/health",
+      "status": 200,
+      "content_type_prefix": "application/json",
+      "json": {
+        "status": "healthy"
+      }
+    },
+    {
+      "name": "voidplayer root",
+      "path": "/voidplayer/",
+      "status": 200,
+      "content_type_prefix": "text/html"
+    }
+  ],
+  "host_checks": {
+    "default_ssh_target": "root@89.167.49.137",
+    "listener_port": 3334,
+    "shared_unit": "openclaw-gateway.service",
+    "nginx_container": "nginx",
+    "nginx_config": "/opt/app/nginx/conf.d/default.conf",
+    "expected": {
+      "listener_count": "0",
+      "unit_active": "active",
+      "unit_enabled": "enabled",
+      "plugin_enabled": "false",
+      "ufw_rule_count": "0",
+      "nginx_exact_410": "1",
+      "nginx_prefix_410": "1",
+      "nginx_proxy_3334": "0",
+      "nginx_syntax": "ok"
+    }
+  }
+}
