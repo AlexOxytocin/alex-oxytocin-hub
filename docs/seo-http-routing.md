@@ -23,7 +23,7 @@
 - Exact redirects append `$is_args$args`, preserving the original query without adding an empty `?`.
 - `/api/` proxies to the existing backend with path/query preservation. The trailing slash on `proxy_pass` deliberately maps `/api/health` to backend `/health`.
 - `/voidplayer/` remains an isolated alias; missing assets cannot fall through to Astro.
-- `/openclaw-voice/**` returns `410` and has no upstream in this configuration. GOD-8 still owns process, listener, secret and auto-start teardown on the host.
+- Exact `/openclaw-voice` and the complete `/openclaw-voice/**` namespace return `410` on HTTP and HTTPS and have no upstream in this configuration. GOD-8 still owns process, listener, secret and auto-start teardown on the host.
 - The frontend catchall is `try_files $uri $uri/ $uri/index.html =404`; there is no SPA fallback.
 - The GOD-6 compression and cache policies remain active: fingerprinted `/_astro/` assets are immutable, route HTML revalidates, and final locale-first resume downloads use bounded caching.
 - Cache locations re-include the security-header policy explicitly because Nginx 1.27 does not inherit parent `add_header` directives when a location sets `Cache-Control`.

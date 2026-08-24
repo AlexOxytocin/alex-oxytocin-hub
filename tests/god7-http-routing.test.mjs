@@ -136,10 +136,15 @@ test('Nginx contains exact legacy redirect destinations with explicit query pres
 
 test('Nginx reserves service prefixes before static fallback and retires openclaw with 410', () => {
   const apex = serverBlockFor('https://godmodetools.com/');
+  const apexHttp = serverBlockFor('http://godmodetools.com/');
   assert.ok(apex);
+  assert.ok(apexHttp);
   assert.match(apex, /location\s+\^~\s+\/api\/\s*\{[\s\S]*?proxy_pass\s+http:\/\/backend:8000\//u);
   assert.match(apex, /location\s+\^~\s+\/voidplayer\/\s*\{[\s\S]*?alias\s+\/usr\/share\/nginx\/html\/voidplayer\//u);
-  assert.match(apex, /location\s+\^~\s+\/openclaw-voice\/\s*\{[\s\S]*?return\s+410\s*;/u);
+  for (const server of [apexHttp, apex]) {
+    assert.match(server, /location\s+=\s+\/openclaw-voice\s*\{[\s\S]*?return\s+410\s*;/u);
+    assert.match(server, /location\s+\^~\s+\/openclaw-voice\/\s*\{[\s\S]*?return\s+410\s*;/u);
+  }
   assert.match(apex, /include\s+\/etc\/nginx\/includes\/site-cache\.conf\s*;/u);
   assert.match(nginxCache, /location\s+\/\s*\{[\s\S]*?try_files\s+\$uri\s+\$uri\/\s+\$uri\/index\.html\s+=404\s*;/u);
 });

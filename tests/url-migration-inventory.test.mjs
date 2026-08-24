@@ -74,6 +74,7 @@ test("preserved service contracts and retired voice contract are explicit", () =
   const apiHealth = recordFor("https://godmodetools.com/api/health");
   const voidplayer = recordFor("https://godmodetools.com/voidplayer/");
   const voidManifest = recordFor("https://godmodetools.com/voidplayer/void.webmanifest");
+  const voiceExact = recordFor("https://godmodetools.com/openclaw-voice");
   const voice = recordFor("https://godmodetools.com/openclaw-voice/");
 
   assert.equal(api.final.action, "serve");
@@ -83,6 +84,7 @@ test("preserved service contracts and retired voice contract are explicit", () =
   assert.deepEqual(apiHealth.final, { action: "serve", status: 200, target: "https://godmodetools.com/api/health", security_contract: "status-only health response" });
   assert.deepEqual(voidplayer.final, { action: "serve", status: 200, target: "https://godmodetools.com/voidplayer/" });
   assert.deepEqual(voidManifest.final, { action: "serve", status: 200, target: "https://godmodetools.com/voidplayer/void.webmanifest" });
+  assert.deepEqual(voiceExact.final, { action: "gone", status: 410 });
   assert.deepEqual(voice.final, { action: "gone", status: 410 });
   assert.equal(recordFor("https://godmodetools.com/openclaw-voice/any/deep/path").final.status, 410);
 

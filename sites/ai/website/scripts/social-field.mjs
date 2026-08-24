@@ -31,7 +31,9 @@ export function fingerprintSocialCard(field) {
     new URL("./social-field.mjs", import.meta.url),
     new URL("./make-og.mjs", import.meta.url)
   ]) {
-    hash.update(readFileSync(source));
+    // Git may materialize these files as CRLF on Windows and LF in CI. Hash a
+    // canonical text representation so the checked card is platform-stable.
+    hash.update(readFileSync(source, "utf8").replace(/\r\n?/g, "\n"));
     hash.update("\0");
   }
   hash.update(`${field.count}:${field.edgeCount}:${field.cx}:${field.rx}\0`);
