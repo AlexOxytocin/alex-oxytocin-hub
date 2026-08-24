@@ -93,7 +93,6 @@ const ALLOWED_URL_PREFIXES = [
   "https://cv.godmodetools.com/",
   "https://ai.godmodetools.com/",
   "https://allo.godmodetools.com/",
-  "https://alex-neon.ks-design.workers.dev",
   "http://www.w3.org/",
   "https://www.w3.org/",
   "http://www.sitemaps.org/"

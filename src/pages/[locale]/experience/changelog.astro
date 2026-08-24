@@ -1,0 +1,68 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { getCollection } from 'astro:content';
+import Container from '../../../components/ui/Container.astro';
+import Section from '../../../components/ui/Section.astro';
+import { changelogPath, publishedLocales, type Locale } from '../../../config/routes';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+
+export const getStaticPaths = (() => publishedLocales.map(({ id }) => ({
+  params: { locale: id },
+  props: { locale: id },
+}))) satisfies GetStaticPaths;
+
+const { locale } = Astro.props as { locale: Locale };
+const collections = await getCollection('changelog');
+if (collections.length !== 1) throw new Error(`Expected one changelog, found ${collections.length}`);
+const entries = collections[0]!.data.changelog;
+const path = changelogPath(locale);
+const alternatePaths = { ru: changelogPath('ru'), en: changelogPath('en') };
+const copy = locale === 'en'
+  ? {
+      title: 'CV Hub changelog',
+      description: 'Version history and notable changes carried forward from the former CV Hub.',
+      eyebrow: 'Experience · release history',
+      heading: 'CV Hub changelog',
+      intro: 'A preserved technical history of the profile site that preceded the unified God Mode Tools experience.',
+    }
+  : {
+      title: 'История изменений CV Hub',
+      description: 'История версий и значимых изменений прежнего сайта CV Hub.',
+      eyebrow: 'Опыт · история релизов',
+      heading: 'История изменений CV Hub',
+      intro: 'Сохранённая техническая история сайта-профиля, который предшествовал единому God Mode Tools.',
+    };
+const typeLabels = locale === 'en'
+  ? { fixed: 'Fixed', added: 'Added', changed: 'Changed', removed: 'Removed' }
+  : { fixed: 'Исправлено', added: 'Добавлено', changed: 'Изменено', removed: 'Удалено' };
+---
+
+<BaseLayout locale={locale} route="experience" title={copy.title} description={copy.description} path={path} alternatePaths={alternatePaths}>
+  <Section class="page-hero page-hero--short">
+    <Container>
+      <div class="reading-column">
+        <p class="eyebrow">{copy.eyebrow}</p>
+        <h1>{copy.heading}</h1>
+        <p class="intro">{copy.intro}</p>
+      </div>
+    </Container>
+  </Section>
+
+  <Section>
+    <Container>
+      <div class="timeline">
+        {entries.map((entry) => (
+          <article class="timeline-item">
+            <div>
+              <p class="eyebrow">v{entry.version}</p>
+              <h2><time datetime={entry.date}>{entry.date}</time></h2>
+            </div>
+            <ul>
+              {entry.changes.map((change) => <li><strong>{typeLabels[change.type]}:</strong> {change.text}</li>)}
+            </ul>
+          </article>
+        ))}
+      </div>
+    </Container>
+  </Section>
+</BaseLayout>

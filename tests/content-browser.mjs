@@ -30,7 +30,7 @@ try {
   await desktopPage.goto(`${baseUrl}/en/projects/flatscanner/`, { waitUntil: 'networkidle' });
   assert.equal(await desktopPage.locator('.locale-switcher a[lang="ru"]').getAttribute('href'), '/ru/projects/flatscanner/');
   for (const extension of ['pdf', 'docx', 'txt']) {
-    const response = await desktopPage.request.get(`${baseUrl}/downloads/resume_en_java.${extension}`);
+    const response = await desktopPage.request.get(`${baseUrl}/en/experience/java/downloads/resume_en_java.${extension}`);
     assert.equal(response.status(), 200, extension);
   }
   await desktop.close();

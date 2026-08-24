@@ -1,7 +1,7 @@
 ---
 import type { PageContent } from '../../content/pages';
 import type { CvContent, ProfileDefinition } from '../../content/site-content';
-import { profilePath, type Locale } from '../../config/routes';
+import { profilePath, resumeDownloadPath, type Locale } from '../../config/routes';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Container from '../ui/Container.astro';
 import Section from '../ui/Section.astro';
@@ -58,7 +58,10 @@ const localizedProfileLabel = (profile: ProfileDefinition) => profile.slug === '
           <h2>{content.downloadsLabel}</h2>
           <p>{content.downloadNote}</p>
           <div class="download-links">
-            {['pdf', 'docx', 'txt'].map((extension) => <a class="button" data-variant="secondary" href={`/downloads/${fileStem}.${extension}`} download>{extension.toUpperCase()}</a>)}
+            {['pdf', 'docx', 'txt'].map((extension) => {
+              const filename = `${fileStem}.${extension}`;
+              return <a class="button" data-variant="secondary" href={resumeDownloadPath(locale, profileSlug, filename)} download>{extension.toUpperCase()}</a>;
+            })}
           </div>
         </aside>
       </div>

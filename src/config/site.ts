@@ -1,6 +1,7 @@
 export const siteConfig = {
   name: 'God Mode Tools',
   url: 'https://godmodetools.com',
+  socialImage: '/assets/alexey-grishchenko-hero-original-colors-v6.png',
   defaultLocale: 'ru',
   author: 'Alex Oxytocin',
   social: {

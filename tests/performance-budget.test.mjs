@@ -21,7 +21,7 @@ async function filesBelow(directory) {
 
 test('every route stays inside the HTML gzip budget', async () => {
   const htmlFiles = (await filesBelow(dist)).filter((file) => file.endsWith('.html'));
-  assert.equal(htmlFiles.length, 41);
+  assert.equal(htmlFiles.length, 43);
   for (const file of htmlFiles) {
     const compressed = gzipSync(await readFile(file)).length;
     assert.ok(compressed <= budgets.assets.htmlGzipBytes, `${path.relative(dist, file)} is ${(compressed / 1024).toFixed(1)} KB gzip`);
