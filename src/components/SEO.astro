@@ -23,6 +23,7 @@ const alternates = route
     }))
   : [];
 const fullTitle = `${title} — ${siteConfig.name}`;
+const socialImage = new URL(siteConfig.socialImage, siteConfig.url).href;
 ---
 
 <title>{fullTitle}</title>
@@ -34,11 +35,16 @@ const fullTitle = `${title} — ${siteConfig.name}`;
 ))}
 {route && <link rel="alternate" hreflang="x-default" href={new URL(alternatePaths?.ru ?? routePath('ru', route), siteConfig.url).href} />}
 <meta property="og:type" content="website" />
+<meta property="og:site_name" content={siteConfig.name} />
 <meta property="og:title" content={fullTitle} />
 <meta property="og:description" content={description} />
 {canonical && <meta property="og:url" content={canonical} />}
+<meta property="og:image" content={socialImage} />
 <meta property="og:locale" content={definition.ogLocale} />
 {alternates.filter(({ locale: alternate }) => alternate.id !== locale).map(({ locale: alternate }) => (
   <meta property="og:locale:alternate" content={alternate.ogLocale} />
 ))}
-<meta name="twitter:card" content="summary" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={fullTitle} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={socialImage} />

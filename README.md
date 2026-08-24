@@ -12,7 +12,7 @@ npm run dev
 npm test
 ```
 
-`npm run build` сначала собирает CV-артефакты, затем выполняет `astro check` и статическую генерацию в `dist/`.
+`npm run build` сначала собирает CV-артефакты, затем выполняет `astro check`, статическую генерацию и раскладывает downloads по финальным locale-first URL из migration inventory.
 
 ## Архитектура
 
@@ -33,7 +33,8 @@ npm test
 
 - `npm run dev` — Astro dev server;
 - `npm run build` — полный воспроизводимый static build;
-- `npm test` — build и регрессия foundation;
+- `npm test` — полный build, static/HTTP contracts и автоматический Chromium smoke на локальном preview;
+- `npm run test:http:nginx` — изолированный Docker smoke реального target Nginx, backend и VoidPlayer fixture;
 - `npm run test:plan` — URL migration contracts;
 - `npm run test:backend-security` — security regression API;
 - `npm run test:design` — tokens, primitives и motion contracts;
@@ -45,4 +46,4 @@ npm test
 
 ## Production
 
-Новый Astro build пока не является production-сайтом. Текущий публичный релиз остаётся rollback-границей до staging/cutover в GOD-9; `/api/` и `/voidplayer/` сохраняются как отдельные Nginx-контракты.
+Новый Astro build и [target Nginx config](infra/nginx/default.conf) пока не применены в production. Текущий публичный релиз остаётся rollback-границей до staging/cutover в GOD-9; `/api/` и `/voidplayer/` сохраняются как отдельные Nginx-контракты. Подробная матрица и порядок проверки: [docs/seo-http-routing.md](docs/seo-http-routing.md).

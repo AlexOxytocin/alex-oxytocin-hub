@@ -1,4 +1,3 @@
-import sitemap from '@astrojs/sitemap';
 import { defineConfig } from 'astro/config';
 import { siteConfig } from './src/config/site.ts';
 
@@ -9,5 +8,4 @@ export default defineConfig({
   build: {
     format: 'directory',
   },
-  integrations: [sitemap()],
 });

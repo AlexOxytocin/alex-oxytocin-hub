@@ -11,7 +11,8 @@ import { join, resolve } from "node:path";
 const root = resolve(import.meta.dirname, "..");
 const dist = join(root, "dist");
 
-const ORIGIN = "https://alex-neon.ks-design.workers.dev";
+const PRODUCTION_ORIGIN = "https://godmodetools.com";
+const LEARNING_URL = `${PRODUCTION_ORIGIN}/ru/learning/`;
 
 const STYLE_ORDER = [
   "tokens.css",
@@ -68,11 +69,11 @@ async function main() {
 
   await writeFile(
     join(dist, "robots.txt"),
-    `User-agent: *\nAllow: /\nSitemap: ${ORIGIN}/sitemap.xml\n`
+    `User-agent: *\nAllow: /\nSitemap: ${PRODUCTION_ORIGIN}/sitemap.xml\n`
   );
   await writeFile(
     join(dist, "sitemap.xml"),
-    `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n  <url><loc>${ORIGIN}/</loc></url>\n</urlset>\n`
+    `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n  <url><loc>${LEARNING_URL}</loc></url>\n</urlset>\n`
   );
 
   console.log("Built the Alex Neon landing into dist/");

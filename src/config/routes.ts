@@ -50,6 +50,14 @@ export function profilePath(locale: Locale, profileSlug = ''): string {
   return profileSlug ? `${base}${profileSlug}/` : base;
 }
 
+export function changelogPath(locale: Locale): string {
+  return `${routePath(locale, 'experience')}changelog/`;
+}
+
+export function resumeDownloadPath(locale: Locale, profileSlug: string, filename: string): string {
+  return `${profilePath(locale, profileSlug)}downloads/${filename}`;
+}
+
 export function projectPath(locale: Locale, projectSlug: string): string {
   return `${routePath(locale, 'projects')}${projectSlug}/`;
 }

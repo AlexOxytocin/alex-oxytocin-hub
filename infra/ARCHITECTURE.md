@@ -1,6 +1,6 @@
 # God Mode Tools web ecosystem
 
-> Этот файл фиксирует текущий production до cutover. Целевой Astro foundation и его границы описаны в `docs/astro-foundation.md`.
+> Публичный production ещё работает на прежнем release. `infra/nginx/default.conf` теперь является проверяемой target-конфигурацией для staging и не должен устанавливаться до GOD-9 cutover. Текущий baseline сохранён в `docs/site-baseline.md`.
 
 ## Public routing
 
@@ -13,9 +13,10 @@
 | `app.godmodetools.com` | Reserved for the community web app | not deployed |
 
 Nginx serves versioned releases from `/opt/app/frontend/sites/current`.
-The root host continues to proxy `/api/` to the existing backend and
-`/openclaw-voice/` to the existing voice service. `/voidplayer/` remains served
-from the legacy frontend directory.
+The target root host continues to proxy `/api/` to the existing backend and
+serves `/voidplayer/` from the legacy frontend directory. Its
+`/openclaw-voice/` namespace terminates with `410`; removal of the underlying
+runtime/listener remains a separate GOD-8 operation.
 
 The `/api/` implementation is source-controlled in `backend/`. Its public root
 and health responses are fixed status contracts and must never echo environment
@@ -25,12 +26,14 @@ container must not receive `DATABASE_URL`.
 ## Target public frontend
 
 The repository root now owns a single static Astro build. It emits locale-first
-RU/EN pages from one route registry and leaves `/`, legacy-host redirects,
-`/api/`, `/voidplayer/`, and `/openclaw-voice/` status handling to Nginx. This
-target is not active in production until the staged cutover in GOD-9.
+RU/EN pages, crawl artifacts and migrated downloads from one route/contract
+registry. Nginx owns `/`, exact legacy-host redirects, `/api/`, `/voidplayer/`,
+the voice tombstone and terminal 404 behavior. The target static root is
+`/usr/share/nginx/html/sites/current/site`; it is not active in production until
+the staged cutover in GOD-9.
 
 ## Future domain migration
 
-Each product uses root-relative assets and its own host, so it can later move to
-a separate domain by changing DNS and Nginx `server_name`; the content does not
-depend on `godmodetools.com` paths.
+Legacy product hosts are redirect-only in the target contract. New public
+content uses root-relative assets below `https://godmodetools.com/{locale}/`.
+See `docs/seo-http-routing.md` for the exact one-hop and query-preservation rules.

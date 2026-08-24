@@ -84,10 +84,11 @@ test('CV pipeline is available from the root and its generated downloads ship in
 
   for (const locale of ['en', 'ru']) {
     for (const extension of ['txt', 'docx']) {
-      assert.equal(await exists(`dist/downloads/resume_${locale}.${extension}`), true);
-      assert.equal(await exists(`dist/downloads/resume_${locale}_java.${extension}`), true);
+      assert.equal(await exists(`dist/${locale}/experience/downloads/resume_${locale}.${extension}`), true);
+      assert.equal(await exists(`dist/${locale}/experience/java/downloads/resume_${locale}_java.${extension}`), true);
     }
   }
+  assert.equal(await exists('dist/downloads'), false);
 });
 
 test('release is static and leaves the root redirect to the HTTP layer', async () => {
@@ -95,10 +96,10 @@ test('release is static and leaves the root redirect to the HTTP layer', async (
   assert.equal(await exists('dist/ru/index.html'), true);
   assert.equal(await exists('dist/en/index.html'), true);
 
-  const sitemapIndex = await readFile(new URL('dist/sitemap-index.xml', root), 'utf8');
-  const sitemap = await readFile(new URL('dist/sitemap-0.xml', root), 'utf8');
-  assert.match(sitemapIndex, /sitemap-0\.xml/);
+  const sitemap = await readFile(new URL('dist/sitemap.xml', root), 'utf8');
+  assert.match(sitemap, /<urlset\b/);
   assert.match(sitemap, /https:\/\/godmodetools\.com\/ru\/projects\//);
   assert.match(sitemap, /https:\/\/godmodetools\.com\/en\/community\//);
+  assert.match(sitemap, /https:\/\/godmodetools\.com\/ru\/experience\/changelog\//);
   assert.doesNotMatch(sitemap, /\/es\//);
 });

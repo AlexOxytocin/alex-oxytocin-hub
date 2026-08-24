@@ -1,0 +1,19 @@
+services:
+  backend:
+    build:
+      context: ../../backend
+      dockerfile: Dockerfile
+
+  nginx:
+    image: nginx:1.27.5-alpine
+    depends_on:
+      - backend
+    ports:
+      - "${GOD7_HTTP_PORT}:80"
+      - "${GOD7_HTTPS_PORT}:443"
+    volumes:
+      - ../../infra/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - ../../infra/nginx/includes:/etc/nginx/includes:ro
+      - ../../dist:/usr/share/nginx/html/sites/current/site:ro
+      - ./voidplayer:/usr/share/nginx/html/voidplayer:ro
+      - ./tls:/etc/nginx/ssl:ro

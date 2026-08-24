@@ -206,4 +206,18 @@ const cv = defineCollection({
   }),
 });
 
-export const collections = { locales, pages, profiles, projects, cv };
+const changelog = defineCollection({
+  loader: glob({ pattern: '*.{yaml,yml}', base: './src/content/changelog' }),
+  schema: z.object({
+    changelog: z.array(z.object({
+      version: z.string().min(1),
+      date: z.string().min(1),
+      changes: z.array(z.object({
+        type: z.enum(['fixed', 'added', 'changed', 'removed']),
+        text: z.string().min(1),
+      })).min(1),
+    })).min(1),
+  }),
+});
+
+export const collections = { locales, pages, profiles, projects, cv, changelog };

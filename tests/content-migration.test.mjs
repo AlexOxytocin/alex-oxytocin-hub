@@ -62,12 +62,16 @@ test('CV profile pages and PDF, DOCX, and TXT downloads remain available', async
   for (const locale of ['ru', 'en']) {
     for (const profile of ['', '_java']) {
       for (const extension of ['pdf', 'docx', 'txt']) {
-        assert.equal(await exists(`dist/downloads/resume_${locale}${profile}.${extension}`), true);
+        const profilePath = profile ? 'java/' : '';
+        assert.equal(
+          await exists(`dist/${locale}/experience/${profilePath}downloads/resume_${locale}${profile}.${extension}`),
+          true,
+        );
       }
     }
     const java = await built(`${locale}/experience/java`);
     assert.match(java, new RegExp(`canonical" href="https://godmodetools\\.com/${locale}/experience/java/`));
-    assert.match(java, new RegExp(`/downloads/resume_${locale}_java\\.pdf`));
+    assert.match(java, new RegExp(`/${locale}/experience/java/downloads/resume_${locale}_java\\.pdf`));
   }
 });
 
