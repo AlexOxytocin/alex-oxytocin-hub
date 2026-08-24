@@ -42,6 +42,8 @@ npm test
 - `npm run release:plan` — read-only проверка самодостаточного release payload;
 - `npm run release:prepare -- --release-id <id> --confirm <id>` — explicit local apply для immutable artifact;
 - `npm run verify:god9` — staging/public/direct-origin release verifier;
+- `npm run test:legacy-reference` — contracts временного frozen legacy path-prefix;
+- `npm run verify:legacy-reference` — public/direct-origin health всех файлов legacy reference manifest;
 - `npm run resume:pdf` — PDF-экспорт CV через Playwright;
 
 Подробности решения: `docs/astro-foundation.md`. Полная программа миграции: `docs/site-modernization-plan.md`.
