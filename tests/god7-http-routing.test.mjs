@@ -6,10 +6,11 @@ import test from 'node:test';
 
 const root = new URL('../', import.meta.url);
 const inventory = JSON.parse(await readFile(new URL('docs/url-migration-inventory.json', root), 'utf8'));
-const [nginxDefault, nginxCache, nginxSecurity] = await Promise.all([
+const [nginxDefault, nginxCache, nginxSecurity, nginxHost] = await Promise.all([
   readFile(new URL('infra/nginx/default.conf', root), 'utf8'),
   readFile(new URL('infra/nginx/conf.d/_includes/site-cache.inc', root), 'utf8'),
   readFile(new URL('infra/nginx/conf.d/_includes/security-headers.inc', root), 'utf8'),
+  readFile(new URL('tests/fixtures/nginx-production.conf', root), 'utf8'),
 ]);
 const contractOrigin = process.env.HTTP_CONTRACT_URL?.replace(/\/$/u, '');
 const redirectOrigin = process.env.HTTP_REDIRECT_URL?.replace(/\/$/u, '');
@@ -149,8 +150,9 @@ test('Nginx reserves service prefixes before static fallback and retires opencla
   assert.match(nginxCache, /location\s+\/\s*\{[\s\S]*?try_files\s+\$uri\s+\$uri\/\s+\$uri\/index\.html\s+=404\s*;/u);
 });
 
-test('Nginx retains compression, cache, and security contracts from GOD-6', () => {
-  assert.match(nginxDefault, /include\s+\/etc\/nginx\/conf\.d\/_includes\/compression\.inc\s*;/u);
+test('Nginx keeps host-owned compression singular and retains cache and security contracts', () => {
+  assert.match(nginxHost, /gzip\s+on\s*;/u);
+  assert.doesNotMatch(nginxDefault, /\bgzip(?:_|\s)|compression\.inc/u);
   assert.match(nginxDefault, /include\s+\/etc\/nginx\/conf\.d\/_includes\/security-headers\.inc\s*;/u);
   assert.equal((nginxDefault.match(/ssl_buffer_size\s+4k\s*;/gu) ?? []).length, 1);
   assert.match(nginxDefault, /root\s+\/usr\/share\/nginx\/html\/site-current\s*;/u);

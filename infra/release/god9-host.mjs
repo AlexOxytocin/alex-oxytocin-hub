@@ -234,7 +234,7 @@ function validateManifestRecord(record, index) {
 export async function validateReleaseBundle(directory, releaseId) {
   directory = resolve(directory);
   await assertDirectory(directory, 'Release');
-  for (const pathname of ['site/ru/index.html', 'site/en/index.html', 'site/404.html', 'nginx/default.conf', 'nginx/_includes/compression.inc', 'nginx/_includes/security-headers.inc', 'nginx/_includes/site-cache.inc', 'ops/god9-host.mjs', 'ops/god9-cleanup.mjs', 'release-manifest.json', 'SHA256SUMS']) {
+  for (const pathname of ['site/ru/index.html', 'site/en/index.html', 'site/404.html', 'nginx/default.conf', 'nginx/_includes/security-headers.inc', 'nginx/_includes/site-cache.inc', 'ops/god9-host.mjs', 'ops/god9-cleanup.mjs', 'release-manifest.json', 'SHA256SUMS']) {
     await assertRegularFile(resolve(directory, pathname), `Release payload ${pathname}`);
   }
 

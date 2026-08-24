@@ -84,7 +84,7 @@ npm run release:prepare -- --release-id "$GOD9_RELEASE_ID" --confirm "$GOD9_RELE
 release/<release-id>/
 ├── site/
 ├── nginx/default.conf
-├── nginx/_includes/{compression,security-headers,site-cache}.inc
+├── nginx/_includes/{security-headers,site-cache}.inc
 ├── ops/{god9-host,god9-cleanup}.mjs
 ├── release-manifest.json
 └── SHA256SUMS
@@ -263,7 +263,8 @@ node ops/god9-host.mjs cutover \
    mounts, shared backend network, Flatscanner ownership и `nginx -t`.
 2. Ещё не используемый production config symlink атомарно получает target
    `sites/releases/<id>/site`.
-3. Три exact `.inc` устанавливаются во вложенный `_includes`.
+3. Два exact `.inc` (`security-headers` и `site-cache`) устанавливаются во
+   вложенный `_includes`; gzip остаётся единолично в host `nginx.conf`.
 4. `default.conf` атомарно заменяется config с root
    `/usr/share/nginx/html/site-current`.
 5. Выполняются `nginx -t` и reload. При любой ошибке script восстанавливает

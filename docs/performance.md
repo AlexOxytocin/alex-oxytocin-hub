@@ -37,9 +37,16 @@ CI lab metrics catch deterministic regressions. The Playwright INP probe clicks 
 - HTML routes: `Cache-Control: no-cache` and no SPA soft-404 fallback;
 - stable favicon/download names: bounded one-day cache.
 
-`infra/nginx/conf.d/_includes/compression.inc` enables gzip for compressible text formats. The nested `.inc` file matches the real production `conf.d` bind while staying outside the top-level `*.conf` load glob. Brotli is an optional host-level enhancement because it depends on an Nginx module; enabling an unavailable directive would make `nginx -t` fail.
+Compression is owned once by the host-level Nginx `http` context. Release
+`conf.d` files deliberately contain no `gzip*` directives: redeclaring them in
+the same context makes `nginx -t` fail. The Docker HTTP contract mounts the
+production-compatible host baseline, so this ownership boundary is exercised in
+CI. Brotli remains an optional host-level enhancement because it depends on an
+Nginx module; enabling an unavailable directive would make `nginx -t` fail.
 
-The includes are versioned now and are activated with the unified server block during GOD-9 cutover. Existing production routing remains unchanged in this story.
+The cache and security includes are versioned and activated with the unified
+server block during GOD-9 cutover. Existing production routing remains unchanged
+in this story.
 
 ## Automated gates
 

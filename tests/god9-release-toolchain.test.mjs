@@ -43,7 +43,6 @@ async function createReleaseFixture(releaseId) {
     ['site/en/index.html', '<h1>EN</h1>'],
     ['site/404.html', '<h1>404</h1>'],
     ['nginx/default.conf', 'server {}'],
-    ['nginx/_includes/compression.inc', 'gzip on;'],
     ['nginx/_includes/security-headers.inc', 'add_header X-Test true;'],
     ['nginx/_includes/site-cache.inc', 'expires -1;'],
     ['ops/god9-host.mjs', 'export {};'],
@@ -389,13 +388,13 @@ test('rollback fails closed as soon as legacy-link retirement starts', async () 
 test('Nginx contract matches the real production mounts and preserves protected services', async () => {
   const nginx = await readFile(resolve(root, 'infra/nginx/default.conf'), 'utf8');
   assert.match(nginx, /root \/usr\/share\/nginx\/html\/site-current;/u);
-  assert.match(nginx, /include \/etc\/nginx\/conf\.d\/_includes\/compression\.inc;/u);
+  assert.doesNotMatch(nginx, /\bgzip(?:_|\s)|compression\.inc/u);
   assert.match(nginx, /include \/etc\/nginx\/conf\.d\/_includes\/site-cache\.inc;/u);
   assert.doesNotMatch(nginx, /\/etc\/nginx\/includes|sites\/current\/site/u);
   assert.match(nginx, /location \^~ \/api\/\s*\{[\s\S]*proxy_pass http:\/\/backend:8000\//u);
   assert.match(nginx, /location \^~ \/voidplayer\/\s*\{[\s\S]*alias \/usr\/share\/nginx\/html\/voidplayer\//u);
 
-  const includes = ['compression.inc', 'security-headers.inc', 'site-cache.inc'];
+  const includes = ['security-headers.inc', 'site-cache.inc'];
   for (const name of includes) assert.equal(await exists(`infra/nginx/conf.d/_includes/${name}`), true);
   for (const retired of ['compression.conf', 'security-headers.conf', 'site-cache.conf']) {
     assert.equal(await exists(`infra/nginx/includes/${retired}`), false);
