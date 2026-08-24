@@ -37,11 +37,15 @@ const NGINX_CONTAINER = 'nginx';
 const BACKEND_CONTAINER = 'backend';
 const FLATSCANNER_CONFIG = '/opt/app/nginx/conf.d/flatscanner.godmodetools.com.conf';
 const releaseIdPattern = /^\d{8}-\d{6}-[a-z0-9][a-z0-9._-]{2,63}$/u;
-const mutatingActions = new Set(['staging-up', 'staging-down', 'prepare-cutover', 'test-rollback', 'cutover', 'rollback']);
+const mutatingActions = new Set(['finalize-upload', 'staging-up', 'staging-down', 'prepare-cutover', 'test-rollback', 'cutover', 'rollback']);
 
-function command(program, args, { quiet = false } = {}) {
-  const result = spawnSync(program, args, { encoding: 'utf8', stdio: quiet ? 'pipe' : 'inherit' });
-  if (result.status !== 0) throw new Error(`${program} ${args.join(' ')} failed with ${result.status}`);
+function command(program, args, { quiet = false, input } = {}) {
+  const piped = quiet || input !== undefined;
+  const result = spawnSync(program, args, { encoding: 'utf8', input, stdio: piped ? 'pipe' : 'inherit' });
+  if (result.status !== 0) {
+    const detail = (result.stderr ?? '').trim();
+    throw new Error(`${program} ${args.join(' ')} failed with ${result.status}${detail ? `: ${detail}` : ''}`);
+  }
   return (result.stdout ?? '').trim();
 }
 
@@ -50,7 +54,7 @@ export function parseArgs(argv) {
   for (let index = argv[0] ? 1 : 0; index < argv.length; index += 1) {
     const arg = argv[index];
     if (arg === '--apply') options.apply = true;
-    else if (['--release-id', '--confirm', '--expected-nginx-sha', '--staging-evidence'].includes(arg)) options[arg.slice(2).replaceAll('-', '')] = argv[++index];
+    else if (['--release-id', '--confirm', '--upload-name', '--expected-nginx-sha', '--staging-evidence'].includes(arg)) options[arg.slice(2).replaceAll('-', '')] = argv[++index];
     else if (arg === '--port') options.port = Number(argv[++index]);
     else if (arg === '--http-port') options.httpPort = Number(argv[++index]);
     else throw new Error(`Unknown argument: ${arg}`);
@@ -71,6 +75,17 @@ function validateReleaseId(value) {
 function releaseDirectory(releaseId) {
   const directory = resolve(RELEASES_ROOT, validateReleaseId(releaseId));
   if (relative(RELEASES_ROOT, directory).includes(sep)) throw new Error('Release path must be one direct child of releases root');
+  return directory;
+}
+
+function uploadDirectory(releaseId, value) {
+  const prefix = `.upload-${validateReleaseId(releaseId)}-`;
+  const token = typeof value === 'string' && value.startsWith(prefix) ? value.slice(prefix.length) : '';
+  if (!/^[a-z0-9][a-z0-9-]{5,63}$/u.test(token) || basename(value) !== value) {
+    throw new Error(`--upload-name must be one direct temporary release child named ${prefix}<token>`);
+  }
+  const directory = resolve(RELEASES_ROOT, value);
+  if (relative(RELEASES_ROOT, directory) !== value) throw new Error('Temporary upload path escaped releases root');
   return directory;
 }
 
@@ -113,6 +128,85 @@ async function walk(directory, base = directory) {
     else throw new Error(`Unsupported release payload entry: ${relativePath}`);
   }
   return paths.sort();
+}
+
+function modeText(mode) {
+  return (mode & 0o777).toString(8).padStart(4, '0');
+}
+
+async function releasePermissionEntries(directory) {
+  directory = resolve(directory);
+  const entries = [];
+  async function visit(pathname) {
+    const stat = await lstat(pathname);
+    const relativePath = relative(directory, pathname).split(sep).join('/') || '.';
+    if (relativePath !== '.') validatePayloadPath(relativePath, 'Release permission path');
+    if (stat.isSymbolicLink()) throw new Error(`Release permission path is a symlink: ${relativePath}`);
+    if (stat.isDirectory()) {
+      entries.push({ kind: 'directory', path: relativePath, pathname, mode: stat.mode & 0o777 });
+      for (const entry of await readdir(pathname, { withFileTypes: true })) await visit(resolve(pathname, entry.name));
+    } else if (stat.isFile()) {
+      entries.push({ kind: 'file', path: relativePath, pathname, mode: stat.mode & 0o777 });
+    } else {
+      throw new Error(`Unsupported release permission entry: ${relativePath}`);
+    }
+  }
+  await visit(directory);
+  return entries.sort((left, right) => left.path.localeCompare(right.path));
+}
+
+export function assertUnprivilegedNginxModes(entries) {
+  for (const entry of entries) {
+    if (!entry || !['directory', 'file'].includes(entry.kind) || typeof entry.path !== 'string' || !Number.isInteger(entry.mode)) {
+      throw new Error('Release permission entry has an invalid structure');
+    }
+    if (entry.kind === 'directory' && (entry.mode & 0o001) === 0) {
+      throw new Error(`Release directory is not traversable by an unprivileged Nginx worker: ${entry.path} mode ${modeText(entry.mode)}`);
+    }
+    if (entry.kind === 'file' && (entry.mode & 0o004) === 0) {
+      throw new Error(`Release file is not readable by an unprivileged Nginx worker: ${entry.path} mode ${modeText(entry.mode)}`);
+    }
+    if ((entry.mode & 0o022) !== 0) {
+      throw new Error(`Release permission entry is group/other writable: ${entry.path} mode ${modeText(entry.mode)}`);
+    }
+  }
+  return entries;
+}
+
+export async function validateReleasePermissions(directory) {
+  return assertUnprivilegedNginxModes(await releasePermissionEntries(directory));
+}
+
+export async function normalizeReleasePermissions(directory) {
+  const entries = await releasePermissionEntries(directory);
+  for (const entry of entries.filter(({ kind }) => kind === 'file')) await chmod(entry.pathname, 0o644);
+  const directories = entries
+    .filter(({ kind, path }) => kind === 'directory' && path !== '.')
+    .sort((left, right) => right.path.split('/').length - left.path.split('/').length);
+  for (const entry of directories) await chmod(entry.pathname, 0o755);
+  await chmod(resolve(directory), 0o755);
+  return validateReleasePermissions(directory);
+}
+
+export function assertNginxWorkerAccess(directory, entries, runCommand = command) {
+  directory = resolve(directory);
+  const child = relative(RELEASES_ROOT, directory);
+  if (!/^[A-Za-z0-9._-]+$/u.test(child) || child.includes(sep)) throw new Error('Nginx worker probe target must be one direct release child');
+  const containerRoot = `/usr/share/nginx/html/sites/releases/${child}`;
+  const input = entries.map((entry) => {
+    const pathname = entry.path === '.' ? containerRoot : `${containerRoot}/${entry.path}`;
+    return `${entry.kind === 'directory' ? 'd' : 'f'} ${pathname}`;
+  }).join('\n');
+  const probe = [
+    "while IFS=' ' read -r kind pathname; do",
+    '  case "$kind" in',
+    "    d) test -x \"$pathname\" || { printf 'Nginx worker cannot traverse directory: %s\\n' \"$pathname\" >&2; exit 1; } ;;",
+    "    f) test -r \"$pathname\" || { printf 'Nginx worker cannot read file: %s\\n' \"$pathname\" >&2; exit 1; } ;;",
+    "    *) printf 'Unknown permission probe entry: %s\\n' \"$kind\" >&2; exit 1 ;;",
+    '  esac',
+    'done',
+  ].join('\n');
+  runCommand('docker', ['exec', '-i', '--user', 'nginx', NGINX_CONTAINER, 'sh', '-ceu', probe], { quiet: true, input: `${input}\n` });
 }
 
 function validatePayloadPath(value, label) {
@@ -184,6 +278,13 @@ async function validateRelease(releaseId) {
   return validateReleaseBundle(directory, releaseId);
 }
 
+async function validateCandidateRelease(releaseId) {
+  const release = await validateRelease(releaseId);
+  const permissionEntries = await validateReleasePermissions(release.directory);
+  assertNginxWorkerAccess(release.directory, permissionEntries);
+  return { ...release, permissionEntries };
+}
+
 function dockerInspect(container) {
   return JSON.parse(command('docker', ['inspect', container], { quiet: true }))[0];
 }
@@ -204,7 +305,7 @@ function sharedBackendNetwork() {
   return shared[0];
 }
 
-async function preflight() {
+async function preflight(options = {}) {
   await Promise.all([
     assertDirectory(FRONTEND_ROOT, 'Frontend root'),
     assertDirectory(RELEASES_ROOT, 'Releases root'),
@@ -237,6 +338,7 @@ async function preflight() {
     if (!activeStat.isSymbolicLink()) throw new Error('site-current exists but is not a symlink');
     active = await readlink(ACTIVE_LINK);
   }
+  const candidate = options.releaseid ? await validateCandidateRelease(validateReleaseId(options.releaseid)) : null;
   const summary = {
     result: 'pass',
     currentLegacyTarget: await realpath(LEGACY_LINK),
@@ -245,9 +347,18 @@ async function preflight() {
     nginxImage: nginx.Config.Image,
     backendNetwork: sharedBackendNetwork(),
     protectedPaths: [VOIDPLAYER_ROOT, FLATSCANNER_CONFIG],
+    ...(candidate ? {
+      candidateRelease: {
+        releaseId: candidate.manifest.releaseId,
+        manifestSha256: candidate.manifestSha256,
+        directories: candidate.permissionEntries.filter(({ kind }) => kind === 'directory').length,
+        regularFiles: candidate.permissionEntries.filter(({ kind }) => kind === 'file').length,
+        nginxWorkerAccess: 'pass',
+      },
+    } : {}),
   };
   console.log(JSON.stringify(summary, null, 2));
-  return summary;
+  return { ...summary, candidate };
 }
 
 function requireConfirmation(options) {
@@ -262,8 +373,8 @@ function stagingContainer(releaseId) {
 
 async function stagingUp(options) {
   const releaseId = requireConfirmation(options);
-  await preflight();
-  const release = await validateRelease(releaseId);
+  const { candidate: release } = await preflight(options);
+  if (!release) throw new Error('Candidate release validation did not run before staging');
   const name = stagingContainer(releaseId);
   if (dockerContainerExists(name)) throw new Error(`Staging container already exists: ${name}`);
   const nginx = dockerInspect(NGINX_CONTAINER);
@@ -296,6 +407,30 @@ async function stagingUp(options) {
   }, null, 2));
 }
 
+async function finalizeUpload(options) {
+  const releaseId = requireConfirmation(options);
+  const temporary = uploadDirectory(releaseId, options.uploadname);
+  const final = releaseDirectory(releaseId);
+  await preflight();
+  if (!(await entryExists(temporary))) throw new Error(`Temporary upload does not exist: ${temporary}`);
+  if (await realpath(temporary) !== temporary) throw new Error('Temporary upload must be an exact real directory');
+  if (await entryExists(final)) throw new Error(`Refusing to overwrite existing final release: ${final}`);
+
+  await validateReleaseBundle(temporary, releaseId);
+  const permissionEntries = await normalizeReleasePermissions(temporary);
+  const release = await validateReleaseBundle(temporary, releaseId);
+  assertNginxWorkerAccess(temporary, permissionEntries);
+  if (await entryExists(final)) throw new Error(`Final release appeared during upload validation: ${final}`);
+  await rename(temporary, final);
+  console.log(JSON.stringify({
+    result: 'pass',
+    releaseId,
+    finalizedRelease: final,
+    manifestSha256: release.manifestSha256,
+    permissionContract: { directories: '0755', regularFiles: '0644', nginxWorkerAccess: 'pass' },
+  }, null, 2));
+}
+
 async function stagingDown(options) {
   const releaseId = requireConfirmation(options);
   command('docker', ['rm', '-f', stagingContainer(releaseId)], { quiet: true });
@@ -322,8 +457,8 @@ export function hasCompleteTransportEvidence(http) {
 
 async function prepareCutover(options) {
   const releaseId = requireConfirmation(options);
-  const release = await validateRelease(releaseId);
-  await preflight();
+  const { candidate: release } = await preflight(options);
+  if (!release) throw new Error('Candidate release validation did not run before cutover preparation');
   if (!/^[a-f0-9]{64}$/u.test(options.expectednginxsha ?? '')) throw new Error('--expected-nginx-sha is required');
   if (await sha256(NGINX_DEFAULT) !== options.expectednginxsha) throw new Error('Nginx config changed since the reviewed preflight');
   if (!options.stagingevidence) throw new Error('--staging-evidence is required');
@@ -528,12 +663,12 @@ async function restoreState(state) {
 
 async function cutover(options) {
   const releaseId = requireConfirmation(options);
-  const release = await validateRelease(releaseId);
+  const { candidate: release } = await preflight(options);
+  if (!release) throw new Error('Candidate release validation did not run before cutover');
   const state = await loadState(releaseId);
   await assertRollbackOpen(state.directory);
   const rollbackTest = await readJsonRegular(resolve(state.directory, 'rollback-tested.json'), 'Rollback test marker');
   if (rollbackTest.result !== 'pass' || rollbackTest.releaseId !== releaseId || rollbackTest.previousDefaultSha256 !== state.metadata.previousDefaultSha256) throw new Error('Rollback was not tested against this rollback packet');
-  await preflight();
   if (await sha256(NGINX_DEFAULT) !== state.metadata.previousDefaultSha256) throw new Error('Nginx config changed after rollback packet creation');
   if (await realpath(LEGACY_LINK) !== state.metadata.previousLegacyTarget) throw new Error('Legacy rollback symlink changed after rollback packet creation');
   if (release.manifestSha256 !== state.metadata.releaseManifestSha256) throw new Error('Release changed after staging acceptance');
@@ -571,6 +706,7 @@ export async function main(argv = process.argv.slice(2)) {
   const options = parseArgs(argv);
   const actions = {
     preflight,
+    'finalize-upload': finalizeUpload,
     'staging-up': stagingUp,
     'staging-down': stagingDown,
     'prepare-cutover': prepareCutover,

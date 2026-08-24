@@ -1,13 +1,23 @@
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
-import { access, mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
+import { access, chmod, lstat, mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { dirname, resolve } from 'node:path';
 import test from 'node:test';
 
 import { inspectSite, isContained, main as prepareRelease, validateReleaseId } from '../scripts/prepare-god9-release.mjs';
 import { expectedHttpContract, parseArgs as parseVerificationArgs } from '../scripts/verify-god9-release.mjs';
-import { assertRollbackOpen, hasCompleteTransportEvidence, main as hostOperation, parseArgs as parseHostArgs, validateReleaseBundle } from '../infra/release/god9-host.mjs';
+import {
+  assertNginxWorkerAccess,
+  assertRollbackOpen,
+  assertUnprivilegedNginxModes,
+  hasCompleteTransportEvidence,
+  main as hostOperation,
+  normalizeReleasePermissions,
+  parseArgs as parseHostArgs,
+  validateReleaseBundle,
+  validateReleasePermissions,
+} from '../infra/release/god9-host.mjs';
 import { assertActiveReleaseIdentity, exactReleasePath } from '../infra/release/god9-cleanup.mjs';
 
 const root = resolve(import.meta.dirname, '..');
@@ -142,6 +152,74 @@ test('release validation binds SHA256SUMS to manifest hashes, sizes, and safe re
   }
 });
 
+test('permission contract rejects the Windows scp 0700-directory and 0644-file case', () => {
+  const scpModes = [
+    { kind: 'directory', path: '.', mode: 0o700 },
+    { kind: 'file', path: 'site/ru/index.html', mode: 0o644 },
+  ];
+  assert.throws(
+    () => assertUnprivilegedNginxModes(scpModes),
+    /directory is not traversable by an unprivileged Nginx worker: \. mode 0700/u,
+  );
+  assert.doesNotThrow(() => assertUnprivilegedNginxModes([
+    { kind: 'directory', path: '.', mode: 0o755 },
+    { kind: 'file', path: 'site/ru/index.html', mode: 0o644 },
+  ]));
+  assert.throws(
+    () => assertUnprivilegedNginxModes([{ kind: 'file', path: 'site/ru/index.html', mode: 0o600 }]),
+    /file is not readable by an unprivileged Nginx worker/u,
+  );
+  assert.throws(
+    () => assertUnprivilegedNginxModes([{ kind: 'directory', path: '.', mode: 0o777 }]),
+    /group\/other writable/u,
+  );
+
+  const releaseId = '20990101-000006-finalize-contract';
+  assert.throws(
+    () => parseHostArgs(['finalize-upload', '--release-id', releaseId, '--confirm', releaseId, '--upload-name', `.upload-${releaseId}-transfer-01`]),
+    /requires --apply/u,
+  );
+  const options = parseHostArgs(['finalize-upload', '--apply', '--release-id', releaseId, '--confirm', releaseId, '--upload-name', `.upload-${releaseId}-transfer-01`]);
+  assert.equal(options.uploadname, `.upload-${releaseId}-transfer-01`);
+});
+
+test('filesystem permission normalization repairs an actual 0700 release root on POSIX', { skip: process.platform === 'win32' }, async () => {
+  const directory = await mkdtemp(resolve(tmpdir(), 'god9-release-permissions-'));
+  try {
+    const file = resolve(directory, 'index.html');
+    await writeFile(file, '<h1>release</h1>', { mode: 0o644 });
+    await chmod(directory, 0o700);
+    await chmod(file, 0o644);
+    assert.equal((await lstat(directory)).mode & 0o777, 0o700);
+    assert.equal((await lstat(file)).mode & 0o777, 0o644);
+    await assert.rejects(validateReleasePermissions(directory), /mode 0700/u);
+    await normalizeReleasePermissions(directory);
+    assert.equal((await lstat(directory)).mode & 0o777, 0o755);
+    assert.equal((await lstat(file)).mode & 0o777, 0o644);
+    await assert.doesNotReject(validateReleasePermissions(directory));
+  } finally {
+    await rm(directory, { recursive: true, force: true });
+  }
+});
+
+test('effective access probe executes as the Nginx worker against every release entry', () => {
+  let invocation;
+  const directory = '/opt/app/frontend/sites/releases/20990101-000006-permission-probe';
+  assertNginxWorkerAccess(directory, [
+    { kind: 'directory', path: '.', mode: 0o755 },
+    { kind: 'directory', path: 'site/ru', mode: 0o755 },
+    { kind: 'file', path: 'site/ru/index.html', mode: 0o644 },
+  ], (program, args, options) => { invocation = { program, args, options }; });
+
+  assert.equal(invocation.program, 'docker');
+  assert.deepEqual(invocation.args.slice(0, 5), ['exec', '-i', '--user', 'nginx', 'nginx']);
+  assert.deepEqual(invocation.args.slice(5, 7), ['sh', '-ceu']);
+  assert.match(invocation.args[7], /test -x/u);
+  assert.match(invocation.args[7], /test -r/u);
+  assert.match(invocation.options.input, /^d \/usr\/share\/nginx\/html\/sites\/releases\/20990101-000006-permission-probe$/mu);
+  assert.match(invocation.options.input, /^f \/usr\/share\/nginx\/html\/sites\/releases\/20990101-000006-permission-probe\/site\/ru\/index\.html$/mu);
+});
+
 test('host mutations require explicit apply before touching server state', async () => {
   await assert.rejects(
     hostOperation(['cutover', '--release-id', '20260824-123456-abcdef123456']),
@@ -151,14 +229,33 @@ test('host mutations require explicit apply before touching server state', async
     hostOperation(['rollback', '--apply', '--release-id', '20260824-123456-abcdef123456', '--confirm', 'wrong']),
     /--confirm exactly matching/u,
   );
+  await assert.rejects(
+    hostOperation(['finalize-upload', '--apply', '--release-id', '20260824-123456-abcdef123456', '--confirm', '20260824-123456-abcdef123456', '--upload-name', '../../release']),
+    /--upload-name must be one direct temporary release child/u,
+  );
   const source = await readFile(resolve(root, 'infra/release/god9-host.mjs'), 'utf8');
   assert.match(source, /httpsStatus\(port, pathname\)/u);
   for (const probe of ["['/', 200]", "['/api/health', 200]", "['/voidplayer/', 200]", "['/openclaw-voice/rollback-probe', 410]"]) {
     assert.ok(source.includes(probe), probe);
   }
   const cutover = source.slice(source.indexOf('async function cutover('), source.indexOf('async function rollback('));
-  assert.ok(cutover.indexOf('await preflight();') > 0, 'cutover must run a fresh preflight');
-  assert.ok(cutover.indexOf('await preflight();') < cutover.indexOf('await atomicSymlink('), 'preflight must precede the first cutover mutation');
+  assert.ok(cutover.indexOf('await preflight(options)') > 0, 'cutover must run a fresh candidate preflight');
+  assert.ok(cutover.indexOf('await preflight(options)') < cutover.indexOf('await atomicSymlink('), 'candidate preflight must precede the first cutover mutation');
+
+  const staging = source.slice(source.indexOf('async function stagingUp('), source.indexOf('async function finalizeUpload('));
+  assert.ok(staging.indexOf('await preflight(options)') > 0, 'staging must run the candidate permission preflight');
+  assert.ok(staging.indexOf('await preflight(options)') < staging.indexOf("'run', '-d'"), 'candidate preflight must precede staging container creation');
+
+  const finalize = source.slice(source.indexOf('async function finalizeUpload('), source.indexOf('async function stagingDown('));
+  const firstIntegrityCheck = finalize.indexOf('await validateReleaseBundle(temporary, releaseId)');
+  const normalize = finalize.indexOf('await normalizeReleasePermissions(temporary)');
+  const secondIntegrityCheck = finalize.indexOf('await validateReleaseBundle(temporary, releaseId)', firstIntegrityCheck + 1);
+  const workerProbe = finalize.indexOf('assertNginxWorkerAccess(temporary, permissionEntries)');
+  const finalRename = finalize.indexOf('await rename(temporary, final)');
+  assert.ok(firstIntegrityCheck > 0 && firstIntegrityCheck < normalize, 'temp bundle integrity must pass before permission normalization');
+  assert.ok(normalize < secondIntegrityCheck && secondIntegrityCheck < workerProbe, 'checksums must be revalidated before the worker probe');
+  assert.ok(workerProbe < finalRename, 'worker access must pass before atomic finalization');
+  assert.equal(finalize.indexOf('chmod(', finalRename), -1, 'finalized releases must never be chmodded');
 });
 
 test('staging and verification keep TLS and plain HTTP ports separate', () => {
@@ -239,6 +336,17 @@ test('Nginx contract matches the real production mounts and preserves protected 
   for (const retired of ['compression.conf', 'security-headers.conf', 'site-cache.conf']) {
     assert.equal(await exists(`infra/nginx/includes/${retired}`), false);
   }
+});
+
+test('runbook finalizes a normalized temporary upload before candidate preflight', async () => {
+  const runbook = await readFile(resolve(root, 'docs/runbooks/GOD-9-staging-cutover-cleanup.md'), 'utf8');
+  const upload = runbook.slice(runbook.indexOf('Transport permissions считаются недоверенными'), runbook.indexOf('## 4. Isolated staging gate'));
+  assert.match(upload, /GOD9_UPLOAD_NAME="\.upload-\$GOD9_RELEASE_ID-transfer-01"/u);
+  assert.match(upload, /scp -r "release\/\$GOD9_RELEASE_ID" "\$GOD9_HOST:\$GOD9_UPLOAD_PATH"/u);
+  assert.doesNotMatch(upload, /scp[^\n]+GOD9_FINAL_PATH/u);
+  assert.ok(upload.indexOf('finalize-upload') < upload.indexOf('preflight --release-id'), 'finalization must precede candidate preflight');
+  assert.match(upload, /exact `0755` всем directories и `0644` всем/u);
+  assert.match(upload, /Не запускать `chmod` после finalization/u);
 });
 
 test('legacy frontend stacks and their build entrypoints are absent', async () => {
