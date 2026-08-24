@@ -96,8 +96,8 @@ test('every built asset reference exists and optimized assets are fingerprinted'
 
 test('Nginx policy keeps fingerprints immutable and HTML revalidated', async () => {
   const [cache, compression] = await Promise.all([
-    readFile(path.join(root, 'infra/nginx/includes/site-cache.conf'), 'utf8'),
-    readFile(path.join(root, 'infra/nginx/includes/compression.conf'), 'utf8'),
+    readFile(path.join(root, 'infra/nginx/conf.d/_includes/site-cache.inc'), 'utf8'),
+    readFile(path.join(root, 'infra/nginx/conf.d/_includes/compression.inc'), 'utf8'),
   ]);
   assert.match(cache, /location \^~ \/_astro\//);
   assert.match(cache, /max-age=31536000, immutable/);

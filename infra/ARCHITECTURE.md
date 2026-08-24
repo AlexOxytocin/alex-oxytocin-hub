@@ -2,7 +2,7 @@
 
 > Публичный production ещё работает на прежнем release. `infra/nginx/default.conf` теперь является проверяемой target-конфигурацией для staging и не должен устанавливаться до GOD-9 cutover. Текущий baseline сохранён в `docs/site-baseline.md`.
 
-## Public routing
+## Legacy production baseline (pre-cutover)
 
 | Host | Purpose | Deployment directory |
 | --- | --- | --- |
@@ -12,7 +12,9 @@
 | `allo.godmodetools.com` | “Алло, Нейросеточная?” community | `allo/` |
 | `app.godmodetools.com` | Reserved for the community web app | not deployed |
 
-Nginx serves versioned releases from `/opt/app/frontend/sites/current`.
+Production still serves the legacy multi-site release through
+`/opt/app/frontend/sites/current`. That symlink is preserved as the first
+GOD-9 rollback boundary through the observation window.
 The target root host continues to proxy `/api/` to the existing backend and
 serves `/voidplayer/` from the legacy frontend directory. Its
 `/openclaw-voice/` namespace terminates with `410`; removal of the underlying
@@ -29,8 +31,15 @@ The repository root now owns a single static Astro build. It emits locale-first
 RU/EN pages, crawl artifacts and migrated downloads from one route/contract
 registry. Nginx owns `/`, exact legacy-host redirects, `/api/`, `/voidplayer/`,
 the voice tombstone and terminal 404 behavior. The target static root is
-`/usr/share/nginx/html/sites/current/site`; it is not active in production until
-the staged cutover in GOD-9.
+`/usr/share/nginx/html/site-current`. The host pointer is
+`/opt/app/frontend/site-current -> sites/releases/<release-id>/site`; it is not
+active in production until the reviewed GOD-9 staging/cutover change window.
+
+Production mounts only `/opt/app/nginx/conf.d` into the Nginx container and its
+top-level glob loads `*.conf`. Reusable target fragments therefore live under
+`infra/nginx/conf.d/_includes/*.inc` and are installed to the matching nested
+container path. The separate Flatscanner vhost remains outside the GOD-9
+allowlist.
 
 ## Future domain migration
 

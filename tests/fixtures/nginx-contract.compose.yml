@@ -13,7 +13,7 @@ services:
       - "${GOD7_HTTPS_PORT}:443"
     volumes:
       - ../../infra/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
-      - ../../infra/nginx/includes:/etc/nginx/includes:ro
-      - ../../dist:/usr/share/nginx/html/sites/current/site:ro
+      - ../../infra/nginx/conf.d/_includes:/etc/nginx/conf.d/_includes:ro
+      - ../../dist:/usr/share/nginx/html/site-current:ro
       - ./voidplayer:/usr/share/nginx/html/voidplayer:ro
       - ./tls:/etc/nginx/ssl:ro

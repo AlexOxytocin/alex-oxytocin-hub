@@ -2,7 +2,7 @@
 
 ## Результат
 
-Корень репозитория является единственным frontend-проектом и собирает статический public shell командой `npm run build`. Активный frontend не зависит от React, Vinext или Cloudflare Worker runtime. Старый production пока не меняется и остаётся rollback-границей до cutover в GOD-9.
+Корень репозитория является единственным frontend-проектом и собирает статический public shell командой `npm run build`. Активный frontend не зависит от React, Vinext или Cloudflare Worker runtime. После clean build и GOD-9 release inspection старые repository stacks удалены; старый production release на server не менялся и остаётся rollback-границей до cutover.
 
 Astro 5 был первоначальной целевой версией плана. Во время реализации `npm audit` обнаружил известные XSS/SSRF advisories в этой major-линии, поэтому foundation переведён на Astro 7.2.4 до первого деплоя. После обновления и исправления транзитивных зависимостей `npm audit` возвращает 0 vulnerabilities.
 
@@ -52,7 +52,8 @@ npm run build
 npm test
 npm run test:plan
 npm run test:backend-security
+npm run release:plan
 npm audit
 ```
 
-`npm test` проверяет десять опубликованных страниц, отсутствие `/es/`, canonical/hreflang, навигацию, отсутствие клиентского JavaScript в shell, реальный 404, единственный package/lockfile и выпуск CV downloads.
+`npm test` проверяет опубликованные страницы, отсутствие `/es/`, canonical/hreflang, навигацию, отсутствие клиентского JavaScript в shell, реальный 404, единственный package/lockfile, выпуск CV downloads и GOD-9 release/Nginx safety contracts.
