@@ -1,0 +1,24 @@
+---
+interface Props {
+  kind?: 'css' | 'svg' | 'canvas' | 'webgl';
+  aspectRatio?: string;
+  class?: string;
+}
+
+const { kind = 'css', aspectRatio = '4 / 5', class: className } = Astro.props;
+---
+
+<div
+  class:list={['motion-boundary', className]}
+  data-motion-root
+  data-motion-kind={kind}
+  data-motion-state="static"
+  style={`--motion-aspect-ratio: ${aspectRatio}`}
+>
+  <div class="motion-boundary__fallback" aria-hidden="true">
+    <slot name="fallback" />
+  </div>
+  <div class="motion-boundary__stage" aria-hidden="true">
+    <slot />
+  </div>
+</div>

@@ -1,0 +1,13 @@
+---
+import MotionBoundary from './MotionBoundary.astro';
+---
+
+<MotionBoundary kind="canvas" class="ambient-field">
+  <canvas data-ambient-canvas aria-hidden="true"></canvas>
+</MotionBoundary>
+
+<script>
+  import { startAmbientFields } from '../../scripts/ambient-field';
+
+  startAmbientFields();
+</script>

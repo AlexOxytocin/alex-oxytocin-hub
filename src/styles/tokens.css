@@ -1,0 +1,76 @@
+:root {
+  color-scheme: dark;
+
+  --color-ink-1000: #07090d;
+  --color-ink-950: #0b0e13;
+  --color-ink-900: #11161e;
+  --color-ink-850: #171d27;
+  --color-ink-800: #202837;
+  --color-ink-700: #313d50;
+  --color-cloud-500: #8f9aac;
+  --color-cloud-300: #c4cad4;
+  --color-cloud-100: #f2f5f8;
+  --color-signal-500: #89a9ff;
+  --color-signal-300: #b7c9ff;
+  --color-warm-500: #ffb478;
+  --color-focus: #ffd166;
+  --color-danger: #ff7d8a;
+
+  --surface-page: var(--color-ink-1000);
+  --surface-primary: var(--color-ink-950);
+  --surface-secondary: var(--color-ink-900);
+  --surface-elevated: var(--color-ink-850);
+  --surface-interactive: var(--color-ink-800);
+  --text-primary: var(--color-cloud-100);
+  --text-secondary: var(--color-cloud-300);
+  --text-muted: var(--color-cloud-500);
+  --text-accent: var(--color-signal-300);
+  --border-subtle: color-mix(in srgb, var(--color-ink-700) 72%, transparent);
+  --border-strong: var(--color-ink-700);
+
+  --font-sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-md: 1rem;
+  --font-size-lg: clamp(1.0625rem, 1.5vw, 1.25rem);
+  --font-size-xl: clamp(1.375rem, 2.6vw, 2rem);
+  --font-size-2xl: clamp(2.75rem, 7vw, 6.5rem);
+  --line-tight: 0.98;
+  --line-heading: 1.12;
+  --line-body: 1.65;
+  --tracking-tight: -0.055em;
+  --tracking-label: 0.12em;
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+  --space-24: 6rem;
+  --space-32: 8rem;
+
+  --radius-sm: 0.5rem;
+  --radius-md: 0.875rem;
+  --radius-lg: 1.25rem;
+  --radius-pill: 999px;
+  --shadow-raised: 0 1.5rem 5rem rgb(0 0 0 / 0.3);
+  --container-wide: 72rem;
+  --container-reading: 46rem;
+  --gutter: clamp(1rem, 4vw, 2rem);
+  --header-height: 5rem;
+  --touch-target: 2.75rem;
+
+  --motion-instant: 80ms;
+  --motion-fast: 180ms;
+  --motion-normal: 350ms;
+  --motion-slow: 600ms;
+  --ease-smooth: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-sharp: cubic-bezier(0.4, 0, 0.2, 1);
+}
