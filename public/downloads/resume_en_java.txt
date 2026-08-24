@@ -1,0 +1,66 @@
+Aleksei Grishchenko
+Senior Java Architect · Team Lead · Enterprise Systems
+
+Java architect with 7+ years in enterprise software and 20+ years of overall engineering experience. I specialize in legacy modernization, monolith decomposition, event-driven architecture, and technical team leadership.
+
+────────────────────────────────────────────────────────────
+CONTACTS
+────────────────────────────────────────────────────────────
+Telegram
+LinkedIn
+GitHub
+Personal site
+
+────────────────────────────────────────────────────────────
+KEY ACHIEVEMENTS
+────────────────────────────────────────────────────────────
+• 7+ years in Java development, technical leadership, and architecture
+• Led engineering teams of more than 10 people
+• Evolved a back-office platform serving 15,000+ stores
+• Helped decompose a ~12,000-class legacy monolith
+• Reduced an enterprise build pipeline from 1.5 hours to 30 minutes
+• Modernized a core stack from Java 7 to Java 17 and Spring Boot
+
+────────────────────────────────────────────────────────────
+SKILLS
+────────────────────────────────────────────────────────────
+Java & Spring: Java 17, Spring Boot, Spring Cloud, Spring Framework, Maven, Gradle
+Architecture: Microservices, Modular Monolith, Event-driven Architecture, SAGA, Orchestration, REST
+Data & integrations: Kafka, PostgreSQL, Swagger, RMI
+Engineering practices: CI/CD, Code Review, Observability, Grafana, Technical Leadership
+Additional stack: Python, Go, Docker, Kubernetes, Linux, AWS
+
+────────────────────────────────────────────────────────────
+EXPERIENCE
+────────────────────────────────────────────────────────────
+X5 — Senior Java Developer / Team Lead / Architect
+Jan 2018 — Apr 2023
+  • Evolved a back-office platform serving 15,000+ stores
+  • Helped decompose a ~12,000-class legacy monolith into a modular monolith and later microservices
+  • Reduced build time from 1.5 hours to 30 minutes and modernized the stack from Java 7 to Java 17 / Spring Boot
+  • Designed a Spring Cloud store-update delivery system
+  • Moved integrations from RMI to REST and Kafka; developed SAGA and orchestration-based workflows
+  • Led engineering teams of more than 10 people
+  Java 17, Spring Boot, Spring Cloud, Kafka, SAGA, REST, Maven, Gradle, Swagger, Grafana, PostgreSQL
+
+Wellink Company — Java Developer
+2016 — 2018
+  • Developed the backend of an SLA monitoring and reporting platform
+  • Worked with PostgreSQL, Linux deployments, integrations, and network monitoring
+  Java, PostgreSQL, Linux, REST, Monitoring
+
+ImportFrut — System Administrator / Infrastructure Engineer
+Nov 2008 — Sep 2016
+  • Owned the company's server, network, and virtualization infrastructure
+  Linux, Windows Server, Proxmox, VMware, Networking
+
+BSKB Vostok — Software Engineer (C++ / DSP)
+Sep 2004 — Nov 2008
+  • Developed embedded C++ systems and contributed to digital signal processing R&D
+  C++, DSP, MATLAB, Embedded Systems
+
+────────────────────────────────────────────────────────────
+LANGUAGES
+────────────────────────────────────────────────────────────
+Russian: Native
+English: Professional working proficiency

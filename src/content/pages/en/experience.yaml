@@ -1,8 +1,14 @@
 locale: en
 route: experience
 status: published
-title: Experience
-description: Alex Grishchenko's professional experience, capabilities, and verifiable outcomes.
+title: Aleksei Grishchenko — experience and résumé
+description: Experience in AI systems architecture, automation, enterprise Java, and technical leadership; résumé in PDF, DOCX, and TXT.
 eyebrow: Experience
-heading: Architecture, automation, and engineering leadership
-intro: This section now uses the shared content architecture. CV profiles and the complete material will be assembled here in GOD-5.
+heading: From embedded and enterprise Java to applied AI systems
+intro: For more than 20 years I have designed and evolved systems that need to work beyond a demo and hold up in daily production.
+profileLabel: Profile
+achievementsLabel: Selected outcomes
+skillsLabel: Capabilities
+historyLabel: Work history
+downloadsLabel: Download résumé
+downloadNote: PDF, DOCX, and TXT are generated from the same source as this page.

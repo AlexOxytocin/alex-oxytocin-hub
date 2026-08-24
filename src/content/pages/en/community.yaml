@@ -1,8 +1,23 @@
 locale: en
 route: community
 status: published
-title: Community
-description: The Allo, Neural? community and the projects growing around it.
-eyebrow: Community
-heading: People, practice, and mutual support
-intro: This section now has a stable locale-first URL. Community content and platform connections move in GOD-5.
+title: Hello, Neural Network? — a community of AI practitioners
+description: A non-commercial community for people who try AI tools, build projects, and share tested practice.
+eyebrow: Community · tools · practice
+heading: Hello, Neural Network?
+intro: "A place for people who do more than watch AI from the sidelines: we try things, build, break, fix, and share what actually worked."
+primaryCta: Join us on Telegram
+manifestoLabel: Why we're here
+manifestoQuote: Technology belongs inside life, not in place of it.
+manifestoBody: So we talk about more than models and prompts. We discuss work, products, automation, mistakes, money, moving countries, and all the real things these tools are meant to help with.
+principles:
+  - { title: "Explore practical work", description: "Agent tools, vibe coding, real workflows, and honest breakdowns without recycled marketing slides." }
+  - { title: "Build projects", description: "Bots, automations, and our own tools. An idea becomes interesting when other people can actually try it." }
+  - { title: "Help each other", description: "Our bot supports tasks, progress, and reputation — the technology serves the community, not the other way around." }
+ecosystemLabel: The ecosystem is growing
+ecosystemHeading: From conversations to working things.
+products:
+  - { title: "Community Bot", description: "Tasks, internal economy, and participant progress", status: "live" }
+  - { title: "Web App", description: "A shared home for community tools", status: "in development" }
+joinText: If doing the work sounds more interesting than looking knowledgeable, we'll probably get along.
+joinCta: Hello, I'm in ↗

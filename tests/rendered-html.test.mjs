@@ -28,13 +28,13 @@ test('build emits every published locale-first route and no unpublished Spanish 
 test('English and Russian pages carry localized copy and canonical metadata', async () => {
   const [ru, en] = await Promise.all([readBuiltPage('ru'), readBuiltPage('en')]);
 
-  assert.match(ru, /<title>Главная — God Mode Tools<\/title>/);
-  assert.match(ru, /Один быстрый сайт вместо набора поддоменов/);
+  assert.match(ru, /<title>Алексей Грищенко — архитектура, разработка и ИИ — God Mode Tools<\/title>/);
+  assert.match(ru, /Разрабатываю ИИ-инструменты и автоматизирую процессы/);
   assert.match(ru, /rel="canonical" href="https:\/\/godmodetools\.com\/ru\/"/);
   assert.match(ru, /hreflang="en" href="https:\/\/godmodetools\.com\/en\/"/);
 
-  assert.match(en, /<title>Home — God Mode Tools<\/title>/);
-  assert.match(en, /One fast site instead of scattered subdomains/);
+  assert.match(en, /<title>Aleksei Grishchenko — architecture, engineering, and AI — God Mode Tools<\/title>/);
+  assert.match(en, /I build AI tools and automate processes/);
   assert.match(en, /rel="canonical" href="https:\/\/godmodetools\.com\/en\/"/);
   assert.match(en, /hreflang="ru" href="https:\/\/godmodetools\.com\/ru\/"/);
 });

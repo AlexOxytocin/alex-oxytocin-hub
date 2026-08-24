@@ -1,0 +1,59 @@
+---
+import type { PageContent } from '../../content/pages';
+import { routePath, type Locale } from '../../config/routes';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import AmbientField from '../motion/AmbientField.astro';
+import Container from '../ui/Container.astro';
+import Section from '../ui/Section.astro';
+
+interface Props {
+  locale: Locale;
+  content: Extract<PageContent, { route: 'home' }>;
+}
+
+const { locale, content } = Astro.props;
+---
+
+<BaseLayout locale={locale} route="home" title={content.title} description={content.description}>
+  <Section class="page-hero home-hero">
+    <Container>
+      <div class="page-hero__grid">
+        <div class="page-hero__content">
+          <p class="eyebrow">{content.eyebrow}</p>
+          <h1>{content.heading}</h1>
+          <p class="intro">{content.intro}</p>
+          <ul class="feature-list">
+            {content.heroPoints.map((point) => <li>{point}</li>)}
+          </ul>
+        </div>
+        <div class="portrait-stage">
+          <AmbientField />
+          <img src={content.portrait.src} alt={content.portrait.alt} width={content.portrait.width} height={content.portrait.height} fetchpriority="high" />
+        </div>
+      </div>
+    </Container>
+  </Section>
+
+  <Section class="section-compact" aria-label={locale === 'en' ? 'Experience in numbers' : 'Опыт в цифрах'}>
+    <Container>
+      <dl class="evidence-grid">
+        {content.evidence.map((item) => <div><dt>{item.value}</dt><dd>{item.label}</dd></div>)}
+      </dl>
+    </Container>
+  </Section>
+
+  <Section>
+    <Container>
+      <div class="direction-grid">
+        {content.directions.map((direction) => (
+          <a class="content-card direction-card" href={routePath(locale, direction.route)}>
+            <span class="eyebrow">{direction.label}</span>
+            <h2>{direction.title}</h2>
+            <p>{direction.description}</p>
+            <span class="card-link" aria-hidden="true">↗</span>
+          </a>
+        ))}
+      </div>
+    </Container>
+  </Section>
+</BaseLayout>

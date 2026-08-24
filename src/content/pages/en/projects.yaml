@@ -1,8 +1,12 @@
 locale: en
 route: projects
 status: published
-title: Projects
-description: Products, client systems, and engineering tools built by Alex Grishchenko.
+title: Projects and engineering cases
+description: Client AI systems, original products, engineering platforms, and personal operations automation.
 eyebrow: Projects
-heading: Systems, products, and practical tools
-intro: The existing showcase already passes schema validation; its complete presentation moves here in GOD-5.
+heading: Systems that make it into a working process
+intro: Client systems, original products, and engineering tools. Completed cases are separated from work in progress, and metrics appear only where they can be substantiated.
+approachesLabel: How I design systems
+selectedLabel: All projects
+detailsLabel: Open case
+backLabel: Back to all projects

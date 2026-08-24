@@ -1,0 +1,29 @@
+---
+import type { PageContent } from '../../content/pages';
+import type { Locale } from '../../config/routes';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Container from '../ui/Container.astro';
+import Section from '../ui/Section.astro';
+
+interface Props { locale: Locale; content: Extract<PageContent, { route: 'community' }>; }
+const { locale, content } = Astro.props;
+const telegramCommunity = 'https://t.me/+uzk17Dr2rREyNmRi';
+---
+
+<BaseLayout locale={locale} route="community" title={content.title} description={content.description}>
+  <Section class="page-hero community-hero">
+    <Container><div class="community-hero__panel"><p class="eyebrow">{content.eyebrow}</p><h1>{content.heading}</h1><p class="intro">{content.intro}</p><a class="button" href={telegramCommunity}>{content.primaryCta} ↗</a></div></Container>
+  </Section>
+  <Section class="section-compact">
+    <Container><blockquote class="manifesto"><p class="eyebrow">{content.manifestoLabel}</p><strong>{content.manifestoQuote}</strong><p>{content.manifestoBody}</p></blockquote></Container>
+  </Section>
+  <Section>
+    <Container><div class="principle-grid">{content.principles.map((principle, index) => <article class="content-card"><span class="card-number">{String(index + 1).padStart(2, '0')}</span><h2>{principle.title}</h2><p>{principle.description}</p></article>)}</div></Container>
+  </Section>
+  <Section class="section-tinted">
+    <Container><header class="section-heading"><p class="eyebrow">{content.ecosystemLabel}</p><h2>{content.ecosystemHeading}</h2></header><div class="product-list">{content.products.map((product) => <article><div><h3>{product.title}</h3><p>{product.description}</p></div><span>{product.status}</span></article>)}</div></Container>
+  </Section>
+  <Section>
+    <Container><div class="join-panel"><h2>{content.joinText}</h2><a class="button" href={telegramCommunity}>{content.joinCta}</a></div></Container>
+  </Section>
+</BaseLayout>

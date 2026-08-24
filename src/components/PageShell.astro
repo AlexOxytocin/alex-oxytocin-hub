@@ -1,12 +1,12 @@
 ---
 import type { PageContent } from '../content/pages';
 import type { Locale, RouteId } from '../config/routes';
-import { interfaceCopy } from '../i18n/ui';
-import BaseLayout from '../layouts/BaseLayout.astro';
-import AmbientField from './motion/AmbientField.astro';
-import Container from './ui/Container.astro';
-import Section from './ui/Section.astro';
-import Stack from './ui/Stack.astro';
+import { getCv, getProfiles, getProjects } from '../content/site-content';
+import CommunityPage from './pages/CommunityPage.astro';
+import ExperiencePage from './pages/ExperiencePage.astro';
+import HomePage from './pages/HomePage.astro';
+import LearningPage from './pages/LearningPage.astro';
+import ProjectsPage from './pages/ProjectsPage.astro';
 
 interface Props {
   locale: Locale;
@@ -15,23 +15,13 @@ interface Props {
 }
 
 const { locale, route, content } = Astro.props;
-const copy = interfaceCopy(locale);
+const cv = route === 'experience' ? await getCv(locale) : undefined;
+const profiles = route === 'experience' ? await getProfiles() : undefined;
+const projects = route === 'projects' ? await getProjects(locale) : undefined;
 ---
 
-<BaseLayout locale={locale} route={route} title={content.title} description={content.description}>
-  <Section class="page-hero">
-    <Container>
-      <div class="page-hero__grid">
-        <article class="page-hero__content" data-route={route}>
-          <Stack gap="lg">
-            <p class="eyebrow">{content.eyebrow}</p>
-            <h1>{content.heading}</h1>
-            <p class="intro">{content.intro}</p>
-            <p class="foundation-note">{copy.foundation}</p>
-          </Stack>
-        </article>
-        {route === 'home' && <AmbientField />}
-      </div>
-    </Container>
-  </Section>
-</BaseLayout>
+{content.route === 'home' && <HomePage locale={locale} content={content} />}
+{content.route === 'experience' && cv && profiles && <ExperiencePage locale={locale} content={content} cv={cv} profiles={profiles} />}
+{content.route === 'projects' && projects && <ProjectsPage locale={locale} content={content} collection={projects} />}
+{content.route === 'learning' && <LearningPage locale={locale} content={content} />}
+{content.route === 'community' && <CommunityPage locale={locale} content={content} />}

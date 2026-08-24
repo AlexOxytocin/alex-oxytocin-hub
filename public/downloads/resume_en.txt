@@ -1,0 +1,75 @@
+Aleksei Grishchenko
+AI Solutions Architect · Agentic Systems · Automation
+
+AI Solutions Architect and Automation Lead with 20+ years in IT, spanning embedded C++, infrastructure, enterprise Java, and applied LLM systems. I take AI solutions from process audit to production: agents, MCP integrations, RAG, evaluation, human-in-the-loop controls, and CI/CD.
+
+────────────────────────────────────────────────────────────
+CONTACTS
+────────────────────────────────────────────────────────────
+Telegram
+LinkedIn
+GitHub
+Personal site
+
+────────────────────────────────────────────────────────────
+KEY ACHIEVEMENTS
+────────────────────────────────────────────────────────────
+• 20+ years in IT across embedded development, infrastructure, enterprise backend, and applied AI
+• 10+ years in Java development, technical leadership, and architecture; led teams of 20+ engineers
+• Evolved a back-office platform serving 15,000+ stores and helped decompose a ~12,000-class legacy monolith
+• Reduced an enterprise build pipeline from 1.5 hours to 30 minutes
+• 2+ years designing and deploying LLM agents, including code review and acceptance workflows integrated with CI/CD
+• Founder and mentor of the non-commercial AI practitioner community “Hello, Neural Network?”
+
+────────────────────────────────────────────────────────────
+SKILLS
+────────────────────────────────────────────────────────────
+AI & agentic systems: LLM orchestration, LangGraph, LangChain, CrewAI, OpenAI Agents SDK, Anthropic SDK, RAG, Evals, Human-in-the-loop
+Integrations & automation: MCP, FastMCP, Tool Calling, n8n, Temporal, Airflow, REST APIs
+Enterprise engineering: Java 17, Spring Boot, Spring Cloud, Microservices, Kafka, SAGA, PostgreSQL
+Engineering stack: Python, Java, Go, Docker, Kubernetes, AWS, CI/CD, Linux
+AI tooling: Codex, Claude Code, OpenAI, Anthropic, OpenRouter, LangSmith, Langfuse
+
+────────────────────────────────────────────────────────────
+EXPERIENCE
+────────────────────────────────────────────────────────────
+Self-Employed — AI Solutions Architect / Automation Engineer
+2023 — Present
+  • Design and deploy production agentic systems for enterprise clients, from process audit and prototype through rollout and team handoff
+  • Build agent pipelines, RAG systems, and custom MCP servers over internal APIs and enterprise data
+  • Integrate evaluations, LLM-as-judge, human-in-the-loop controls, observability, and CI/CD
+  • Work with clients across LATAM, Israel, and international SaaS projects; selected case details are protected by NDA
+  LangGraph, LangChain, OpenAI Agents SDK, Anthropic SDK, FastMCP, RAG, LangSmith, Langfuse, n8n, Temporal, Java, Python, Go, Docker, Kubernetes, AWS
+
+X5 — Senior Java Developer / Team Lead / Architect
+Jan 2018 — Apr 2023
+  • Evolved a back-office platform serving 15,000+ stores
+  • Helped decompose a ~12,000-class legacy monolith into a modular monolith and later microservices
+  • Reduced build time from 1.5 hours to 30 minutes and modernized the stack from Java 7 to Java 17 / Spring Boot
+  • Designed a Spring Cloud store-update delivery system and developed event-driven flows with Kafka, SAGA, and orchestration
+  • Led engineering teams of more than 20 people
+  Java 17, Spring Boot, Spring Cloud, Kafka, SAGA, REST, Maven, Gradle, Swagger, Grafana, PostgreSQL
+
+Wellink Company — Java Developer
+2016 — 2018
+  • Developed the backend of an SLA monitoring and reporting platform
+  • Worked with PostgreSQL data processing, Linux deployments, integrations, and network monitoring
+  Java, PostgreSQL, Linux, REST, Monitoring
+
+ImportFrut — System Administrator / Infrastructure Engineer
+Nov 2008 — Sep 2016
+  • Owned local networking, physical and virtual servers, storage, and POS infrastructure
+  • Maintained reliability, backups, and security across Linux and Windows systems
+  Linux, Windows Server, Proxmox, VMware, iptables, NFS, mdadm, LVM
+
+BSKB Vostok — Software Engineer (C++ / DSP)
+Sep 2004 — Nov 2008
+  • Developed embedded C++ systems for microcontrollers and contributed to digital signal processing R&D
+  • Worked in an engineering R&D team of more than 20 people
+  C++, DSP, MATLAB, ViewLab, Embedded Systems
+
+────────────────────────────────────────────────────────────
+LANGUAGES
+────────────────────────────────────────────────────────────
+Russian: Native
+English: Professional working proficiency

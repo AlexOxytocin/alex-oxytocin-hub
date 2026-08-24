@@ -1,0 +1,75 @@
+Алексей Грищенко
+AI Solutions Architect · Agentic Systems · Automation
+
+AI Solutions Architect и Automation Lead с 20+ годами в IT — от embedded C++, инфраструктуры и enterprise Java до прикладных LLM-систем. Проектирую решения, которые проходят путь от аудита процесса до продакшена: агенты, MCP-интеграции, RAG, оценка качества, human-in-the-loop и CI/CD.
+
+────────────────────────────────────────────────────────────
+КОНТАКТЫ
+────────────────────────────────────────────────────────────
+Telegram
+LinkedIn
+GitHub
+Личный сайт
+
+────────────────────────────────────────────────────────────
+КЛЮЧЕВЫЕ ДОСТИЖЕНИЯ
+────────────────────────────────────────────────────────────
+• Более 20 лет работаю в IT: embedded-разработка, инфраструктура, enterprise backend и прикладной ИИ
+• Более 10 лет работаю с Java-разработкой, техлидством и архитектурой; руководил командами из 20+ инженеров
+• Развивал back-office платформу для 15 000+ магазинов и руководил декомпозицией монолита из ~12 000 классов
+• Сократил время сборки enterprise-системы с 1,5 часа до 30 минут
+• Более 2 лет проектирую и внедряю LLM-агентов, включая code review и acceptance-процессы в CI/CD
+• Основал и развиваю некоммерческое сообщество AI-практиков «Алло, Нейросеточная?»
+
+────────────────────────────────────────────────────────────
+НАВЫКИ
+────────────────────────────────────────────────────────────
+AI и агентные системы: LLM orchestration, LangGraph, LangChain, CrewAI, OpenAI Agents SDK, Anthropic SDK, RAG, Evals, Human-in-the-loop
+Интеграции и автоматизация: MCP, FastMCP, Tool Calling, n8n, Temporal, Airflow, REST API
+Enterprise-разработка: Java 17, Spring Boot, Spring Cloud, микросервисы, Kafka, SAGA, PostgreSQL
+Инженерный стек: Python, Java, Go, Docker, Kubernetes, AWS, CI/CD, Linux
+AI-инструменты: Codex, Claude Code, OpenAI, Anthropic, OpenRouter, LangSmith, Langfuse
+
+────────────────────────────────────────────────────────────
+ОПЫТ
+────────────────────────────────────────────────────────────
+Self-Employed — AI Solutions Architect / Automation Engineer
+2023 — настоящее время
+  • Проектирую и внедряю агентные системы для enterprise-клиентов — от аудита процесса и прототипа до продакшена и передачи команде
+  • Собираю agent pipelines, RAG-системы и MCP-серверы поверх внутренних API и корпоративных данных
+  • Встраиваю измерение качества, LLM-as-judge, human-in-the-loop, наблюдаемость и CI/CD
+  • Работаю с клиентами в LATAM, Израиле и международных SaaS-проектах; детали части кейсов закрыты NDA
+  LangGraph, LangChain, OpenAI Agents SDK, Anthropic SDK, FastMCP, RAG, LangSmith, Langfuse, n8n, Temporal, Java, Python, Go, Docker, Kubernetes, AWS
+
+X5 — Senior Java Developer / Team Lead / Architect
+Янв 2018 — Апр 2023
+  • Развивал back-office платформу, обслуживавшую 15 000+ магазинов
+  • Руководил декомпозицией legacy-монолита из ~12 000 классов: модульный монолит, затем микросервисы
+  • Сократил время сборки с 1,5 часа до 30 минут и модернизировал стек с Java 7 до Java 17 / Spring Boot
+  • Спроектировал систему доставки обновлений в магазины на Spring Cloud и развивал event-driven архитектуру на Kafka, SAGA и orchestration
+  • Руководил инженерными командами численностью более 20 человек
+  Java 17, Spring Boot, Spring Cloud, Kafka, SAGA, REST, Maven, Gradle, Swagger, Grafana, PostgreSQL
+
+Wellink Company — Java Developer
+2016 — 2018
+  • Разрабатывал backend SLA-платформы мониторинга и отчётности
+  • Работал с обработкой данных в PostgreSQL, Linux-деплоями, интеграциями и сетевым мониторингом
+  Java, PostgreSQL, Linux, REST, Monitoring
+
+ImportFrut — System Administrator / Infrastructure Engineer
+Ноя 2008 — Сен 2016
+  • Отвечал за локальную сеть, физические и виртуальные серверы, хранилища и POS-инфраструктуру
+  • Обеспечивал надёжность, резервное копирование и безопасность Linux/Windows-систем
+  Linux, Windows Server, Proxmox, VMware, iptables, NFS, mdadm, LVM
+
+БСКБ «Восток» — Software Engineer (C++ / DSP)
+Сен 2004 — Ноя 2008
+  • Разрабатывал embedded-системы на C++ для микроконтроллеров и участвовал в исследованиях цифровой обработки сигналов
+  • Работал в инженерной R&D-команде численностью более 20 человек
+  C++, DSP, MATLAB, ViewLab, Embedded Systems
+
+────────────────────────────────────────────────────────────
+ЯЗЫКИ
+────────────────────────────────────────────────────────────
+Русский: Родной
+Английский: Рабочий

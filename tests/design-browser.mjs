@@ -43,7 +43,7 @@ try {
   const mobilePage = await mobile.newPage();
   await mobilePage.goto(`${baseUrl}/en/`, { waitUntil: 'networkidle' });
   assert.equal(await mobilePage.locator('[data-motion-root]').getAttribute('data-motion-state'), 'static');
-  const communityBounds = await mobilePage.getByRole('link', { name: 'Community' }).boundingBox();
+  const communityBounds = await mobilePage.getByRole('link', { name: 'Community', exact: true }).boundingBox();
   assert.ok(communityBounds && communityBounds.x + communityBounds.width <= 390, 'mobile navigation must not clip Community');
   await mobilePage.screenshot({ path: '.qa-god4-mobile.png', fullPage: true });
   const missingResponse = await mobilePage.goto(`${baseUrl}/not-a-page/`);

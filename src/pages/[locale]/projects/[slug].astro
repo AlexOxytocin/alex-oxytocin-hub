@@ -1,0 +1,24 @@
+---
+import type { GetStaticPaths } from 'astro';
+import ProjectDetailPage from '../../../components/pages/ProjectDetailPage.astro';
+import { getPublishedPage } from '../../../content/pages';
+import { getProjects, type ProjectContent } from '../../../content/site-content';
+import { publishedLocales, type Locale } from '../../../config/routes';
+
+export const getStaticPaths = (async () => {
+  const paths = await Promise.all(publishedLocales.map(async ({ id }) => {
+    const collection = await getProjects(id);
+    const content = await getPublishedPage(id, 'projects');
+    return collection.projects.map((project) => ({ params: { locale: id, slug: project.slug }, props: { locale: id, content, project } }));
+  }));
+  return paths.flat();
+}) satisfies GetStaticPaths;
+
+const { locale, content, project } = Astro.props as {
+  locale: Locale;
+  content: Extract<Awaited<ReturnType<typeof getPublishedPage>>, { route: 'projects' }>;
+  project: ProjectContent;
+};
+---
+
+<ProjectDetailPage locale={locale} content={content} project={project} />

@@ -2,11 +2,12 @@
 interface Props {
   class?: string;
   labelledby?: string;
+  id?: string;
 }
 
-const { class: className, labelledby } = Astro.props;
+const { class: className, labelledby, id } = Astro.props;
 ---
 
-<section class:list={['section', className]} aria-labelledby={labelledby}>
+<section id={id} class:list={['section', className]} aria-labelledby={labelledby}>
   <slot />
 </section>

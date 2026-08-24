@@ -1,8 +1,26 @@
 locale: en
 route: home
 status: published
-title: Home
-description: One place for Alex Grishchenko's experience, projects, learning, and community work.
-eyebrow: God Mode Tools
-heading: One fast site instead of scattered subdomains
-intro: This foundation unifies routes, content contracts, and the shared visual layer. The complete home content moves in GOD-5.
+title: Aleksei Grishchenko — architecture, engineering, and AI
+description: I design AI tools, automate processes, teach practical AI, and grow a professional community.
+eyebrow: Aleksei Grishchenko · architecture · engineering · AI
+heading: I build AI tools and automate processes.
+intro: I look at the whole problem — from the initial idea and architecture to implementation and daily use.
+heroPoints:
+  - I teach people to use AI on their own real tasks, so they can keep applying it independently.
+  - I grow “Hello, Neural Network?” — a warm, safe professional community for mutual help, joint projects, and online and offline meetings.
+portrait:
+  src: /assets/alexey-grishchenko-hero-original-colors-v6.png
+  alt: Aleksei Grishchenko
+  width: 1954
+  height: 805
+evidence:
+  - { value: "20+", label: "years in IT — from embedded to enterprise and AI" }
+  - { value: "10+", label: "years in Java, technical leadership, and architecture" }
+  - { value: "20+", label: "engineers in teams I led" }
+  - { value: "15,000+", label: "stores ran on systems our teams built" }
+directions:
+  - { route: learning, label: "Learning", title: "Make AI useful", description: "One-to-one learning around your real task — from process analysis to a controlled personal assistant." }
+  - { route: projects, label: "Work", title: "Projects and automation", description: "Client cases, original products, and engineering approaches across RAG, agents, Temporal, and automation." }
+  - { route: experience, label: "Profile", title: "Experience and résumé", description: "Architecture, Java, AI systems, technical leadership, and verifiable outcomes." }
+  - { route: community, label: "Community", title: "Hello, Neural Network?", description: "A community of practitioners where conversations become bots, tools, projects, and mutual support." }

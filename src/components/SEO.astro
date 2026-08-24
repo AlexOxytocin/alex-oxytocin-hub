@@ -8,15 +8,18 @@ interface Props {
   title: string;
   description: string;
   noIndex?: boolean;
+  path?: string | undefined;
+  alternatePaths?: Partial<Record<Locale, string>> | undefined;
 }
 
-const { locale, route, title, description, noIndex = false } = Astro.props;
+const { locale, route, title, description, noIndex = false, path, alternatePaths } = Astro.props;
 const definition = localeDefinition(locale);
-const canonical = route ? new URL(routePath(locale, route), siteConfig.url).href : undefined;
+const canonicalPath = path ?? (route ? routePath(locale, route) : undefined);
+const canonical = canonicalPath ? new URL(canonicalPath, siteConfig.url).href : undefined;
 const alternates = route
   ? publishedLocales.map((alternate) => ({
       locale: alternate,
-      href: new URL(routePath(alternate.id, route), siteConfig.url).href,
+      href: new URL(alternatePaths?.[alternate.id] ?? routePath(alternate.id, route), siteConfig.url).href,
     }))
   : [];
 const fullTitle = `${title} — ${siteConfig.name}`;
@@ -29,7 +32,7 @@ const fullTitle = `${title} — ${siteConfig.name}`;
 {alternates.map(({ locale: alternate, href }) => (
   <link rel="alternate" hreflang={alternate.htmlLang} href={href} />
 ))}
-{route && <link rel="alternate" hreflang="x-default" href={new URL(routePath('ru', route), siteConfig.url).href} />}
+{route && <link rel="alternate" hreflang="x-default" href={new URL(alternatePaths?.ru ?? routePath('ru', route), siteConfig.url).href} />}
 <meta property="og:type" content="website" />
 <meta property="og:title" content={fullTitle} />
 <meta property="og:description" content={description} />

@@ -1,8 +1,55 @@
 locale: en
 route: learning
 status: published
-title: Learning
-description: Practical AI learning built around real tasks and repeatable skills.
-eyebrow: Learning
-heading: Practical AI without the magic show
-intro: The route and SEO contract are shared with the rest of the site. The complete learning content moves in a dedicated stage.
+title: One-to-one practical AI learning
+description: Build a personal AI assistant around a real task and learn to control the process yourself.
+eyebrow: One-to-one AI sessions · online
+heading: AI can do more than answer in a chat. Learn to give it real work.
+intro: Build a personal AI assistant for email, documents, finances, travel, and everyday work. You will configure it around your real task and learn to run it independently.
+heroPoints: [Free 30-minute check-up, No programming required, Everything is built around your task]
+primaryCta: Book a free check-up
+examplesCta: See examples
+comparisonLabel: The next step after chat
+comparisonHeading: An answer is not a completed task
+comparison:
+  - label: Typical scenario
+    title: Ask a chatbot
+    steps: [Copy information into a chat, Get text or advice, Move everything into files by hand, Repeat the same work next time]
+  - label: Working process
+    title: Build an AI assistant
+    steps: [Connect only the materials it needs, Define the sequence and rules, Get a result with sources and checks, Approve important actions and repeat the process]
+examplesLabel: Concrete examples
+examplesHeading: What you can build for yourself
+examplesIntro: These are examples, not a closed menu. We describe the result in plain language and assemble a process that fits you instead of forcing your work into a rigid app.
+scenarioGroups:
+  - label: Email and social media
+    title: Communicate faster — and still sound like yourself
+    items:
+      - { title: "Send an email by voice", description: "Say: “Send Andrey the latest invoice and mention payment is due Friday.” The assistant finds the person and file, prepares the email, and shows it before sending.", benefit: "One voice command from intent to a ready-to-review email" }
+      - { title: "A digital voice from your conversations", description: "With conversations you choose, it maps vocabulary, tone, thought structure, and examples so drafts sound like you rather than a robot's press office.", benefit: "Write messages, posts, and replies faster in your own voice" }
+      - { title: "Patterns in Telegram", description: "It compares themes, conversation rhythms, and activity over time to help you notice recurring periods and triggers. This supports reflection; it is not a diagnosis.", benefit: "See patterns that are hard to notice inside a busy day" }
+  - label: Finances and documents
+    title: Remove manual routine without handing away responsibility
+    items:
+      - { title: "Records, invoices, and declarations", description: "It collects account movements and invoices, maintains simple records, generates documents, and prepares declaration drafts using your rules.", benefit: "Prepare everything for review and filing without rebuilding it by hand each month" }
+      - { title: "Document status and deadlines", description: "It checks an official source on schedule, compares the result with the previous state, and warns you about changes.", benefit: "Do not miss a status change, deadline, or new document" }
+      - { title: "Personal document archive", description: "It sorts files into a clear structure, recognizes their contents, and supports meaning-based searches.", benefit: "Find the right document in a minute instead of excavating Downloads" }
+  - label: Everyday life
+    title: Build personal tools around the way you work
+    items:
+      - { title: "Coach and habit tracker", description: "It keeps a training and habits plan, collects progress, suggests the next step, and estimates food calories from photos with explicit uncertainty.", benefit: "One adaptable assistant instead of ten rigid apps" }
+      - { title: "Complex travel and accommodation search", description: "It searches routes and homes using criteria ordinary filters miss and reviews photos and feedback for evidence, risks, and trade-offs.", benefit: "Get a short list with evidence, risks, and compromises" }
+      - { title: "A personal assistant with memory", description: "It builds permitted long-term context from email, documents, calendars, trackers, and prior conversations — only from sources you choose.", benefit: "Stop explaining your whole working context in every new chat" }
+processLabel: How the learning works
+processHeading: Your task comes first. Tools come second.
+processIntro: You are not buying a closed box. During the sessions you assemble the process yourself, understand its rules, and learn to change it without me.
+process:
+  - { title: "Free check-up", description: "In 30 minutes we review how you already use AI and identify a recurring task that consumes your time." }
+  - { title: "Choose one process", description: "We select repeatable work with a verifiable outcome that can be corrected without major loss." }
+  - { title: "Build it together", description: "We choose suitable tools, connect the required materials, and define limits and manual approval points." }
+  - { title: "Run it yourself", description: "You learn to change instructions and sources, verify results, and recognize where the AI must stop and ask you." }
+contactLabel: Free introductory meeting
+contactHeading: What task are you still doing by hand?
+contactIntro: Send me the word “task” and explain in two or three sentences what you repeatedly search, move, compare, or prepare. In a 30-minute meeting we will identify what AI can handle and the safest place to start.
+contactPoints: [No obligation to buy sessions, A clear next step, Online and one-to-one]
+safetyNote: Do not send confidential files until we have separately agreed on a safe way to work with them.
