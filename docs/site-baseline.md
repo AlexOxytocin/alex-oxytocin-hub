@@ -21,6 +21,8 @@
 
 ## Доказательства текущего состояния
 
+Пятнадцать актуальных viewport-снимков пяти публичных разделов лежат в [`docs/baseline-screenshots/`](baseline-screenshots/README.md): mobile, tablet и desktop для Home, Experience, Projects, Learning и Community. Они сняты с production 2026-08-23 в reduced-motion режиме и фиксируют исходное состояние до миграции.
+
 | Наблюдение | Репозиторное доказательство | Значение для миграции |
 | --- | --- | --- |
 | Пять host обслуживаются отдельными Nginx server blocks | `infra/nginx/default.conf` | Нужна точная matrix, а не redirect всего subdomain на главную |
@@ -81,6 +83,7 @@
 ## Условия закрытия GOD-2
 
 - Inventory покрывает все известные public/legacy/service contracts, формально описывает HTTP и prefix semantics и имеет один окончательный action на source URL.
+- В репозитории сохранены свежие production screenshots ключевых страниц на трёх viewport.
 - Inventory проходит `npm run test:plan`.
 - Приняты политика query string, locale-first target и fate changelog/downloads.
 - Production HTTP baseline и runtime audit OpenClaw Voice зафиксированы отдельно перед исполнением edge/service changes.
