@@ -706,6 +706,21 @@ async function runProductionProbes(expectedRootStatus) {
   return Object.fromEntries(checks);
 }
 
+async function waitForProductionProbes(expectedRootStatus, { timeoutMs = 15_000, intervalMs = 250 } = {}) {
+  const deadline = Date.now() + timeoutMs;
+  let lastError;
+  do {
+    try {
+      return await runProductionProbes(expectedRootStatus);
+    } catch (error) {
+      lastError = error;
+      if (Date.now() >= deadline) break;
+      await new Promise((resolveDelay) => setTimeout(resolveDelay, intervalMs));
+    }
+  } while (Date.now() < deadline);
+  throw new Error(`Production did not reach the expected post-reload state within ${timeoutMs}ms: ${lastError?.message ?? 'unknown probe failure'}`);
+}
+
 async function replaceIncludes(sourceDirectory) {
   const sourceNames = sourceDirectory ? await includeNames(sourceDirectory) : [];
   for (const name of sourceNames) {
@@ -804,7 +819,7 @@ async function cutover(options) {
     await atomicConfig(resolve(release.directory, 'nginx/default.conf'));
     command('docker', ['exec', NGINX_CONTAINER, 'nginx', '-t'], { quiet: true });
     command('docker', ['exec', NGINX_CONTAINER, 'nginx', '-s', 'reload'], { quiet: true });
-    const probes = await runProductionProbes(301);
+    const probes = await waitForProductionProbes(301);
     marker = { schema: 'god9.cutover.v1', releaseId, result: 'pass', cutoverAtUtc: new Date().toISOString(), pendingSha256: await sha256(pendingPath), activeTarget: await realpath(ACTIVE_LINK), legacyRollbackTarget: await realpath(LEGACY_LINK), probes };
     await commitDurableJson(cutoverMarkerPath, commitTemporary, marker);
   } catch (error) {
@@ -854,7 +869,7 @@ async function reconcileCutover(options) {
   if (sameSnapshot(live, expected.candidate)) {
     if (!pending) throw new Error('Candidate state is active without a valid pending journal; manual incident review required');
     command('docker', ['exec', NGINX_CONTAINER, 'nginx', '-t'], { quiet: true });
-    const probes = await runProductionProbes(301);
+    const probes = await waitForProductionProbes(301);
     let marker;
     if (markerExists) {
       marker = await readJsonRegular(markerPath, 'Cutover marker');
@@ -875,7 +890,7 @@ async function reconcileCutover(options) {
     if (markerExists) throw new Error('Committed cutover marker exists while the previous deployment is active; lock retained for manual incident review');
     const aborted = { schema: 'god9.cutover-aborted.v1', releaseId, result: 'previous-state-confirmed', reconciledAtUtc: new Date().toISOString(), pendingPresent: Boolean(pending), pendingError, live };
     await writeDurableJsonExclusive(resolve(state.directory, `cutover-aborted-${Date.now()}.json`), aborted);
-    await runProductionProbes(200);
+    await waitForProductionProbes(200);
     await releaseCutoverLock(releaseId);
     console.log(JSON.stringify({ result: 'pass', resolution: 'previous-state-confirmed', releaseId }, null, 2));
     return;
@@ -921,7 +936,8 @@ async function rollback(options) {
   const releaseId = requireConfirmation(options);
   const state = await loadState(releaseId);
   await restoreState(state);
-  const marker = { schema: 'god9.rollback-result.v1', releaseId, result: 'pass', rolledBackAtUtc: new Date().toISOString(), restoredDefaultSha256: await sha256(NGINX_DEFAULT) };
+  const probes = await waitForProductionProbes(200);
+  const marker = { schema: 'god9.rollback-result.v1', releaseId, result: 'pass', rolledBackAtUtc: new Date().toISOString(), restoredDefaultSha256: await sha256(NGINX_DEFAULT), probes };
   await writeFile(resolve(state.directory, `rollback-${Date.now()}.json`), `${JSON.stringify(marker, null, 2)}\n`, { encoding: 'utf8', flag: 'wx', mode: 0o600 });
   console.log(JSON.stringify(marker, null, 2));
 }

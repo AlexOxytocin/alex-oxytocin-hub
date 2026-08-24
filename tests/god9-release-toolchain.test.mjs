@@ -246,7 +246,7 @@ test('host mutations require explicit apply before touching server state', async
   assert.ok(cutover.indexOf('await entryExists(cutoverMarkerPath)') < cutover.indexOf('await atomicSymlink('), 'an existing immutable cutover marker must fail before the first mutation');
   assert.ok(cutover.indexOf('await acquireCutoverLock(releaseId)') < cutover.indexOf('await writeDurableJsonExclusive(pendingPath'), 'the global cutover lock must precede the pending journal');
   assert.ok(cutover.indexOf('await writeDurableJsonExclusive(pendingPath') < cutover.indexOf('await atomicSymlink('), 'the durable pending journal must precede the first mutation');
-  assert.ok(cutover.indexOf('await runProductionProbes(301)') < cutover.indexOf('await commitDurableJson(cutoverMarkerPath'), 'post-reload probes must pass before committed evidence');
+  assert.ok(cutover.indexOf('await waitForProductionProbes(301)') < cutover.indexOf('await commitDurableJson(cutoverMarkerPath'), 'post-reload readiness probes must pass before committed evidence');
   const mutationCatch = cutover.indexOf('} catch (error)', cutover.indexOf('await atomicSymlink('));
   assert.ok(cutover.indexOf('await commitDurableJson(cutoverMarkerPath') < mutationCatch, 'committed evidence must stay inside the automatic rollback boundary');
   assert.match(cutover, /Live deployment is neither the exact previous nor candidate snapshot/u);
@@ -262,6 +262,12 @@ test('host mutations require explicit apply before touching server state', async
   assert.match(evidenceHelpers, /await syncDirectory\(dirname\(temporary\)\)/u);
   assert.match(source, /await symlink\(releaseId, CUTOVER_LOCK\);\s+await syncDirectory\(STATE_ROOT\)/u);
   assert.match(source, /await unlink\(CUTOVER_LOCK\);\s+await syncDirectory\(STATE_ROOT\)/u);
+  const readiness = source.slice(source.indexOf('async function waitForProductionProbes('), source.indexOf('async function replaceIncludes('));
+  assert.match(readiness, /timeoutMs = 15_000/u);
+  assert.match(readiness, /await new Promise\(\(resolveDelay\) => setTimeout\(resolveDelay, intervalMs\)\)/u);
+  assert.match(readiness, /Production did not reach the expected post-reload state/u);
+  const rollback = source.slice(source.indexOf('async function rollback('), source.indexOf('export async function main('));
+  assert.ok(rollback.indexOf('await restoreState(state)') < rollback.indexOf('await waitForProductionProbes(200)'), 'rollback evidence must wait for the restored workers');
 
   const staging = source.slice(source.indexOf('async function stagingUp('), source.indexOf('async function finalizeUpload('));
   assert.ok(staging.indexOf('await preflight(options)') > 0, 'staging must run the candidate permission preflight');
