@@ -5,9 +5,10 @@ import { interfaceCopy, navigationLabel } from '../i18n/ui';
 interface Props {
   locale: Locale;
   route: RouteId;
+  localePaths?: Partial<Record<Locale, string>> | undefined;
 }
 
-const { locale, route } = Astro.props;
+const { locale, route, localePaths } = Astro.props;
 const copy = interfaceCopy(locale);
 const currentLocale = localeDefinition(locale);
 ---
@@ -33,7 +34,7 @@ const currentLocale = localeDefinition(locale);
   <div class="locale-switcher" aria-label={copy.languages}>
     {publishedLocales.map((alternate) => (
       <a
-        href={routePath(alternate.id, route)}
+        href={localePaths?.[alternate.id] ?? routePath(alternate.id, route)}
         lang={alternate.htmlLang}
         aria-current={alternate.id === currentLocale.id ? 'page' : undefined}
       >

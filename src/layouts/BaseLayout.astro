@@ -12,9 +12,11 @@ interface Props {
   title: string;
   description: string;
   noIndex?: boolean;
+  path?: string;
+  alternatePaths?: Partial<Record<Locale, string>>;
 }
 
-const { locale, route, title, description, noIndex = false } = Astro.props;
+const { locale, route, title, description, noIndex = false, path, alternatePaths } = Astro.props;
 const definition = localeDefinition(locale);
 const copy = interfaceCopy(locale);
 ---
@@ -26,12 +28,12 @@ const copy = interfaceCopy(locale);
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <SEO locale={locale} route={route} title={title} description={description} noIndex={noIndex} />
+    <SEO locale={locale} route={route} title={title} description={description} noIndex={noIndex} path={path} alternatePaths={alternatePaths} />
   </head>
   <body>
     <a class="skip-link" href="#content">{copy.skip}</a>
-    {route && <SiteHeader locale={locale} route={route} />}
-    <main id="content">
+    {route && <SiteHeader locale={locale} route={route} localePaths={alternatePaths} />}
+    <main id="content" data-route={route}>
       <slot />
     </main>
     <SiteFooter locale={locale} />

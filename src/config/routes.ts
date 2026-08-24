@@ -45,6 +45,15 @@ export function routePath(locale: Locale, route: RouteId): string {
   return segment ? `/${locale}/${segment}/` : `/${locale}/`;
 }
 
+export function profilePath(locale: Locale, profileSlug = ''): string {
+  const base = routePath(locale, 'experience');
+  return profileSlug ? `${base}${profileSlug}/` : base;
+}
+
+export function projectPath(locale: Locale, projectSlug: string): string {
+  return `${routePath(locale, 'projects')}${projectSlug}/`;
+}
+
 export function routeIdFromSection(section: string): SectionRouteId | undefined {
   return sectionRouteIds.find((route) => routeSegments[route] === section);
 }
