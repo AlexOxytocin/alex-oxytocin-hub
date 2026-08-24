@@ -1,8 +1,8 @@
 # GOD-8: безопасный демонтаж OpenClaw Voice
 
-- Версия: 1.0
+- Версия: 1.1
 - Инвентаризация: 2026-08-24 04:32–04:39 UTC
-- Состояние: **PRE-TEARDOWN CHECKPOINT — production не изменён**
+- Состояние: **POST-GATE-2 CHECKPOINT — reversible teardown применён и проверен; Gate 3 запрещён**
 
 Этот runbook выводит из эксплуатации только voice-call surface. Он не удаляет shared OpenClaw gateway, Telegram channel, Minimax plugin, `/api/`, `/voidplayer/` или другие сервисы на хосте.
 
@@ -131,6 +131,8 @@ printf 'Rollback packet: %s\n' "$GOD8_BACKUP_DIR"
 Не продолжать, пока `sha256sum --check` не завершится без ошибок и точный path packet не будет записан в change evidence.
 
 ## 5. Gate 2 — reversible teardown
+
+Шаги 5.1–5.3 выполняются в одном change window. При любой ошибке дальнейшие шаги прекращаются и применяется полный точный rollback из раздела 7; shared gateway нельзя оставлять в частично проверенном состоянии.
 
 ### 5.1 Заменить production proxy на точный 410
 
@@ -312,10 +314,10 @@ ufw status numbered | grep '3334/tcp'
 
 ## 9. Текущий checkpoint для hand-off
 
-- Production mutations: **0**.
-- Listener `3334`: всё ещё active и доступен напрямую.
-- UFW `3334/tcp`: всё ещё allowed для IPv4/IPv6.
-- Nginx: всё ещё proxy на `172.18.0.1:3334`; public probes возвращают `404`, не целевой `410`.
-- Voice plugin: всё ещё loaded+enabled.
-- Backup packet: ещё не создавался, потому что это server write после review gate.
-- Следующий разрешаемый шаг после review/follow-up: повторить Gate 0 и создать Gate 1 rollback packet. Никакой cleanup из Gate 3 до отдельного последующего разрешения.
+- Gate 0: PASS `2026-08-24T05:12:40Z`; все четыре discovery hash совпали, shared unit active+enabled, voice/Telegram/Minimax были enabled.
+- Execution contract head: `bf8d0c080896363e7fb32414fcdb68521e4bd6a4`.
+- Gate 1: PASS `2026-08-24T05:13:47Z`; rollback packet `/root/god-8-backups/20260824T051347Z`, manifest PASS, directory mode `0700`, sensitive files mode `0600`. Содержимое packet не покидало production host.
+- Gate 2: PASS `2026-08-24T05:16:36Z`; listener/UFW/proxy counts `0/0/0`, voice disabled, shared unit active+enabled, Telegram/Minimax enabled.
+- Post-change hashes: config `9f6da7d134846c0f67682908e6662f8a332157304b62719bf3d3558abf92e22b`; Nginx `91b71576850ee1f1e60d558a7777137a37f5e44cb9a7c7685a5a3f8545dfc004`; unit и global OpenClaw hashes не изменились.
+- Full verifier: PASS `2026-08-24T05:19:26Z`–`05:19:36Z`; public tombstones `410` без redirects, protected routes `200`, все host-инварианты совпали, Nginx syntax valid.
+- Gate 3 не выполнялся. Credential rotation, удаление voice config/data/local copy/legacy backups и закрытие rollback packet запрещены до нового явного follow-up.

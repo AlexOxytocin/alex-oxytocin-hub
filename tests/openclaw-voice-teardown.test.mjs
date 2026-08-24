@@ -44,7 +44,7 @@ test("target Nginx config returns 410 without retaining the voice upstream", () 
 });
 
 test("runbook protects the shared runtime and avoids broad deletion commands", () => {
-  assert.match(runbook, /PRE-TEARDOWN CHECKPOINT/u);
+  assert.match(runbook, /POST-GATE-2 CHECKPOINT/u);
   assert.match(runbook, /openclaw plugins disable voice-call/u);
   assert.match(runbook, /openclaw plugins enable voice-call/u);
   assert.match(runbook, /shared runtime/iu);
