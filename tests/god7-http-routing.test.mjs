@@ -152,6 +152,7 @@ test('Nginx reserves service prefixes before static fallback and retires opencla
 test('Nginx retains compression, cache, and security contracts from GOD-6', () => {
   assert.match(nginxDefault, /include\s+\/etc\/nginx\/conf\.d\/_includes\/compression\.inc\s*;/u);
   assert.match(nginxDefault, /include\s+\/etc\/nginx\/conf\.d\/_includes\/security-headers\.inc\s*;/u);
+  assert.equal((nginxDefault.match(/ssl_buffer_size\s+4k\s*;/gu) ?? []).length, 1);
   assert.match(nginxDefault, /root\s+\/usr\/share\/nginx\/html\/site-current\s*;/u);
   assert.doesNotMatch(nginxDefault, /\/etc\/nginx\/includes|sites\/current\/site/u);
   assert.match(nginxCache, /location\s+\^~\s+\/_astro\//u);
