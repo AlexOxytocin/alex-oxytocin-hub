@@ -204,6 +204,8 @@ GOD-2 фиксирует проверяемый baseline и точные пра�
 
 Цель — полностью снять сервис с сервера, а не только скрыть ссылку. Старый namespace сохраняется как tombstone `410 Gone`, чтобы поисковики и клиенты не получали главную или неясный `404`.
 
+Исполняемый inventory, rollback packet, review gates и точные проверки зафиксированы в [`docs/runbooks/GOD-8-openclaw-voice-teardown.md`](runbooks/GOD-8-openclaw-voice-teardown.md).
+
 1. Провести read-only инвентаризацию: кто слушает `3334`, тип runtime (Docker/systemd/process/compose), restart policy, volumes/bind mounts, cron, мониторинг, firewall, потребители и access logs. Секреты идентифицировать по ссылкам, но не выводить их значения.
 2. Зафиксировать точные идентификаторы процесса, контейнера, image, unit и файлов. Ничего не удалять по предположению.
 3. Отключить автозапуск и остановить сервис, не удаляя артефакты.
