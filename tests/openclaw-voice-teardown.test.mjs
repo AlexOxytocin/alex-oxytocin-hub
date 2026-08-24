@@ -39,8 +39,8 @@ test("target Nginx config returns 410 without retaining the voice upstream", () 
   assert.match(nginx, /location\s*=\s*\/openclaw-voice\s*\{\s*return\s+410;\s*\}/su);
   assert.match(nginx, /location\s+\^~\s+\/openclaw-voice\/\s*\{\s*return\s+410;\s*\}/su);
   assert.doesNotMatch(nginx, /172\.18\.0\.1:3334|proxy_pass[^;]*openclaw/iu);
-  assert.match(nginx, /location \/api\/ \{\s*proxy_pass http:\/\/backend:8000\//su);
-  assert.match(nginx, /location \/voidplayer\/ \{\s*alias \/usr\/share\/nginx\/html\/voidplayer\//su);
+  assert.match(nginx, /location\s+\^~\s+\/api\/\s*\{\s*proxy_pass http:\/\/backend:8000\//su);
+  assert.match(nginx, /location\s+\^~\s+\/voidplayer\/\s*\{\s*alias \/usr\/share\/nginx\/html\/voidplayer\//su);
 });
 
 test("runbook protects the shared runtime and avoids broad deletion commands", () => {
