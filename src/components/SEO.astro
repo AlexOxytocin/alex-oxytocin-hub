@@ -1,0 +1,41 @@
+---
+import { localeDefinition, publishedLocales, routePath, type Locale, type RouteId } from '../config/routes';
+import { siteConfig } from '../config/site';
+
+interface Props {
+  locale: Locale;
+  route?: RouteId | undefined;
+  title: string;
+  description: string;
+  noIndex?: boolean;
+}
+
+const { locale, route, title, description, noIndex = false } = Astro.props;
+const definition = localeDefinition(locale);
+const canonical = route ? new URL(routePath(locale, route), siteConfig.url).href : undefined;
+const alternates = route
+  ? publishedLocales.map((alternate) => ({
+      locale: alternate,
+      href: new URL(routePath(alternate.id, route), siteConfig.url).href,
+    }))
+  : [];
+const fullTitle = `${title} — ${siteConfig.name}`;
+---
+
+<title>{fullTitle}</title>
+<meta name="description" content={description} />
+{noIndex && <meta name="robots" content="noindex, nofollow" />}
+{canonical && <link rel="canonical" href={canonical} />}
+{alternates.map(({ locale: alternate, href }) => (
+  <link rel="alternate" hreflang={alternate.htmlLang} href={href} />
+))}
+{route && <link rel="alternate" hreflang="x-default" href={new URL(routePath('ru', route), siteConfig.url).href} />}
+<meta property="og:type" content="website" />
+<meta property="og:title" content={fullTitle} />
+<meta property="og:description" content={description} />
+{canonical && <meta property="og:url" content={canonical} />}
+<meta property="og:locale" content={definition.ogLocale} />
+{alternates.filter(({ locale: alternate }) => alternate.id !== locale).map(({ locale: alternate }) => (
+  <meta property="og:locale:alternate" content={alternate.ogLocale} />
+))}
+<meta name="twitter:card" content="summary" />

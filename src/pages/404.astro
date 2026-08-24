@@ -1,0 +1,19 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { routePath } from '../config/routes';
+
+const homeHref = routePath('ru', 'home');
+---
+
+<BaseLayout
+  locale="ru"
+  title="Страница не найдена"
+  description="Запрошенная страница не существует."
+  noIndex
+>
+  <article class="foundation-page">
+    <p class="eyebrow">404</p>
+    <h1>Страница не найдена</h1>
+    <p class="intro">Проверьте адрес или вернитесь на <a href={homeHref}>главную страницу</a>.</p>
+  </article>
+</BaseLayout>

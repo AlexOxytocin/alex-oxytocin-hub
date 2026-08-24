@@ -1,5 +1,7 @@
 # God Mode Tools web ecosystem
 
+> Этот файл фиксирует текущий production до cutover. Целевой Astro foundation и его границы описаны в `docs/astro-foundation.md`.
+
 ## Public routing
 
 | Host | Purpose | Deployment directory |
@@ -19,6 +21,13 @@ The `/api/` implementation is source-controlled in `backend/`. Its public root
 and health responses are fixed status contracts and must never echo environment
 configuration. The current backend has no database behavior, so its production
 container must not receive `DATABASE_URL`.
+
+## Target public frontend
+
+The repository root now owns a single static Astro build. It emits locale-first
+RU/EN pages from one route registry and leaves `/`, legacy-host redirects,
+`/api/`, `/voidplayer/`, and `/openclaw-voice/` status handling to Nginx. This
+target is not active in production until the staged cutover in GOD-9.
 
 ## Future domain migration
 

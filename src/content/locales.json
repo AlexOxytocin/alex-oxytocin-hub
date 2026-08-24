@@ -1,0 +1,26 @@
+[
+  {
+    "id": "ru",
+    "label": "RU",
+    "name": "Русский",
+    "htmlLang": "ru",
+    "ogLocale": "ru_RU",
+    "published": true
+  },
+  {
+    "id": "en",
+    "label": "EN",
+    "name": "English",
+    "htmlLang": "en",
+    "ogLocale": "en_US",
+    "published": true
+  },
+  {
+    "id": "es",
+    "label": "ES",
+    "name": "Español",
+    "htmlLang": "es",
+    "ogLocale": "es_ES",
+    "published": false
+  }
+]

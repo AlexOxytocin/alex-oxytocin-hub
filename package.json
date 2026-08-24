@@ -1,52 +1,41 @@
 {
-  "name": "site-creator-vinext-starter",
-  "version": "0.1.0",
+  "name": "godmodetools-site",
+  "version": "1.0.0",
   "private": true,
   "engines": {
     "node": ">=22.13.0"
   },
   "scripts": {
-    "predev": "node scripts/sync-neural-assets.mjs",
-    "dev": "vinext dev",
-    "prebuild": "node scripts/sync-neural-assets.mjs",
-    "build": "vinext build",
-    "start": "vinext start",
-    "test": "npm run build && node --test tests/rendered-html.test.mjs",
+    "dev": "astro dev",
+    "build": "npm run cv:build && npm run resume:generate && astro check && astro build",
+    "preview": "astro preview",
+    "test": "npm run build && npm run test:foundation",
+    "test:foundation": "node --test tests/rendered-html.test.mjs tests/astro-foundation.test.mjs",
     "test:plan": "node --test tests/url-migration-inventory.test.mjs",
     "test:backend-security": "node --test tests/backend-security.test.mjs",
-    "release": "node scripts/assemble-release.mjs",
-    "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
-    "db:generate": "drizzle-kit generate"
+    "audit": "npm audit --audit-level=high",
+    "lint": "astro check",
+    "cv:build": "node scripts/cv/merge.mjs",
+    "resume:generate": "node scripts/cv/generate-resume.js",
+    "resume:pdf": "node scripts/cv/resume-export-pdf.mjs",
+    "resume:import": "node scripts/cv/resume-import-json.mjs",
+    "resume:linkedin": "node scripts/cv/resume-import-linkedin.mjs",
+    "legacy:ai:build": "node sites/ai/website/scripts/build.mjs"
   },
   "dependencies": {
-    "drizzle-orm": "0.45.2",
-    "react": "19.2.6",
-    "react-dom": "19.2.6"
+    "@astrojs/sitemap": "3.7.3",
+    "ajv": "8.18.0",
+    "ajv-formats": "3.0.1",
+    "astro": "7.2.4",
+    "docx": "9.5.0",
+    "unpdf": "1.4.0",
+    "yaml": "2.9.0"
   },
   "devDependencies": {
-    "@cloudflare/vite-plugin": "1.37.1",
-    "@eslint/js": "9.39.4",
-    "@next/eslint-plugin-next": "16.2.6",
-    "@openai/sites-vite-plugin": "0.1.0",
-    "@tailwindcss/postcss": "4.2.1",
+    "@astrojs/check": "0.9.10",
     "@types/node": "22.19.19",
-    "@types/react": "19.2.14",
-    "@types/react-dom": "19.2.3",
-    "@vitejs/plugin-react": "6.0.2",
-    "@vitejs/plugin-rsc": "0.5.26",
-    "drizzle-kit": "0.31.10",
-    "eslint": "9.39.4",
-    "eslint-plugin-jsx-a11y": "6.10.2",
-    "eslint-plugin-react": "7.37.5",
-    "eslint-plugin-react-hooks": "7.1.1",
-    "globals": "16.4.0",
-    "react-server-dom-webpack": "19.2.6",
-    "tailwindcss": "4.2.1",
-    "typescript": "5.9.3",
-    "typescript-eslint": "8.59.3",
-    "vinext": "1.0.0-beta.2",
-    "vite": "8.0.13",
-    "wrangler": "4.92.0"
+    "playwright": "1.58.2",
+    "typescript": "5.9.3"
   },
   "type": "module"
 }

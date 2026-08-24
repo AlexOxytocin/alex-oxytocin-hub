@@ -34,7 +34,7 @@ if (!SUPPORTED_LANGS.includes(lang)) {
 const root        = process.cwd();
 const yamlOut     = path.join(root, 'src/content/cv', `${lang}.yaml`);
 const jsonOut     = path.join(root, 'public/downloads/json', `cv_${lang}.json`);
-const schemaPath  = path.join(root, 'src/scripts/resume.schema.json');
+const schemaPath  = path.join(root, 'scripts/cv/resume.schema.json');
 
 const PRESENT = { en: 'Present', ru: 'н.в.' };
 

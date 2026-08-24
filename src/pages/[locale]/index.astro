@@ -1,0 +1,17 @@
+---
+import type { GetStaticPaths } from 'astro';
+import PageShell from '../../components/PageShell.astro';
+import { getPublishedPage, type PageContent } from '../../content/pages';
+import { publishedLocales, type Locale } from '../../config/routes';
+
+export const getStaticPaths = (async () => Promise.all(
+  publishedLocales.map(async ({ id }) => ({
+    params: { locale: id },
+    props: { locale: id, content: await getPublishedPage(id, 'home') },
+  })),
+)) satisfies GetStaticPaths;
+
+const { locale, content } = Astro.props as { locale: Locale; content: PageContent };
+---
+
+<PageShell locale={locale} route="home" content={content} />

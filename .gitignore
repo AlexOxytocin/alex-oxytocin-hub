@@ -40,6 +40,9 @@ yarn-error.log*
 /dist/
 **/dist/
 /release/
+/.astro/
+/public/cv/
+/public/downloads/
 /*.tar.gz
 /.wrangler/
 **/.wrangler/

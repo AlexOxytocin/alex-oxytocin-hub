@@ -1,0 +1,8 @@
+locale: en
+route: projects
+status: published
+title: Projects
+description: Products, client systems, and engineering tools built by Alex Grishchenko.
+eyebrow: Projects
+heading: Systems, products, and practical tools
+intro: The existing showcase already passes schema validation; its complete presentation moves here in GOD-5.
