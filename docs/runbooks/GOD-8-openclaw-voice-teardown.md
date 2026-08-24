@@ -1,8 +1,8 @@
 # GOD-8: безопасный демонтаж OpenClaw Voice
 
-- Версия: 1.1
+- Версия: 2.0
 - Инвентаризация: 2026-08-24 04:32–04:39 UTC
-- Состояние: **POST-GATE-2 CHECKPOINT — reversible teardown применён и проверен; Gate 3 запрещён**
+- Состояние: **GATE-3 AUTHORIZED CHECKPOINT — exact cleanup разрешён, ещё не выполнен**
 
 Этот runbook выводит из эксплуатации только voice-call surface. Он не удаляет shared OpenClaw gateway, Telegram channel, Minimax plugin, `/api/`, `/voidplayer/` или другие сервисы на хосте.
 
@@ -55,9 +55,9 @@ PIDs не являются teardown targets: после restart они изме�
 - менять blocks `/api/` и `/voidplayer/`;
 - использовать glob или рекурсивное принудительное удаление.
 
-Ожидаемое финальное состояние shared runtime: `openclaw-gateway.service` остаётся active+enabled, Telegram/Minimax остаются loaded, а только `voice-call` становится disabled и перестаёт слушать `3334`.
+Ожидаемое финальное состояние shared runtime: `openclaw-gateway.service` остаётся active+enabled, Telegram/Minimax остаются enabled, а `plugins.entries.voice-call` отсутствует, `plugins.allow` равен ровно `["telegram","minimax"]`, listener `3334` отсутствует. Bundled extension внутри global OpenClaw остаётся на месте и обнаруживается как `bundled/disabled`, но не allowlisted, не configured и не loaded.
 
-Для acceptance criterion «auto-start отключён» source of truth здесь — `plugins.entries.voice-call.enabled=false`: отдельного voice unit/container/restart policy не существует. Отключение shared unit недопустимо без отдельной Story на полный OpenClaw retirement.
+Source of truth финального cleanup — отсутствие exact voice subtree и allow entry, а не прежнее промежуточное `enabled=false`. Отключение shared unit или удаление bundled extension недопустимо без отдельной Story на полный OpenClaw retirement.
 
 ## 3. Gate 0 — повторить read-only drift check
 
@@ -234,8 +234,12 @@ fi
 
 ```bash
 npm run test:openclaw-teardown
+npm run verify:openclaw-teardown -- --ssh root@89.167.49.137 --phase gate2
+npm run verify:openclaw-teardown -- --ssh root@89.167.49.137 --phase cleanup
 npm run verify:openclaw-teardown -- --ssh root@89.167.49.137
 ```
+
+Фазы запускаются последовательно: `gate2` до cleanup, `cleanup` до уничтожения rollback payload, `final` по умолчанию после закрытия packet. Несовпадение фазы считается failure, а не допустимым переходным состоянием.
 
 Verifier делает GET без follow redirects и требует:
 
@@ -243,7 +247,10 @@ Verifier делает GET без follow redirects и требует:
 - отсутствие `Location` у tombstone;
 - прежние `200` и тела для `/`, `/api/`, `/api/health`, `/voidplayer/`;
 - отсутствие listener/UFW rule/proxy на `3334`;
-- disabled `voice-call`, но active+enabled shared gateway и по-прежнему enabled Telegram/Minimax;
+- отсутствие voice config/allow entry/data/local copy/exact legacy backups при active+enabled shared gateway и enabled Telegram/Minimax;
+- bundled extension и global OpenClaw остаются неизменными, а discovered voice plugin имеет `bundled/disabled` и не loaded;
+- до boundary проверенный packet остаётся целым, после boundary четыре sensitive payload отсутствуют и packet помечен `GATE3-CLOSED`;
+- CLI-ошибка не считается отсутствием subtree: verifier требует валидный JSON, успешный `config validate` и рабочие Telegram/Minimax CLI-canary;
 - валидный effective Nginx config.
 
 ## 7. Rollback reversible stage
@@ -275,42 +282,150 @@ ufw status numbered | grep '3334/tcp'
 
 Восстановление исходного JSON уже возвращает `enabled=true`; дополнительный `plugins enable` намеренно идемпотентен и делает rollback-предпосылку явной.
 
-## 8. Gate 3 — необратимый cleanup только после observation + нового follow-up
+## 8. Gate 3 — финальный exact cleanup
 
-Этот раздел **не разрешён текущим checkpoint**. Перед ним нужны independent review, заданный оркестратором observation period и отдельное явное разрешение.
+Gate 3 разрешён отдельным follow-up после observation: `NRestarts=0`, journal error-like count `0`, Nginx `9/9` запросов к voice namespace вернул `410`, а все три credential references дали `shared_outside_voice=false`. Это разрешение не распространяется на provider API: значения credentials не читаются и не печатаются, внешняя rotation требует отдельного ownership/API.
 
-1. Подтвердить у владельцев Twilio/OpenAI, что три credential references не shared; revoke/rotate их у providers. Значения никогда не печатать в terminal/PR.
-2. Удалить voice subtree и allow entry из current config, затем validate/restart:
+### 8.1 Pre-cleanup gate
 
-   ```bash
-   openclaw config unset plugins.entries.voice-call
-   openclaw config set plugins.allow '["telegram","minimax"]' --strict-json
-   openclaw config validate
-   systemctl restart openclaw-gateway.service
-   ```
+```bash
+npm run verify:openclaw-teardown -- --ssh root@89.167.49.137 --phase gate2
 
-3. После отдельного data-retention approval удалить только точный data file, затем пустой каталог:
+set -eu
+GOD8_BACKUP_DIR=/root/god-8-backups/20260824T051347Z
+test "$(cat /root/god-8-backups/LAST_PRE_TEARDOWN)" = "$GOD8_BACKUP_DIR"
+test -d "$GOD8_BACKUP_DIR"
+test ! -L "$GOD8_BACKUP_DIR"
+test "$(stat -c %a "$GOD8_BACKUP_DIR")" = "700"
+(
+  cd "$GOD8_BACKUP_DIR"
+  sha256sum --check SHA256SUMS
+)
+```
 
-   ```bash
-   rm -- /root/.openclaw/voice-calls/calls.jsonl
-   rmdir -- /root/.openclaw/voice-calls
-   ```
+Любая аномалия до раздела 8.7 останавливает cleanup и требует полного точного rollback из раздела 7. После уничтожения payload в 8.7 Voice rollback больше не обещается: только stop/report.
 
-4. Если review подтверждает, что `voice-call-local` — ненужная копия, удалить семь точных файлов и затем пустой каталог. Bundled directory внутри global package не удалять:
+### 8.2 Удалить только voice config и exact allow entry
 
-   ```bash
-   rm -- /root/.openclaw/workspace/plugins/voice-call-local/README.md
-   rm -- /root/.openclaw/workspace/plugins/voice-call-local/runtime-api.js
-   rm -- /root/.openclaw/workspace/plugins/voice-call-local/package.json
-   rm -- /root/.openclaw/workspace/plugins/voice-call-local/runtime-entry.js
-   rm -- /root/.openclaw/workspace/plugins/voice-call-local/api.js
-   rm -- /root/.openclaw/workspace/plugins/voice-call-local/index.js
-   rm -- /root/.openclaw/workspace/plugins/voice-call-local/openclaw.plugin.json
-   rmdir -- /root/.openclaw/workspace/plugins/voice-call-local
-   ```
+```bash
+set -eu
+openclaw config unset plugins.entries.voice-call
+openclaw config set plugins.allow '["telegram","minimax"]' --strict-json
+openclaw config validate
+systemctl restart openclaw-gateway.service
+test "$(systemctl is-active openclaw-gateway.service)" = "active"
+test "$(systemctl is-enabled openclaw-gateway.service)" = "enabled"
+test "$(openclaw config get channels.telegram.enabled | tail -n1 | tr '[:upper:]' '[:lower:]')" = "true"
+test "$(openclaw config get plugins.entries.minimax.enabled | tail -n1 | tr '[:upper:]' '[:lower:]')" = "true"
+test "$(ss -H -ltn '( sport = :3334 )' | wc -l | tr -d '[:space:]')" = "0"
+```
 
-5. После закрытия rollback window обработать exact legacy backups, содержащие voice credentials: `openclaw.json.bak-`, `openclaw.json.bak-20260405-043525`, `openclaw.json.bak-20260405-044351`, `backups/openclaw-voice-switch-.json`. Их нельзя удалять или редактировать до отдельного retention решения; provider rotation делает старые значения недействующими.
-6. Повторить verifier и secret-reference inventory. Не удалять `/root/.openclaw/backups/openclaw-20260403-225852/openclaw.json`: проверено, что voice subtree в нём отсутствует.
+`openclaw.json.bak` не удаляется. После двух config-команд он проверяется только булево: voice subtree должен отсутствовать. Bundled `/usr/lib/node_modules/openclaw/dist/extensions/voice-call/index.js` и весь global package не изменяются.
+
+### 8.3 Удалить exact call data
+
+```bash
+set -eu
+test -f /root/.openclaw/voice-calls/calls.jsonl
+test ! -L /root/.openclaw/voice-calls/calls.jsonl
+rm -- /root/.openclaw/voice-calls/calls.jsonl
+rmdir -- /root/.openclaw/voice-calls
+```
+
+### 8.4 Удалить семь exact файлов local copy
+
+```bash
+set -eu
+rm -- /root/.openclaw/workspace/plugins/voice-call-local/README.md
+rm -- /root/.openclaw/workspace/plugins/voice-call-local/runtime-api.js
+rm -- /root/.openclaw/workspace/plugins/voice-call-local/package.json
+rm -- /root/.openclaw/workspace/plugins/voice-call-local/runtime-entry.js
+rm -- /root/.openclaw/workspace/plugins/voice-call-local/api.js
+rm -- /root/.openclaw/workspace/plugins/voice-call-local/index.js
+rm -- /root/.openclaw/workspace/plugins/voice-call-local/openclaw.plugin.json
+rmdir -- /root/.openclaw/workspace/plugins/voice-call-local
+```
+
+`rmdir` обязан подтвердить, что каталог пуст; glob, recursive delete и bundled extension не используются.
+
+### 8.5 Удалить четыре подтверждённых legacy voice backup
+
+Перед каждым удалением JSON парсится локально на host, наружу печатается только boolean.
+
+```bash
+set -eu
+delete_confirmed_voice_backup() {
+  GOD8_LEGACY_PATH="$1"
+  case "$GOD8_LEGACY_PATH" in
+    /root/.openclaw/openclaw.json.bak-|\
+    /root/.openclaw/openclaw.json.bak-20260405-043525|\
+    /root/.openclaw/openclaw.json.bak-20260405-044351|\
+    /root/.openclaw/backups/openclaw-voice-switch-.json) ;;
+    *) printf 'Refusing unapproved backup path\n' >&2; exit 1 ;;
+  esac
+  test -f "$GOD8_LEGACY_PATH"
+  test ! -L "$GOD8_LEGACY_PATH"
+  python3 - "$GOD8_LEGACY_PATH" <<'PY'
+import json
+import sys
+from pathlib import Path
+document = json.loads(Path(sys.argv[1]).read_text())
+present = 'voice-call' in document.get('plugins', {}).get('entries', {})
+print(f'voice_subtree_present={str(present).lower()}')
+raise SystemExit(0 if present else 1)
+PY
+  rm -- "$GOD8_LEGACY_PATH"
+  test ! -e "$GOD8_LEGACY_PATH"
+}
+
+delete_confirmed_voice_backup /root/.openclaw/openclaw.json.bak-
+delete_confirmed_voice_backup /root/.openclaw/openclaw.json.bak-20260405-043525
+delete_confirmed_voice_backup /root/.openclaw/openclaw.json.bak-20260405-044351
+delete_confirmed_voice_backup /root/.openclaw/backups/openclaw-voice-switch-.json
+```
+
+`/root/.openclaw/backups/openclaw-20260403-225852/openclaw.json` остаётся неприкосновенным и verifier требует для него `voice_subtree_present=false`.
+
+### 8.6 Cleanup verifier и 10-минутное observation
+
+```bash
+npm run verify:openclaw-teardown -- --ssh root@89.167.49.137 --phase cleanup
+```
+
+В observation фиксируются исходный `NRestarts`, отсутствие новых error-like journal lines, active+enabled shared unit, Telegram/Minimax `true`, listener `0`. После десяти полных минут повторяется `--phase cleanup`; до его PASS packet остаётся целым.
+
+### 8.7 Финальная irreversible boundary packet
+
+Только после двух PASS фазы `cleanup` и observation:
+
+```bash
+set -eu
+GOD8_BACKUP_DIR=/root/god-8-backups/20260824T051347Z
+test "$(cat /root/god-8-backups/LAST_PRE_TEARDOWN)" = "$GOD8_BACKUP_DIR"
+(
+  cd "$GOD8_BACKUP_DIR"
+  sha256sum --check SHA256SUMS
+)
+rm -- "$GOD8_BACKUP_DIR/openclaw.json"
+rm -- "$GOD8_BACKUP_DIR/calls.jsonl"
+rm -- "$GOD8_BACKUP_DIR/voice-call-bundled.tgz"
+rm -- "$GOD8_BACKUP_DIR/voice-call-local.tgz"
+rm -- "$GOD8_BACKUP_DIR/SHA256SUMS"
+test ! -e "$GOD8_BACKUP_DIR/openclaw.json"
+test ! -e "$GOD8_BACKUP_DIR/calls.jsonl"
+test ! -e "$GOD8_BACKUP_DIR/voice-call-bundled.tgz"
+test ! -e "$GOD8_BACKUP_DIR/voice-call-local.tgz"
+printf 'closed_at_utc=%s\nvoice_rollback_available=false\nsensitive_payload_count=0\n' \
+  "$(date -u +%Y-%m-%dT%H:%M:%SZ)" > "$GOD8_BACKUP_DIR/GATE3-CLOSED"
+chmod 0600 "$GOD8_BACKUP_DIR/GATE3-CLOSED"
+```
+
+Оставшиеся unit/Nginx/system metadata обезличены; marker остаётся точным audit pointer. После boundary:
+
+```bash
+npm run verify:openclaw-teardown -- --ssh root@89.167.49.137
+npm test
+```
 
 ## 9. Текущий checkpoint для hand-off
 
@@ -320,4 +435,5 @@ ufw status numbered | grep '3334/tcp'
 - Gate 2: PASS `2026-08-24T05:16:36Z`; listener/UFW/proxy counts `0/0/0`, voice disabled, shared unit active+enabled, Telegram/Minimax enabled.
 - Post-change hashes: config `9f6da7d134846c0f67682908e6662f8a332157304b62719bf3d3558abf92e22b`; Nginx `91b71576850ee1f1e60d558a7777137a37f5e44cb9a7c7685a5a3f8545dfc004`; unit и global OpenClaw hashes не изменились.
 - Full verifier: PASS `2026-08-24T05:19:26Z`–`05:19:36Z`; public tombstones `410` без redirects, protected routes `200`, все host-инварианты совпали, Nginx syntax valid.
-- Gate 3 не выполнялся. Credential rotation, удаление voice config/data/local copy/legacy backups и закрытие rollback packet запрещены до нового явного follow-up.
+- Gate 3 отдельно разрешён после root observation: `NRestarts=0`, error-like journal count `0`, voice HTTP `9/9 → 410`, три credential references `shared_outside_voice=false`.
+- Следующий шаг — зелёный `--phase gate2` и exact manifest check. Provider API, shared unit/package/bundled extension, Telegram, Minimax, общий log/cron, Docker/Nginx container и любые неуказанные paths остаются вне scope.
