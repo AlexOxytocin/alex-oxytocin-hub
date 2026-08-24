@@ -297,9 +297,18 @@ function mountFor(inspect, destination) {
   return inspect.Mounts.find((mount) => mount.Destination === destination);
 }
 
+export function attachedNetworkNames(inspect, label = 'container') {
+  const names = Object.keys(inspect?.NetworkSettings?.Networks ?? {}).sort();
+  if (names.length === 0) throw new Error(`${label} is not attached to a Docker network`);
+  for (const name of names) {
+    if (!/^[A-Za-z0-9][A-Za-z0-9_.-]*$/u.test(name)) throw new Error(`${label} has an unsafe Docker network name: ${name}`);
+  }
+  return names;
+}
+
 function sharedBackendNetwork() {
-  const nginx = Object.keys(dockerInspect(NGINX_CONTAINER).NetworkSettings.Networks);
-  const backend = new Set(Object.keys(dockerInspect(BACKEND_CONTAINER).NetworkSettings.Networks));
+  const nginx = attachedNetworkNames(dockerInspect(NGINX_CONTAINER), 'Nginx');
+  const backend = new Set(attachedNetworkNames(dockerInspect(BACKEND_CONTAINER), 'Backend'));
   const shared = nginx.filter((name) => backend.has(name));
   if (shared.length !== 1) throw new Error(`Expected exactly one Nginx/backend shared network, found ${shared.length}`);
   return shared[0];
@@ -557,21 +566,26 @@ async function testRollback(options) {
     '--volume', `${CERTBOT_ROOT}:/var/www/certbot:ro`,
   ];
   if (state.metadata.hadIncludes) volumes.push('--volume', `${resolve(state.directory, 'previous-includes')}:/etc/nginx/conf.d/_includes:ro`);
-  command('docker', [
-    'run', '-d', '--name', name,
-    '--network', sharedBackendNetwork(), '--read-only', '--security-opt', 'no-new-privileges',
-    '--publish', '127.0.0.1::443',
-    '--tmpfs', '/var/cache/nginx', '--tmpfs', '/var/run',
-    ...volumes,
-    nginx.Config.Image,
-  ], { quiet: true });
+  const networks = attachedNetworkNames(nginx, 'Production Nginx');
   const checks = [
     ['/', 200],
     ['/api/health', 200],
     ['/voidplayer/', 200],
     ['/openclaw-voice/rollback-probe', 410],
   ];
+  let created = false;
   try {
+    command('docker', [
+      'create', '--name', name,
+      '--network', networks[0], '--read-only', '--security-opt', 'no-new-privileges',
+      '--publish', '127.0.0.1::443',
+      '--tmpfs', '/var/cache/nginx', '--tmpfs', '/var/run',
+      ...volumes,
+      nginx.Config.Image,
+    ], { quiet: true });
+    created = true;
+    for (const network of networks.slice(1)) command('docker', ['network', 'connect', network, name], { quiet: true });
+    command('docker', ['start', name], { quiet: true });
     command('docker', ['exec', name, 'nginx', '-t'], { quiet: true });
     const binding = command('docker', ['port', name, '443/tcp'], { quiet: true });
     const match = /127\.0\.0\.1:(\d+)$/u.exec(binding);
@@ -591,7 +605,7 @@ async function testRollback(options) {
       if (status !== expected) throw new Error(`Rollback probe ${pathname} expected ${expected}, received ${status}`);
     }
   } finally {
-    command('docker', ['rm', '-f', name], { quiet: true });
+    if (created && dockerContainerExists(name)) command('docker', ['rm', '-f', name], { quiet: true });
   }
   const marker = { schema: 'god9.rollback-test.v1', releaseId, result: 'pass', testedAtUtc: new Date().toISOString(), previousDefaultSha256: state.metadata.previousDefaultSha256, checks: Object.fromEntries(checks) };
   await writeFile(resolve(state.directory, 'rollback-tested.json'), `${JSON.stringify(marker, null, 2)}\n`, { encoding: 'utf8', flag: 'wx', mode: 0o600 });
