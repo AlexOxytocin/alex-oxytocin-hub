@@ -21,14 +21,18 @@ const releaseIdPattern = /^\d{8}-\d{6}-[a-z0-9][a-z0-9._-]{2,63}$/u;
 const textExtensions = new Set(['.css', '.html', '.js', '.json', '.map', '.svg', '.txt', '.webmanifest', '.xml']);
 const forbiddenOrigin = /https?:\/\/(?:localhost|127\.0\.0\.1|(?:[a-z0-9-]+\.)*[a-z0-9-]*workers\.dev|(?:[a-z0-9-]+\.)*(?:stage|staging)[a-z0-9-]*\.[a-z0-9.-]+)/iu;
 const forbiddenRuntimePath = /(?:\/opt\/app\/|\/usr\/share\/nginx\/html\/sites\/|sites\/(?:hub|allo|ai|cv)\/)/iu;
+const publishedLocales = ['ru', 'en'];
+const shellSections = ['', 'experience', 'projects', 'learning', 'community'];
+const expectedHtmlCount = 1 + (publishedLocales.length * shellSections.length);
 
 const requiredSiteFiles = [
   '404.html',
   'robots.txt',
   'sitemap.xml',
-  'ru/index.html',
-  'en/index.html',
-  ...['ru', 'en'].flatMap((locale) => ['pdf', 'docx', 'txt'].flatMap((extension) => [
+  ...publishedLocales.flatMap((locale) => shellSections.map((section) => (
+    section ? `${locale}/${section}/index.html` : `${locale}/index.html`
+  ))),
+  ...publishedLocales.flatMap((locale) => ['pdf', 'docx', 'txt'].flatMap((extension) => [
     `${locale}/experience/downloads/resume_${locale}.${extension}`,
     `${locale}/experience/java/downloads/resume_${locale}_java.${extension}`,
   ])),
@@ -105,7 +109,9 @@ export async function inspectSite(siteRoot = distRoot) {
     records.push({ path: file.relativePath, bytes: stat.size, sha256: await hashFile(file.pathname) });
   }
 
-  if (files.length < 300 || html < 40) throw new Error(`Site looks incomplete: ${files.length} files, ${html} HTML`);
+  if (html !== expectedHtmlCount) {
+    throw new Error(`Site HTML contract mismatch: expected ${expectedHtmlCount}, found ${html}`);
+  }
   return { files: records, fileCount: files.length, htmlCount: html, bytes };
 }
 

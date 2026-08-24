@@ -1,5 +1,5 @@
 ---
-import { localeDefinition, publishedLocales, routeEntries, routePath, type Locale, type RouteId } from '../config/routes';
+import { localeDefinition, localeRouteEntries, routeEntries, type Locale, type RouteId } from '../config/routes';
 import { interfaceCopy, navigationLabel } from '../i18n/ui';
 import { legacyHomeTheme } from '../theme/legacy-home';
 import { Image } from 'astro:assets';
@@ -8,7 +8,7 @@ interface Props {
   locale: Locale;
   route: RouteId;
   localePaths?: Partial<Record<Locale, string>> | undefined;
-  variant?: 'legacy-home' | undefined;
+  variant?: 'legacy-home' | 'site-shell' | undefined;
 }
 
 const { locale, route, localePaths, variant } = Astro.props;
@@ -16,13 +16,19 @@ const copy = interfaceCopy(locale);
 const currentLocale = localeDefinition(locale);
 const isLegacyHome = variant === 'legacy-home';
 const { brandLogo } = legacyHomeTheme.assets;
-const switcherLocales = isLegacyHome
-  ? [...publishedLocales].sort((left, right) => left.id === 'en' ? -1 : left.id === 'ru' ? 1 : left.label.localeCompare(right.label))
-  : publishedLocales;
+const navigationEntries = routeEntries(locale);
+const homeHref = navigationEntries.find((entry) => entry.route === 'home')!.href;
+const localeEntries = localeRouteEntries(route).map((entry) => ({
+  ...entry,
+  href: localePaths?.[entry.locale.id] ?? entry.href,
+}));
+const switcherEntries = isLegacyHome
+  ? [...localeEntries].sort((left, right) => left.locale.id === 'en' ? -1 : left.locale.id === 'ru' ? 1 : left.locale.label.localeCompare(right.locale.label))
+  : localeEntries;
 ---
 
 <header class="site-header" data-variant={variant}>
-  <a class="site-brand" href={routePath(locale, 'home')} aria-label={isLegacyHome ? copy.homeBrand : 'God Mode Tools'}>
+  <a class="site-brand" href={homeHref} aria-label={isLegacyHome ? copy.homeBrand : 'God Mode Tools'}>
     {isLegacyHome ? (
       <Image
         src={brandLogo}
@@ -43,7 +49,7 @@ const switcherLocales = isLegacyHome
 
   <nav aria-label={copy.navigation}>
     <ul class="site-navigation">
-      {routeEntries(locale).map((entry) => (
+      {navigationEntries.map((entry) => (
         <li>
           <a href={entry.href} aria-current={entry.route === route ? 'page' : undefined}>
             {navigationLabel(locale, entry.route)}
@@ -54,9 +60,9 @@ const switcherLocales = isLegacyHome
   </nav>
 
   <div class="locale-switcher" aria-label={copy.languages}>
-    {switcherLocales.map((alternate) => (
+    {switcherEntries.map(({ locale: alternate, href }) => (
       <a
-        href={localePaths?.[alternate.id] ?? routePath(alternate.id, route)}
+        href={href}
         lang={alternate.htmlLang}
         aria-current={alternate.id === currentLocale.id ? 'page' : undefined}
       >

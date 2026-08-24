@@ -61,5 +61,22 @@
     "wide": "72rem",
     "reading": "46rem",
     "touchTarget": "2.75rem"
+  },
+  "themes": {
+    "siteShell": {
+      "fontBody": "Inter, ui-sans-serif, system-ui, sans-serif",
+      "fontDisplay": "fontBody",
+      "fontLabel": "SFMono-Regular, Consolas, Liberation Mono, monospace",
+      "background": "page with signal and warm radial fields",
+      "palette": "ink/cloud/signal/warm",
+      "pageInlineSpacing": "clamp(space.4, 4vw, space.8)",
+      "panelRadius": "radius.lg",
+      "titleSize": "clamp(2.5rem, 7vw, 5.75rem)",
+      "statusLineHeight": 1.65
+    },
+    "legacyHome": {
+      "source": "src/styles/themes/legacy-home.css",
+      "scope": "Home only"
+    }
   }
 }

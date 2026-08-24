@@ -1,5 +1,5 @@
 ---
-import { localeDefinition, publishedLocales, routePath, type Locale, type RouteId } from '../config/routes';
+import { localeDefinition, publishedLocales, routePath, type CrawlDirective, type Locale, type RouteId } from '../config/routes';
 import { siteConfig } from '../config/site';
 
 interface Props {
@@ -7,12 +7,12 @@ interface Props {
   route?: RouteId | undefined;
   title: string;
   description: string;
-  noIndex?: boolean;
+  robots?: CrawlDirective | undefined;
   path?: string | undefined;
   alternatePaths?: Partial<Record<Locale, string>> | undefined;
 }
 
-const { locale, route, title, description, noIndex = false, path, alternatePaths } = Astro.props;
+const { locale, route, title, description, robots, path, alternatePaths } = Astro.props;
 const definition = localeDefinition(locale);
 const canonicalPath = path ?? (route ? routePath(locale, route) : undefined);
 const canonical = canonicalPath ? new URL(canonicalPath, siteConfig.url).href : undefined;
@@ -28,7 +28,7 @@ const socialImage = new URL(siteConfig.socialImage, siteConfig.url).href;
 
 <title>{fullTitle}</title>
 <meta name="description" content={description} />
-{noIndex && <meta name="robots" content="noindex, nofollow" />}
+{robots && robots !== 'index, follow' && <meta name="robots" content={robots} />}
 {canonical && <link rel="canonical" href={canonical} />}
 {alternates.map(({ locale: alternate, href }) => (
   <link rel="alternate" hreflang={alternate.htmlLang} href={href} />

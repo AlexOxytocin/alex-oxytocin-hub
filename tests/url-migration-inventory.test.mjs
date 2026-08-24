@@ -106,10 +106,10 @@ test("key page, CV, download, and SEO mappings are present", () => {
     ["https://www.godmodetools.com/", "https://godmodetools.com/ru/"],
     ["https://cv.godmodetools.com/", "https://godmodetools.com/ru/experience/"],
     ["https://cv.godmodetools.com/showcase/en/", "https://godmodetools.com/en/projects/"],
-    ["https://cv.godmodetools.com/changelog/", "https://godmodetools.com/ru/experience/changelog/"],
+    ["https://cv.godmodetools.com/changelog/", "https://godmodetools.com/ru/experience/"],
     ["https://cv.godmodetools.com/en/", "https://godmodetools.com/en/experience/"],
-    ["https://cv.godmodetools.com/java/", "https://godmodetools.com/ru/experience/java/"],
-    ["https://cv.godmodetools.com/java/en/", "https://godmodetools.com/en/experience/java/"],
+    ["https://cv.godmodetools.com/java/", "https://godmodetools.com/ru/experience/"],
+    ["https://cv.godmodetools.com/java/en/", "https://godmodetools.com/en/experience/"],
     ["https://cv.godmodetools.com/showcase/", "https://godmodetools.com/ru/projects/"],
     ["https://ai.godmodetools.com/", "https://godmodetools.com/ru/learning/"],
     ["https://ai.godmodetools.com/en/", "https://godmodetools.com/en/learning/"],
@@ -137,6 +137,9 @@ test("key page, CV, download, and SEO mappings are present", () => {
     assert.equal(record.final.target, target);
   }
   assert.equal(recordFor("https://godmodetools.com/__god2_unknown__/").final.status, 404);
+  assert.equal(recordFor("https://godmodetools.com/ru/experience/java/").final.status, 404);
+  assert.equal(recordFor("https://godmodetools.com/ru/experience/changelog/").final.status, 404);
+  assert.equal(recordFor("https://godmodetools.com/en/projects/flatscanner/").final.status, 404);
   assert.equal(recordFor("https://cv.godmodetools.com/__god2_unknown__/").final.status, 404);
   assert.equal(recordFor("https://ai.godmodetools.com/__god2_unknown__/").final.status, 404);
   assert.equal(recordFor("https://allo.godmodetools.com/__god2_unknown__/").final.status, 404);

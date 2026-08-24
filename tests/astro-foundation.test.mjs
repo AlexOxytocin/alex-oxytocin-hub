@@ -45,6 +45,9 @@ test('locale registry publishes RU and EN while reserving ES', async () => {
     assert.match(routeRegistry, new RegExp(`\\b${route}\\b`));
   }
   assert.match(routeRegistry, /function routePath\(/);
+  assert.match(routeRegistry, /robots: 'noindex, follow'/);
+  assert.match(routeRegistry, /detailRouteContracts/);
+  assert.match(routeRegistry, /action: 'not_found'/);
 });
 
 test('page and layout templates do not hardcode localized internal links', async () => {
@@ -98,8 +101,7 @@ test('release is static and leaves the root redirect to the HTTP layer', async (
 
   const sitemap = await readFile(new URL('dist/sitemap.xml', root), 'utf8');
   assert.match(sitemap, /<urlset\b/);
-  assert.match(sitemap, /https:\/\/godmodetools\.com\/ru\/projects\//);
-  assert.match(sitemap, /https:\/\/godmodetools\.com\/en\/community\//);
-  assert.match(sitemap, /https:\/\/godmodetools\.com\/ru\/experience\/changelog\//);
+  assert.doesNotMatch(sitemap, /\/(?:experience|projects|learning|community)\//);
+  assert.match(sitemap, /https:\/\/godmodetools\.com\/(?:ru|en)\//);
   assert.doesNotMatch(sitemap, /\/es\//);
 });

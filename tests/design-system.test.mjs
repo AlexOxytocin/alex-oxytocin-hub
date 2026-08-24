@@ -13,8 +13,8 @@ async function exists(relativePath) {
   }
 }
 
-test('design tokens are centralized and Home styles stay route-local', async () => {
-  const [tokens, machineTokens, entrypoint, layout, homePage, homeTheme, homeStyles] = await Promise.all([
+test('design tokens are centralized and route themes stay isolated', async () => {
+  const [tokens, machineTokens, entrypoint, layout, homePage, homeTheme, homeStyles, siteShellTheme, placeholderStyles] = await Promise.all([
     readFile(new URL('src/styles/tokens.css', root), 'utf8'),
     readFile(new URL('docs/design-tokens.json', root), 'utf8'),
     readFile(new URL('src/styles/index.css', root), 'utf8'),
@@ -22,6 +22,8 @@ test('design tokens are centralized and Home styles stay route-local', async () 
     readFile(new URL('src/components/pages/HomePage.astro', root), 'utf8'),
     readFile(new URL('src/styles/themes/legacy-home.css', root), 'utf8'),
     readFile(new URL('src/styles/home.css', root), 'utf8'),
+    readFile(new URL('src/styles/themes/site-shell.css', root), 'utf8'),
+    readFile(new URL('src/styles/placeholder.css', root), 'utf8'),
   ]);
 
   for (const token of ['--surface-page', '--text-primary', '--space-4', '--radius-lg', '--motion-normal', '--touch-target']) {
@@ -35,6 +37,7 @@ test('design tokens are centralized and Home styles stay route-local', async () 
   }
 
   assert.doesNotMatch(entrypoint, /legacy-home|home\.css/);
+  assert.match(entrypoint, /@import '\.\/themes\/site-shell\.css';/);
   assert.match(homePage, /import '\.\.\/\.\.\/styles\/themes\/legacy-home\.css';/);
   assert.match(homePage, /import '\.\.\/\.\.\/styles\/home\.css';/);
 
@@ -51,7 +54,21 @@ test('design tokens are centralized and Home styles stay route-local', async () 
   assert.match(homeStyles, /var\(--home-hero-radius\)/);
   assert.match(homeStyles, /var\(--home-heading-font-size\)/);
 
-  for (const stylesheet of ['src/styles/base.css', 'src/styles/components.css', 'src/styles/motion.css', 'src/styles/home.css']) {
+  for (const token of [
+    '--theme-font-body',
+    '--theme-background-page',
+    '--theme-color-page',
+    '--theme-space-placeholder-panel',
+    '--theme-radius-panel',
+    '--theme-type-title-size',
+  ]) {
+    assert.match(siteShellTheme, new RegExp(token), `${token} missing from the site-shell theme`);
+  }
+  assert.match(placeholderStyles, /var\(--theme-space-placeholder-panel\)/);
+  assert.match(placeholderStyles, /var\(--theme-type-title-size\)/);
+  assert.doesNotMatch(placeholderStyles, /--home-|\.home-/);
+
+  for (const stylesheet of ['src/styles/base.css', 'src/styles/components.css', 'src/styles/motion.css', 'src/styles/home.css', 'src/styles/placeholder.css']) {
     const source = await readFile(new URL(stylesheet, root), 'utf8');
     assert.doesNotMatch(source, /#[0-9a-f]{3,8}\b/i, `${stylesheet} contains a raw color`);
   }
@@ -118,8 +135,9 @@ test('built non-Home pages do not receive Home theme CSS', async () => {
   ]);
   assert.match(homeStyles, /--home-color-page/);
   assert.match(homeStyles, /\.home-hero__primary/);
-  assert.doesNotMatch(projectStyles, /--home-color-page/);
-  assert.doesNotMatch(projectStyles, /\.home-hero__primary/);
+  assert.doesNotMatch(homeStyles, /\.placeholder-page/);
+  assert.doesNotMatch(projectStyles, /--home-|\.home-/);
+  assert.match(projectStyles, /\.placeholder-page/);
 });
 
 test('self-contained design preview and rationale are versioned with the system', async () => {

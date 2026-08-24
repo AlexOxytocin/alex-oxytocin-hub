@@ -3,7 +3,6 @@ import { access, readFile, readdir } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import test from 'node:test';
-import YAML from 'yaml';
 
 const root = new URL('../', import.meta.url);
 
@@ -15,50 +14,41 @@ async function built(relativePath) {
   return readFile(new URL(`dist/${relativePath}/index.html`, root), 'utf8');
 }
 
-async function projectSource(locale) {
-  return YAML.parse(await readFile(new URL(`src/content/showcase/projects_${locale}.yaml`, root), 'utf8'));
-}
-
-test('RU and EN publish the full page set while ES remains unavailable', async () => {
+test('RU and EN publish Home plus top-level placeholders while detail pages stay absent', async () => {
   for (const locale of ['ru', 'en']) {
-    const projects = await projectSource(locale);
-    for (const section of ['', 'experience', 'experience/java', 'projects', 'learning', 'community']) {
+    for (const section of ['', 'experience', 'projects', 'learning', 'community']) {
       assert.equal(await exists(`dist/${locale}/${section ? `${section}/` : ''}index.html`), true, `${locale}/${section}`);
     }
-    for (const project of projects.projects) {
-      assert.equal(await exists(`dist/${locale}/projects/${project.slug}/index.html`), true, `${locale}/${project.slug}`);
+    for (const detail of ['experience/java', 'experience/changelog', 'projects/flatscanner']) {
+      assert.equal(await exists(`dist/${locale}/${detail}/index.html`), false, `${locale}/${detail} must not be generated`);
     }
   }
   assert.equal(await exists('dist/es/index.html'), false);
 });
 
-test('learning and community have complete, independently localized copy', async () => {
-  const [ruLearning, enLearning, ruCommunity, enCommunity] = await Promise.all([
-    built('ru/learning'), built('en/learning'), built('ru/community'), built('en/community'),
-  ]);
-  assert.match(ruLearning, /Ответ — это ещё не выполненная задача/);
-  assert.match(ruLearning, /Личный ассистент с памятью/);
-  assert.match(enLearning, /An answer is not a completed task/);
-  assert.match(enLearning, /A personal assistant with memory/);
-  assert.doesNotMatch(enLearning, /Соберите|Бесплатный чек-ап/);
-  assert.match(ruCommunity, /Технологии существуют внутри жизни/);
-  assert.match(enCommunity, /Technology belongs inside life/);
-});
+test('every placeholder contains only one localized migration status in main content', async () => {
+  const expected = {
+    'ru/experience': ['Опыт и резюме', 'Переношу этот раздел в новую оболочку'],
+    'ru/projects': ['Проекты', 'проверенные кейсы'],
+    'ru/learning': ['Обучение', 'актуальные материалы'],
+    'ru/community': ['Комьюнити', 'актуальная версия'],
+    'en/experience': ['Experience and résumé', 'I’m moving this section into the new shell'],
+    'en/projects': ['Projects', 'reviewed case studies'],
+    'en/learning': ['Learning', 'current materials'],
+    'en/community': ['Community', 'up-to-date version'],
+  };
 
-test('all project records render as localized detail pages with matching alternates', async () => {
-  const [ru, en] = await Promise.all([projectSource('ru'), projectSource('en')]);
-  assert.equal(ru.projects.length, 14);
-  assert.deepEqual(ru.projects.map(({ slug }) => slug), en.projects.map(({ slug }) => slug));
-
-  for (const project of en.projects) {
-    const html = await built(`en/projects/${project.slug}`);
-    assert.match(html, new RegExp(`canonical" href="https://godmodetools\\.com/en/projects/${project.slug}/`));
-    assert.match(html, new RegExp(`hreflang="ru" href="https://godmodetools\\.com/ru/projects/${project.slug}/`));
-    assert.ok(html.includes(project.name.replaceAll('&', '&amp;')), project.name);
+  for (const [route, [heading, status]] of Object.entries(expected)) {
+    const html = await built(route);
+    const main = html.match(/<main\b[^>]*>([\s\S]*?)<\/main>/u)?.[1] ?? '';
+    assert.match(main, new RegExp(`<h1[^>]*>${heading}</h1>`));
+    assert.match(main, new RegExp(status));
+    assert.equal((main.match(/<p>/gu) ?? []).length, 1, `${route} must have one status paragraph`);
+    assert.doesNotMatch(main, /<h2|<article|<img|download|project-card|timeline|scenario/iu);
   }
 });
 
-test('CV profile pages and PDF, DOCX, and TXT downloads remain available', async () => {
+test('existing résumé downloads remain exact artifacts without publishing résumé detail pages', async () => {
   for (const locale of ['ru', 'en']) {
     for (const profile of ['', '_java']) {
       for (const extension of ['pdf', 'docx', 'txt']) {
@@ -69,13 +59,11 @@ test('CV profile pages and PDF, DOCX, and TXT downloads remain available', async
         );
       }
     }
-    const java = await built(`${locale}/experience/java`);
-    assert.match(java, new RegExp(`canonical" href="https://godmodetools\\.com/${locale}/experience/java/`));
-    assert.match(java, new RegExp(`/${locale}/experience/java/downloads/resume_${locale}_java\\.pdf`));
+    assert.equal(await exists(`dist/${locale}/experience/java/index.html`), false);
   }
 });
 
-test('built pages contain no migration placeholders or links back to retired content subdomains', async () => {
+test('built pages contain no links to retired content subdomains', async () => {
   const htmlFiles = [];
   async function collect(directory) {
     for (const entry of await readdir(directory, { withFileTypes: true })) {
@@ -88,7 +76,6 @@ test('built pages contain no migration placeholders or links back to retired con
 
   for (const file of htmlFiles) {
     const html = await readFile(file, 'utf8');
-    assert.doesNotMatch(html, /GOD-5|complete content moves|полный контент|shared content architecture/i, file);
     assert.doesNotMatch(html, /https:\/\/(?:cv|ai|allo)\.godmodetools\.com/i, file);
   }
 });

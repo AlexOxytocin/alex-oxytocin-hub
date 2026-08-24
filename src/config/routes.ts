@@ -1,9 +1,44 @@
 import localeRecords from '../content/locales.json';
 
-export const routeIds = ['home', 'experience', 'projects', 'learning', 'community'] as const;
-export const sectionRouteIds = ['experience', 'projects', 'learning', 'community'] as const;
-export type RouteId = (typeof routeIds)[number];
-export type SectionRouteId = (typeof sectionRouteIds)[number];
+export type CrawlDirective = 'index, follow' | 'noindex, follow' | 'noindex, nofollow';
+
+export const routeRegistry = {
+  home: {
+    segment: '',
+    state: 'ready',
+    robots: 'index, follow',
+  },
+  experience: {
+    segment: 'experience',
+    state: 'placeholder',
+    robots: 'noindex, follow',
+  },
+  projects: {
+    segment: 'projects',
+    state: 'placeholder',
+    robots: 'noindex, follow',
+  },
+  learning: {
+    segment: 'learning',
+    state: 'placeholder',
+    robots: 'noindex, follow',
+  },
+  community: {
+    segment: 'community',
+    state: 'placeholder',
+    robots: 'noindex, follow',
+  },
+} as const satisfies Record<string, {
+  segment: string;
+  state: 'ready' | 'placeholder';
+  robots: CrawlDirective;
+}>;
+
+export type RouteId = keyof typeof routeRegistry;
+export type SectionRouteId = Exclude<RouteId, 'home'>;
+export const routeIds = Object.keys(routeRegistry) as RouteId[];
+export const sectionRouteIds = routeIds.filter((route): route is SectionRouteId => route !== 'home');
+export const indexableRouteIds = routeIds.filter((route) => routeRegistry[route].robots === 'index, follow');
 export type Locale = 'ru' | 'en' | 'es';
 
 export interface LocaleDefinition {
@@ -18,13 +53,35 @@ export interface LocaleDefinition {
 export const locales = localeRecords as LocaleDefinition[];
 export const publishedLocales = locales.filter((locale) => locale.published);
 
-export const routeSegments: Record<RouteId, string> = {
-  home: '',
-  experience: 'experience',
-  projects: 'projects',
-  learning: 'learning',
-  community: 'community',
-};
+export const routeSegments = Object.fromEntries(
+  routeIds.map((route) => [route, routeRegistry[route].segment]),
+) as Record<RouteId, string>;
+
+export const detailRouteContracts = {
+  experienceProfile: {
+    pattern: '/{locale}/experience/{profile}/',
+    action: 'not_found',
+    status: 404,
+    fallbackRoute: 'experience',
+  },
+  experienceChangelog: {
+    pattern: '/{locale}/experience/changelog/',
+    action: 'not_found',
+    status: 404,
+    fallbackRoute: 'experience',
+  },
+  project: {
+    pattern: '/{locale}/projects/{slug}/',
+    action: 'not_found',
+    status: 404,
+    fallbackRoute: 'projects',
+  },
+} as const satisfies Record<string, {
+  pattern: string;
+  action: 'not_found';
+  status: 404;
+  fallbackRoute: SectionRouteId;
+}>;
 
 export function isLocale(value: string): value is Locale {
   return locales.some((locale) => locale.id === value);
@@ -41,25 +98,12 @@ export function localeDefinition(locale: Locale): LocaleDefinition {
 }
 
 export function routePath(locale: Locale, route: RouteId): string {
-  const segment = routeSegments[route];
+  const segment = routeRegistry[route].segment;
   return segment ? `/${locale}/${segment}/` : `/${locale}/`;
 }
 
-export function profilePath(locale: Locale, profileSlug = ''): string {
-  const base = routePath(locale, 'experience');
-  return profileSlug ? `${base}${profileSlug}/` : base;
-}
-
-export function changelogPath(locale: Locale): string {
-  return `${routePath(locale, 'experience')}changelog/`;
-}
-
-export function resumeDownloadPath(locale: Locale, profileSlug: string, filename: string): string {
-  return `${profilePath(locale, profileSlug)}downloads/${filename}`;
-}
-
-export function projectPath(locale: Locale, projectSlug: string): string {
-  return `${routePath(locale, 'projects')}${projectSlug}/`;
+export function routeRobots(route: RouteId): CrawlDirective {
+  return routeRegistry[route].robots;
 }
 
 export function routeIdFromSection(section: string): SectionRouteId | undefined {
@@ -68,4 +112,11 @@ export function routeIdFromSection(section: string): SectionRouteId | undefined 
 
 export function routeEntries(locale: Locale) {
   return routeIds.map((route) => ({ route, href: routePath(locale, route) }));
+}
+
+export function localeRouteEntries(route: RouteId) {
+  return publishedLocales.map((locale) => ({
+    locale,
+    href: routePath(locale.id, route),
+  }));
 }
