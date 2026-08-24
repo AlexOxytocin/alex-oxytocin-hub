@@ -2,12 +2,14 @@ import assert from 'node:assert/strict';
 import { chromium } from 'playwright';
 
 const baseUrl = process.env.SITE_PREVIEW_URL ?? 'http://127.0.0.1:4321';
+const ignoreHTTPSErrors = process.env.SITE_PREVIEW_INSECURE === '1';
 const browser = await chromium.launch();
 
 try {
   const desktop = await browser.newContext({
     viewport: { width: 1440, height: 900 },
     reducedMotion: 'no-preference',
+    ignoreHTTPSErrors,
   });
   await desktop.addInitScript(() => {
     Object.defineProperty(navigator, 'hardwareConcurrency', {
@@ -39,6 +41,7 @@ try {
   const reduced = await browser.newContext({
     viewport: { width: 1024, height: 768 },
     reducedMotion: 'reduce',
+    ignoreHTTPSErrors,
   });
   const reducedPage = await reduced.newPage();
   await reducedPage.goto(`${baseUrl}/en/`, { waitUntil: 'networkidle' });
@@ -48,7 +51,7 @@ try {
   await reducedPage.screenshot({ path: '.qa-god4-reduced.png', fullPage: true });
   await reduced.close();
 
-  const mobile = await browser.newContext({ viewport: { width: 390, height: 844 } });
+  const mobile = await browser.newContext({ viewport: { width: 390, height: 844 }, ignoreHTTPSErrors });
   const mobilePage = await mobile.newPage();
   await mobilePage.goto(`${baseUrl}/en/`, { waitUntil: 'networkidle' });
   assert.equal(await mobilePage.locator('[data-motion-root]').getAttribute('data-motion-state'), 'static');

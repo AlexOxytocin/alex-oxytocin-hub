@@ -3,6 +3,7 @@ import { readFile } from 'node:fs/promises';
 import { chromium } from 'playwright';
 
 const baseUrl = process.env.SITE_PREVIEW_URL ?? 'http://127.0.0.1:4321';
+const ignoreHTTPSErrors = process.env.SITE_PREVIEW_INSECURE === '1';
 const budgets = JSON.parse(await readFile(new URL('../config/performance-budgets.json', import.meta.url), 'utf8'));
 const routes = Object.values(budgets.routes);
 
@@ -14,6 +15,7 @@ try {
       deviceScaleFactor: 2,
       isMobile: true,
       serviceWorkers: 'block',
+      ignoreHTTPSErrors,
     });
     await context.addInitScript(() => {
       window.__godModeVitals = { cls: 0, lcp: 0, inp: 0, inpSupported: false };

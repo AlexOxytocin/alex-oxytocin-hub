@@ -8,8 +8,8 @@ const root = new URL('../', import.meta.url);
 const inventory = JSON.parse(await readFile(new URL('docs/url-migration-inventory.json', root), 'utf8'));
 const [nginxDefault, nginxCache, nginxSecurity] = await Promise.all([
   readFile(new URL('infra/nginx/default.conf', root), 'utf8'),
-  readFile(new URL('infra/nginx/includes/site-cache.conf', root), 'utf8'),
-  readFile(new URL('infra/nginx/includes/security-headers.conf', root), 'utf8'),
+  readFile(new URL('infra/nginx/conf.d/_includes/site-cache.inc', root), 'utf8'),
+  readFile(new URL('infra/nginx/conf.d/_includes/security-headers.inc', root), 'utf8'),
 ]);
 const contractOrigin = process.env.HTTP_CONTRACT_URL?.replace(/\/$/u, '');
 const redirectOrigin = process.env.HTTP_REDIRECT_URL?.replace(/\/$/u, '');
@@ -145,17 +145,19 @@ test('Nginx reserves service prefixes before static fallback and retires opencla
     assert.match(server, /location\s+=\s+\/openclaw-voice\s*\{[\s\S]*?return\s+410\s*;/u);
     assert.match(server, /location\s+\^~\s+\/openclaw-voice\/\s*\{[\s\S]*?return\s+410\s*;/u);
   }
-  assert.match(apex, /include\s+\/etc\/nginx\/includes\/site-cache\.conf\s*;/u);
+  assert.match(apex, /include\s+\/etc\/nginx\/conf\.d\/_includes\/site-cache\.inc\s*;/u);
   assert.match(nginxCache, /location\s+\/\s*\{[\s\S]*?try_files\s+\$uri\s+\$uri\/\s+\$uri\/index\.html\s+=404\s*;/u);
 });
 
 test('Nginx retains compression, cache, and security contracts from GOD-6', () => {
-  assert.match(nginxDefault, /include\s+\/etc\/nginx\/includes\/compression\.conf\s*;/u);
-  assert.match(nginxDefault, /include\s+\/etc\/nginx\/includes\/security-headers\.conf\s*;/u);
+  assert.match(nginxDefault, /include\s+\/etc\/nginx\/conf\.d\/_includes\/compression\.inc\s*;/u);
+  assert.match(nginxDefault, /include\s+\/etc\/nginx\/conf\.d\/_includes\/security-headers\.inc\s*;/u);
+  assert.match(nginxDefault, /root\s+\/usr\/share\/nginx\/html\/site-current\s*;/u);
+  assert.doesNotMatch(nginxDefault, /\/etc\/nginx\/includes|sites\/current\/site/u);
   assert.match(nginxCache, /location\s+\^~\s+\/_astro\//u);
   assert.match(nginxCache, /max-age=31536000, immutable/u);
   assert.match(nginxCache, /\(\?:ru\|en\)\/experience\(\?:\/java\)\?\/downloads/u);
-  assert.equal((nginxCache.match(/include \/etc\/nginx\/includes\/security-headers\.conf;/gu) ?? []).length, 4);
+  assert.equal((nginxCache.match(/include \/etc\/nginx\/conf\.d\/_includes\/security-headers\.inc;/gu) ?? []).length, 4);
   assert.match(nginxSecurity, /X-Content-Type-Options "nosniff" always/u);
 });
 

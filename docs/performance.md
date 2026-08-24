@@ -31,13 +31,13 @@ CI lab metrics catch deterministic regressions. The Playwright INP probe clicks 
 
 ## Cache and compression policy
 
-`infra/nginx/includes/site-cache.conf` is the target server include:
+`infra/nginx/conf.d/_includes/site-cache.inc` is the target server include:
 
 - `/_astro/`: `Cache-Control: public, max-age=31536000, immutable` and exact-file 404s;
 - HTML routes: `Cache-Control: no-cache` and no SPA soft-404 fallback;
 - stable favicon/download names: bounded one-day cache.
 
-`infra/nginx/includes/compression.conf` enables gzip for compressible text formats. Brotli is an optional host-level enhancement because it depends on an Nginx module; enabling an unavailable directive would make `nginx -t` fail.
+`infra/nginx/conf.d/_includes/compression.inc` enables gzip for compressible text formats. The nested `.inc` file matches the real production `conf.d` bind while staying outside the top-level `*.conf` load glob. Brotli is an optional host-level enhancement because it depends on an Nginx module; enabling an unavailable directive would make `nginx -t` fail.
 
 The includes are versioned now and are activated with the unified server block during GOD-9 cutover. Existing production routing remains unchanged in this story.
 

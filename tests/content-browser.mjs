@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { chromium } from 'playwright';
 
 const baseUrl = process.env.SITE_PREVIEW_URL ?? 'http://127.0.0.1:4321';
+const ignoreHTTPSErrors = process.env.SITE_PREVIEW_INSECURE === '1';
 const sampleRoutes = [
   '/ru/',
   '/en/learning/',
@@ -13,7 +14,7 @@ const sampleRoutes = [
 
 const browser = await chromium.launch();
 try {
-  const desktop = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+  const desktop = await browser.newContext({ viewport: { width: 1440, height: 900 }, ignoreHTTPSErrors });
   const desktopPage = await desktop.newPage();
   for (const route of sampleRoutes) {
     const response = await desktopPage.goto(`${baseUrl}${route}`, { waitUntil: 'networkidle' });
@@ -35,7 +36,7 @@ try {
   }
   await desktop.close();
 
-  const mobile = await browser.newContext({ viewport: { width: 390, height: 844 } });
+  const mobile = await browser.newContext({ viewport: { width: 390, height: 844 }, ignoreHTTPSErrors });
   const mobilePage = await mobile.newPage();
   for (const route of ['/ru/', '/ru/projects/', '/en/learning/', '/en/community/', '/ru/experience/java/']) {
     const response = await mobilePage.goto(`${baseUrl}${route}`, { waitUntil: 'networkidle' });

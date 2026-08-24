@@ -71,6 +71,25 @@ function runNodeTests(env) {
   });
 }
 
+function runGod9Verifier(httpsPort, httpPort) {
+  return new Promise((resolveRun, reject) => {
+    const child = spawn(process.execPath, [
+      'scripts/verify-god9-release.mjs',
+      '--phase', 'staging',
+      '--release-id', '20990101-000000-nginx-contract',
+      '--connect-address', '127.0.0.1',
+      '--connect-port', String(httpsPort),
+      '--connect-http-port', String(httpPort),
+      '--insecure',
+    ], { cwd: root, env: process.env, stdio: 'inherit' });
+    child.once('error', reject);
+    child.once('exit', (code, signal) => {
+      if (code === 0) resolveRun();
+      else reject(new Error(`GOD-9 release verifier failed (${signal ?? code})`));
+    });
+  });
+}
+
 if (spawnSync('docker', ['version'], { stdio: 'ignore' }).status !== 0) {
   throw new Error('Docker Engine is required for test:http:nginx');
 }
@@ -108,6 +127,7 @@ try {
     HTTP_REDIRECT_URL: `http://127.0.0.1:${httpPort}`,
     HTTP_CONTRACT_INSECURE: '1',
   });
+  await runGod9Verifier(httpsPort, httpPort);
 } finally {
   command('docker', ['compose', '-f', composeFile, 'down', '--volumes', '--remove-orphans'], { env: composeEnv });
   await rm(tlsDirectory, { recursive: true, force: true });

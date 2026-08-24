@@ -3,6 +3,7 @@ import { chromium } from 'playwright';
 
 const baseUrl = (process.env.SITE_PREVIEW_URL ?? process.env.HTTP_CONTRACT_URL ?? 'http://127.0.0.1:4321').replace(/\/$/u, '');
 const httpContractUrl = process.env.HTTP_CONTRACT_URL?.replace(/\/$/u, '');
+const ignoreHTTPSErrors = process.env.SITE_PREVIEW_INSECURE === '1';
 const productionOrigin = 'https://godmodetools.com';
 // Reject technical deployment hostnames only; prose may legitimately mention a worker.
 const forbiddenOrigin = /https?:\/\/(?:[a-z0-9-]+\.)*[a-z0-9-]*(?:workers\.dev|(?:stage|staging|worker)[a-z0-9-]*\.[a-z0-9.-]+)/iu;
@@ -29,7 +30,7 @@ async function metadata(page) {
 
 const browser = await chromium.launch();
 try {
-  const context = await browser.newContext();
+  const context = await browser.newContext({ ignoreHTTPSErrors });
   const page = await context.newPage();
 
   for (const route of ['/ru/', '/en/', '/ru/experience/', '/en/projects/']) {

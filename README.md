@@ -39,11 +39,13 @@ npm test
 - `npm run test:backend-security` — security regression API;
 - `npm run test:design` — tokens, primitives и motion contracts;
 - `npm run test:browser` — Chromium QA для desktop/reduced-motion/mobile;
+- `npm run release:plan` — read-only проверка самодостаточного release payload;
+- `npm run release:prepare -- --release-id <id> --confirm <id>` — explicit local apply для immutable artifact;
+- `npm run verify:god9` — staging/public/direct-origin release verifier;
 - `npm run resume:pdf` — PDF-экспорт CV через Playwright;
-- `npm run legacy:ai:build` — временная сборка legacy AI-страницы до GOD-5/GOD-9.
 
 Подробности решения: `docs/astro-foundation.md`. Полная программа миграции: `docs/site-modernization-plan.md`.
 
 ## Production
 
-Новый Astro build и [target Nginx config](infra/nginx/default.conf) пока не применены в production. Текущий публичный релиз остаётся rollback-границей до staging/cutover в GOD-9; `/api/` и `/voidplayer/` сохраняются как отдельные Nginx-контракты. Подробная матрица и порядок проверки: [docs/seo-http-routing.md](docs/seo-http-routing.md).
+Новый Astro build и [target Nginx config](infra/nginx/default.conf) пока не применены в production. Текущий публичный релиз остаётся rollback-границей до отдельного staging/cutover change window; `/api/` и `/voidplayer/` сохраняются как отдельные Nginx-контракты. Полный dry-run/apply/rollback/cleanup порядок: [GOD-9 runbook](docs/runbooks/GOD-9-staging-cutover-cleanup.md). HTTP-матрица: [docs/seo-http-routing.md](docs/seo-http-routing.md).

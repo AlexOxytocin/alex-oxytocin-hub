@@ -37,7 +37,10 @@ This separation keeps design replaceable: a future visual redesign changes share
 
 - Four CV variants are available as PDF, DOCX, and TXT: RU/EN base and RU/EN Java.
 - Fourteen showcase images are served from `/media/showcase/`.
-- Legacy sites remain unchanged until the final cutover story.
+- Legacy production sites remain unchanged until the GOD-9 cutover. Their
+  retired source/build stacks were removed from the repository only after a
+  clean root Astro build and release-manifest verifier proved the artifact is
+  self-contained; the server rollback release remains intact.
 
 ## Verification
 
