@@ -12,10 +12,12 @@ import {
   assertNginxWorkerAccess,
   assertRollbackOpen,
   assertUnprivilegedNginxModes,
+  commitDurableJson,
   hasCompleteTransportEvidence,
   main as hostOperation,
   normalizeReleasePermissions,
   parseArgs as parseHostArgs,
+  writeDurableJsonExclusive,
   validateReleaseBundle,
   validateReleasePermissions,
 } from '../infra/release/god9-host.mjs';
@@ -241,6 +243,25 @@ test('host mutations require explicit apply before touching server state', async
   const cutover = source.slice(source.indexOf('async function cutover('), source.indexOf('async function rollback('));
   assert.ok(cutover.indexOf('await preflight(options)') > 0, 'cutover must run a fresh candidate preflight');
   assert.ok(cutover.indexOf('await preflight(options)') < cutover.indexOf('await atomicSymlink('), 'candidate preflight must precede the first cutover mutation');
+  assert.ok(cutover.indexOf('await entryExists(cutoverMarkerPath)') < cutover.indexOf('await atomicSymlink('), 'an existing immutable cutover marker must fail before the first mutation');
+  assert.ok(cutover.indexOf('await acquireCutoverLock(releaseId)') < cutover.indexOf('await writeDurableJsonExclusive(pendingPath'), 'the global cutover lock must precede the pending journal');
+  assert.ok(cutover.indexOf('await writeDurableJsonExclusive(pendingPath') < cutover.indexOf('await atomicSymlink('), 'the durable pending journal must precede the first mutation');
+  assert.ok(cutover.indexOf('await runProductionProbes(301)') < cutover.indexOf('await commitDurableJson(cutoverMarkerPath'), 'post-reload probes must pass before committed evidence');
+  const mutationCatch = cutover.indexOf('} catch (error)', cutover.indexOf('await atomicSymlink('));
+  assert.ok(cutover.indexOf('await commitDurableJson(cutoverMarkerPath') < mutationCatch, 'committed evidence must stay inside the automatic rollback boundary');
+  assert.match(cutover, /Live deployment is neither the exact previous nor candidate snapshot/u);
+  assert.match(cutover, /marker\.result !== 'pass'/u);
+  assert.match(cutover, /marker\.activeTarget !== activeTarget/u);
+  assert.match(cutover, /marker\.legacyRollbackTarget !== legacyTarget/u);
+  assert.match(cutover, /pendingError/u);
+
+  const evidenceHelpers = source.slice(source.indexOf('export async function writeDurableJsonExclusive('), source.indexOf('async function rollback('));
+  assert.match(evidenceHelpers, /await handle\.sync\(\)/u);
+  assert.match(evidenceHelpers, /await syncDirectory\(dirname\(pathname\)\)/u);
+  assert.match(evidenceHelpers, /await link\(temporary, pathname\)/u);
+  assert.match(evidenceHelpers, /await syncDirectory\(dirname\(temporary\)\)/u);
+  assert.match(source, /await symlink\(releaseId, CUTOVER_LOCK\);\s+await syncDirectory\(STATE_ROOT\)/u);
+  assert.match(source, /await unlink\(CUTOVER_LOCK\);\s+await syncDirectory\(STATE_ROOT\)/u);
 
   const staging = source.slice(source.indexOf('async function stagingUp('), source.indexOf('async function finalizeUpload('));
   assert.ok(staging.indexOf('await preflight(options)') > 0, 'staging must run the candidate permission preflight');
@@ -256,6 +277,30 @@ test('host mutations require explicit apply before touching server state', async
   assert.ok(normalize < secondIntegrityCheck && secondIntegrityCheck < workerProbe, 'checksums must be revalidated before the worker probe');
   assert.ok(workerProbe < finalRename, 'worker access must pass before atomic finalization');
   assert.equal(finalize.indexOf('chmod(', finalRename), -1, 'finalized releases must never be chmodded');
+});
+
+test('durable cutover evidence is parseable, exclusive, and race-safe', async () => {
+  const directory = await mkdtemp(resolve(tmpdir(), 'god9-cutover-evidence-'));
+  try {
+    const marker = resolve(directory, 'cutover.json');
+    const payloads = [{ releaseId: 'release-a', result: 'pass' }, { releaseId: 'release-b', result: 'pass' }];
+    const results = await Promise.allSettled([
+      commitDurableJson(marker, resolve(directory, 'commit-a.tmp'), payloads[0]),
+      commitDurableJson(marker, resolve(directory, 'commit-b.tmp'), payloads[1]),
+    ]);
+    assert.equal(results.filter(({ status }) => status === 'fulfilled').length, 1);
+    assert.equal(results.filter(({ status }) => status === 'rejected').length, 1);
+    const committed = JSON.parse(await readFile(marker, 'utf8'));
+    assert.ok(payloads.some((payload) => JSON.stringify(payload) === JSON.stringify(committed)));
+    await assert.rejects(writeDurableJsonExclusive(marker, { result: 'overwrite' }), /EEXIST/u);
+
+    const partial = resolve(directory, 'partial.json');
+    await writeFile(partial, '{', 'utf8');
+    await assert.rejects(commitDurableJson(partial, resolve(directory, 'partial.tmp'), { result: 'pass' }), /EEXIST/u);
+    assert.equal(await readFile(partial, 'utf8'), '{');
+  } finally {
+    await rm(directory, { recursive: true, force: true });
+  }
 });
 
 test('rollback harness mirrors every production Nginx network before startup', async () => {
@@ -437,6 +482,7 @@ test('cleanup tool requires exact manifests, observation evidence, and SHA confi
   assert.match(source, /protectedTargets\(\)/u);
   assert.match(source, /activeReleaseDirectory\(\)/u);
   assert.match(source, /verifiedReleaseEvidence/u);
+  assert.match(source, /assertNoCutoverLock\(\)/u);
   assert.doesNotMatch(source, /rm\s+-rf|glob\s*\(/u);
   const retirement = source.slice(source.indexOf('async function retireLegacyLink('));
   assert.ok(retirement.indexOf('writeFile(markerPath') < retirement.indexOf('unlink(LEGACY_LINK)'), 'rollback-closed marker must be durable before legacy unlink');
